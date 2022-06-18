@@ -14,6 +14,7 @@
 		FAAA04BC285BF31C00368E84 /* cookbookappTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA04BB285BF31C00368E84 /* cookbookappTests.swift */; };
 		FAAA04C6285BF31C00368E84 /* cookbookappUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA04C5285BF31C00368E84 /* cookbookappUITests.swift */; };
 		FAAA04C8285BF31C00368E84 /* cookbookappUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA04C7285BF31C00368E84 /* cookbookappUITestsLaunchTests.swift */; };
+		FAAA04D5285BF37B00368E84 /* Recipes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAAA04D4285BF37B00368E84 /* Recipes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		FAAA04C1285BF31C00368E84 /* cookbookappUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cookbookappUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAAA04C5285BF31C00368E84 /* cookbookappUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cookbookappUITests.swift; sourceTree = "<group>"; };
 		FAAA04C7285BF31C00368E84 /* cookbookappUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cookbookappUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FAAA04D4285BF37B00368E84 /* Recipes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				FAAA04AA285BF31900368E84 /* cookbookappApp.swift */,
 				FAAA04AC285BF31900368E84 /* ContentView.swift */,
+				FAAA04D4285BF37B00368E84 /* Recipes.swift */,
 				FAAA04AE285BF31B00368E84 /* Assets.xcassets */,
 				FAAA04B0285BF31B00368E84 /* Preview Content */,
 			);
@@ -258,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAAA04AD285BF31900368E84 /* ContentView.swift in Sources */,
+				FAAA04D5285BF37B00368E84 /* Recipes.swift in Sources */,
 				FAAA04AB285BF31900368E84 /* cookbookappApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

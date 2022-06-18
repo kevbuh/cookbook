@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+
+struct Recipes: Codable, Hashable {
+    let title: String
+    let description: String
+    let created_at: String
+    let is_public: Bool
+}
