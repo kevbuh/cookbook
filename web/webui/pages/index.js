@@ -1,6 +1,11 @@
 import Head from "next/head";
+import NavBar from "../components/NavBar";
+import { useState } from "react";
+import AddRecipe from "../components/AddRecipe";
 
 export default function Home({ data }) {
+  const [showList, setShowList] = useState(false);
+
   return (
     <div>
       <Head>
@@ -8,19 +13,33 @@ export default function Home({ data }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
 
-      <div className="text-3xl font-medium p-6">
-        <p>CookBook</p>
-      </div>
-      <div>
-        {data.map((d) => (
-          <div key={d.id} className="p-6">
-            <p>Title: {d.title}</p>
-            <p>CookTime: {d.total_cook_time}</p>
-            <p>Description: {d.description}</p>
-            <br></br>
-          </div>
-        ))}
-      </div>
+      <NavBar />
+
+      <AddRecipe />
+      <br></br>
+      <div className="px-6">Edit</div>
+      <div className="px-6">Delete</div>
+
+      <button
+        className="p-6"
+        onClick={(e) => setShowList((showList) => !showList)}
+      >
+        Show List
+      </button>
+      {showList ? (
+        <div>
+          {data.map((d) => (
+            <div key={d.id} className="px-6 py-1">
+              <p>Title: {d.title}</p>
+              <p>CookTime: {d.total_cook_time}</p>
+              <p>Description: {d.description}</p>
+              <br></br>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,7 @@
-backend/core/settings.py
-backend/core/__pycache__
-
-.gitignore
 
 venv
+
+server/core/settings.py
 
 web/node_modules
 web/package-lock.json
