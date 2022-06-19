@@ -38,36 +38,17 @@ export default function Home({ data }) {
           {data.map((d) => (
             <div
               key={d.id}
-              className="mx-6 my-2 bg-slate-200 rounded w-1/4 p-1"
+              className="mx-6 my-2 bg-zinc-200 rounded-lg w-1/4 p-2"
             >
-              <p>ID: {d.id}</p>
               <Link href={"/recipes/" + d.id}>
-                <a>Title: {d.title}</a>
+                <a className="underline text-xl font-semibold">{d.title}</a>
               </Link>
-              <p>CookTime: {d.total_cook_time}</p>
+              <p>Time: {d.total_cook_time} mins</p>
               <p>Description: {d.description}</p>
-              <button className="mr-2">Edit</button>
-              <button
-                onClick={() => {
-                  fetch(`http://127.0.0.1:8000/recipes/${d.id}/`, {
-                    method: "DELETE",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  })
-                    .then(console.log("TRIED TO DELETE"))
-                    .catch((error) => console.log("error", error));
-                  Router.reload();
-                }}
-              >
-                Delete
-              </button>
             </div>
           ))}
         </div>
-      ) : (
-        <div></div>
-      )}
+      ) : null}
     </div>
   );
 }
