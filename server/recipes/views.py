@@ -1,12 +1,13 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
+# from django.http import HttpResponse, JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# from rest_framework.parsers import JSONParser
 from recipes.models import Recipes
 from recipes.serializers import RecipesSerializer
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 
 
 from rest_framework.viewsets import ReadOnlyModelViewSet
@@ -16,6 +17,7 @@ from .models import Recipes
 class RecipeViewSet(ReadOnlyModelViewSet):
     serializer_class = RecipesSerializer
     queryset = Recipes.objects.all()
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False)
     def get_list(self, request):
