@@ -18,14 +18,14 @@ class UserSerializer(serializers.ModelSerializer):
         return (now() - obj.date_joined).days
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super(MyTokenObtainPairSerializer, cls).get_token(user)
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
 
-        # Add custom claims
-        token['email'] = user.email
-        return token
+#         # Add custom claims
+#         token['email'] = user.email
+#         return token
 
 
 class RegisterSerializer(serializers.ModelSerializer):
