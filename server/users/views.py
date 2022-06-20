@@ -1,7 +1,7 @@
 
 # Create your views here.
 # from .models import CustomUser
-from rest_framework import viewsets, permissions, status
+from rest_framework import permissions, status
 from .serializers import UserSerializer, ChangePasswordSerializer, UpdateUserSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 # from rest_framework_simplejwt.views import TokenObtainPairView
@@ -16,30 +16,38 @@ from rest_framework.response import Response
 #     permission_classes = (AllowAny,)
 #     serializer_class = MyTokenObtainPairSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+# class UserView(generics.RetrieveAPIView):
+#     """
+#     API endpoint that allows users to be viewed or edited.
+#     """
+#     permission_classes = [permissions.IsAuthenticated]
+#     queryset = CustomUser.objects.all()
+#     serializer_class = UserSerializer
+class LoadUserView(APIView):
+    def get(self, request, format=None):
+        try:
+            user = request.user
+            user = UserSerializer(user)
+
+            return Response({'user': user.data},status=status.HTTP_200_OK)
+        except:
+            return Response({'error': 'Something went wrong when trying to load user'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class RegisterView(generics.CreateAPIView):
-    queryset = CustomUser.objects.all()
     permission_classes = (AllowAny,)
+    queryset = CustomUser.objects.all()
     serializer_class = RegisterSerializer
 
 class ChangePasswordView(generics.UpdateAPIView):
-
-    queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)
+    queryset = CustomUser.objects.all()
     serializer_class = ChangePasswordSerializer
 
 
 class UpdateProfileView(generics.UpdateAPIView):
-
-    queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated,)
+    queryset = CustomUser.objects.all()
     serializer_class = UpdateUserSerializer
 
 class LogoutView(APIView):
