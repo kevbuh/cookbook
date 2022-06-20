@@ -4,7 +4,7 @@ import Link from "next/link";
 function NavBar() {
   return (
     <div className="flex flex-row py-1.5 px-4">
-      <div className="text-3xl font-medium py-2 w-2/3">
+      <div className="text-3xl font-medium py-2 w-1/3">
         <Link href="/">
           <a>CookBook</a>
         </Link>
@@ -49,6 +49,17 @@ function NavBar() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="w-1/3 justify-center grid grid-cols-3 content-evenly ml-8 ">
+        <Link href="/about">
+          <a className="text-xl font-semibold justify-center">About</a>
+        </Link>
+        <Link href="/login">
+          <a className="text-xl font-semibold">Log In</a>
+        </Link>
+        <Link href="/signup">
+          <a className="text-xl font-semibold">Sign Up</a>
+        </Link>
       </div>
     </div>
   );
