@@ -22,17 +22,20 @@ from recipes.views import RecipeViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenVerifyView
 )
 
 router = DefaultRouter()
 router.register(r'recipe', RecipeViewSet, basename='Recipe')
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    # path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('auth/', include('users.urls')),
     path('', include(router.urls)),
+    path('admin/', admin.site.urls),
+    path('api/token/', TokenObtainPairView.as_view()),
+    path('api/token/refresh/', TokenRefreshView.as_view()),
+    path('api/token/verify/', TokenVerifyView.as_view()),
+
+    path('auth/', include('users.urls')),
 ]
 
 if settings.DEBUG:
