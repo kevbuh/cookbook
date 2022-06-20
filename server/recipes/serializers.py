@@ -12,8 +12,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class RecipesSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=True)
-    comments = CommentSerializer(many=True)
+    category = CategorySerializer(many=True, required=False)
+    comments = CommentSerializer(many=True, required=False)
 
     class Meta:
         model = Recipes

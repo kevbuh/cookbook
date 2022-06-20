@@ -11,10 +11,15 @@ const AddRecipe = () => (
         description: "",
       }}
       onSubmit={(values) => {
-        fetch("http://127.0.0.1:8000/recipes/", {
+        fetch("http://127.0.0.1:8000/recipe/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Accept: "application/json, text/plain, */*",
+            "User-Agent": "*",
+            Authorization:
+              "Bearer " +
+              "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY1MzY2LCJpYXQiOjE2NTU2OTI1NjYsImp0aSI6ImJiYTZhOGUxODI0ZjQ0YmU5ODE3YzdhNzgwZTk3MDlhIiwidXNlcl9pZCI6Nn0.0y472OF5gdp4KO22lx5DrFFZjizSM6u8T0bsY4o-T_k",
           },
           body: JSON.stringify(values),
         })

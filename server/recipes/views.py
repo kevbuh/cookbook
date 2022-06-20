@@ -10,11 +10,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from .serializers import RecipesSerializer
 from .models import Recipes
 
-class RecipeViewSet(ReadOnlyModelViewSet):
+class RecipeViewSet(ModelViewSet):
     serializer_class = RecipesSerializer
     queryset = Recipes.objects.all()
     permission_classes = [IsAuthenticated]

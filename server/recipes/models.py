@@ -24,7 +24,7 @@ class Recipes(models.Model):
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
-    category = models.ManyToManyField(Category, related_name='recipes')
+    category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
     
     # ingredient list
     # course
@@ -42,7 +42,7 @@ class Recipes(models.Model):
 class Comment(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='comments', related_query_name='comment')
+    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='comments', related_query_name='comment', blank=True, null=True)
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments', related_query_name='comment')
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)

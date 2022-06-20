@@ -6,6 +6,13 @@ import NavBar from "../../components/NavBar";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
+  console.log("SENTDATA", sentData);
+  console.log("ID", sentData.id);
+  console.log("TITLE", sentData.title);
+  console.log("DESC", sentData.description);
+  console.log("CAT", sentData.category);
+  console.log("RATING", sentData.rating);
+
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
 
@@ -23,10 +30,15 @@ function SelectedRecipe(data) {
                   description: sentData.description,
                 }}
                 onSubmit={(values) => {
-                  fetch(`http://127.0.0.1:8000/recipes/${sentData.id}/`, {
+                  fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
+                      Accept: "application/json, text/plain, */*",
+                      "User-Agent": "*",
+                      Authorization:
+                        "Bearer " +
+                        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY1MzY2LCJpYXQiOjE2NTU2OTI1NjYsImp0aSI6ImJiYTZhOGUxODI0ZjQ0YmU5ODE3YzdhNzgwZTk3MDlhIiwidXNlcl9pZCI6Nn0.0y472OF5gdp4KO22lx5DrFFZjizSM6u8T0bsY4o-T_k",
                     },
                     body: JSON.stringify(values),
                   })
@@ -78,21 +90,30 @@ function SelectedRecipe(data) {
           </div>
         ) : (
           <div>
-            <p className="text-xl underline font-semibold mx-2">
-              #{sentData.id} - {sentData.title}
-            </p>
+            <div className="text-xl underline font-semibold">
+              <div>Title: {sentData.title}</div>
+            </div>
             <div className="rounded p-1 bg-slate-200 w-1/6">
-              <p>Rating: {sentData.rating}/5</p>
-              <p>Time: {sentData.total_cook_time}</p>
-              <p>Category: {sentData.category}</p>
+              <div>Rating: {sentData.rating}</div>
+              <div>Cook Time: {sentData.total_cook_time} mins</div>
+              <div>Category:</div>
+              {sentData.category.map((d) => (
+                <div>{d.name}</div>
+              ))}
+              <div>Price: ${sentData.price}</div>
             </div>
-            <div className="py-4">
-              <p>Description:</p>
-              <p>{sentData.description}</p>
-            </div>
-            <p>Private: {sentData.private}</p>
-            <p>Image: {sentData.header_image}</p>
-            <p>Source: {sentData.source}</p>
+            <div>Private: {sentData.private}</div>
+            <div>Image: {sentData.header_image}</div>
+            <div className="py-4">Description: {sentData.description}</div>
+            <div>Source: {sentData.source}</div>
+            <div>Created: {sentData.created}</div>
+            <div>Comments:</div>
+            {sentData.comments.map((d) => (
+              <div>
+                {d.title} - {d.created}{" "}
+              </div>
+            ))}
+
             <button
               className="bg-slate-400 p-2 mx-3 my-2 rounded text-white font-semibold"
               onClick={() => setShowEdit((showEdit) => !showEdit)}
@@ -102,10 +123,15 @@ function SelectedRecipe(data) {
             <button
               className="bg-slate-400 p-2 rounded text-white font-semibold"
               onClick={() => {
-                fetch(`http://127.0.0.1:8000/recipes/${sentData.id}/`, {
+                fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
                   method: "DELETE",
                   headers: {
                     "Content-Type": "application/json",
+                    Accept: "application/json, text/plain, */*",
+                    "User-Agent": "*",
+                    Authorization:
+                      "Bearer " +
+                      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY1MzY2LCJpYXQiOjE2NTU2OTI1NjYsImp0aSI6ImJiYTZhOGUxODI0ZjQ0YmU5ODE3YzdhNzgwZTk3MDlhIiwidXNlcl9pZCI6Nn0.0y472OF5gdp4KO22lx5DrFFZjizSM6u8T0bsY4o-T_k",
                   },
                 })
                   .then(console.log("TRIED TO DELETE"))
@@ -127,11 +153,21 @@ export async function getServerSideProps(context) {
   const id = context.query.id; // Get ID from slug `/book/1`
   // If routing to `/book/1?name=some-book`
   // Outputs: `{ id: '1', name: 'some-book' }`
-  // console.log("CONTEXT:", context.query);
 
   // Fetch data from external API
-  const res = await fetch(`http://127.0.0.1:8000/recipes/${id}`);
+  const res = await fetch(`http://127.0.0.1:8000/recipe/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/plain, */*",
+      "User-Agent": "*",
+      Authorization:
+        "Bearer " +
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY1MzY2LCJpYXQiOjE2NTU2OTI1NjYsImp0aSI6ImJiYTZhOGUxODI0ZjQ0YmU5ODE3YzdhNzgwZTk3MDlhIiwidXNlcl9pZCI6Nn0.0y472OF5gdp4KO22lx5DrFFZjizSM6u8T0bsY4o-T_k",
+    },
+  });
   const data = await res.json();
+  console.log("SENT DATA", data);
 
   // Pass data to the page via props
   return { props: { data } };
