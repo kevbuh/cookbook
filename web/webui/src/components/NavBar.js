@@ -1,7 +1,10 @@
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function NavBar() {
+  const router = useRouter();
+
   return (
     <div className="flex flex-row py-1.5 px-4">
       <div className="text-3xl font-medium py-2 w-1/3">
@@ -52,13 +55,37 @@ function NavBar() {
       </div>
       <div className="w-1/3 justify-center grid grid-cols-3 content-evenly ml-8 ">
         <Link href="/about">
-          <a className="text-xl font-semibold justify-center">About</a>
+          <a
+            className={
+              router.pathname === "/about"
+                ? "text-xl font-semibold justify-center"
+                : "text-xl font-medium justify-center"
+            }
+          >
+            About
+          </a>
         </Link>
         <Link href="/login">
-          <a className="text-xl font-semibold">Log In</a>
+          <a
+            className={
+              router.pathname === "/login"
+                ? "text-xl font-semibold justify-center"
+                : "text-xl font-medium justify-center"
+            }
+          >
+            Log In
+          </a>
         </Link>
         <Link href="/signup">
-          <a className="text-xl font-semibold">Sign Up</a>
+          <a
+            className={
+              router.pathname === "/signup"
+                ? "text-xl font-semibold justify-center"
+                : "text-xl font-medium justify-center"
+            }
+          >
+            Sign Up
+          </a>
         </Link>
       </div>
     </div>

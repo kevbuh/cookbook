@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import Router from "next/router";
 import NavBar from "../components/NavBar";
 import AddRecipe from "../components/AddRecipe";
+import Layout from "../hocs/Layout";
 
 export default function Home({ data }) {
   const [showList, setShowList] = useState(false);
@@ -12,14 +12,7 @@ export default function Home({ data }) {
   // console.log(" TITLE:", data.title);
 
   return (
-    <div>
-      <Head>
-        <title>CookBook Home</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
-
-      <NavBar />
-
+    <Layout title="CookBook | Home" content="CookBook Home">
       <button
         className="mx-6 bg-slate-400 p-2 rounded text-white font-semibold my-2"
         onClick={() => setShowAdd((showAdd) => !showAdd)}
@@ -51,7 +44,7 @@ export default function Home({ data }) {
           ))}
         </div>
       ) : null}
-    </div>
+    </Layout>
   );
 }
 
@@ -66,7 +59,7 @@ export async function getServerSideProps() {
       "User-Agent": "*",
       Authorization:
         "Bearer " +
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY1MzY2LCJpYXQiOjE2NTU2OTI1NjYsImp0aSI6ImJiYTZhOGUxODI0ZjQ0YmU5ODE3YzdhNzgwZTk3MDlhIiwidXNlcl9pZCI6Nn0.0y472OF5gdp4KO22lx5DrFFZjizSM6u8T0bsY4o-T_k",
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
     },
   });
   // console.log("RES", res);
