@@ -1,13 +1,16 @@
 import { useState } from "react";
-import Layout from "../hocs/Layout";
 import { useSelector, useDispatch } from "react-redux";
-import Loader from "react-loader-spinner";
+import { useRouter } from "next/router";
 import { register } from "../actions/auth";
+import Layout from "../hocs/Layout";
+import router from "next/router";
 
 function signup() {
   const dispatch = useDispatch();
-  const loading = useSelector((state) => state.auth.loading); // selects a redux state by selecting the auth reducer
+  const router = useRouter();
   const register_success = useSelector((state) => state.auth.register_success);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loading = useSelector((state) => state.auth.loading);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -27,6 +30,10 @@ function signup() {
       dispatch(register(email, password, password2));
     }
   };
+
+  if (typeof window !== "undefined" && isAuthenticated)
+    router.push("/dashboard");
+  if (register_success) router.push("/login");
 
   return (
     <Layout title="CookBook | Sign Up">
@@ -72,12 +79,18 @@ function signup() {
             required
           />
         </div>
-        <button
-          className="rounded p-2 m-2 bg-stone-400 text-white"
-          type="submit"
-        >
-          Create Account
-        </button>
+        {loading ? (
+          <div>
+            <h1>LOADING</h1>
+          </div>
+        ) : (
+          <button
+            className="rounded p-2 m-2 bg-stone-400 text-white"
+            type="submit"
+          >
+            Create Account
+          </button>
+        )}
       </form>
     </Layout>
   );

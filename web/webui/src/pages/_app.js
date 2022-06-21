@@ -1,12 +1,9 @@
-// import "../styles/globals.css"; // need to keep this or else tailwind will break
 import "../../styles/globals.css"; // need to keep this or else tailwind will break
-
 import Head from "next/head";
 import { Provider } from "react-redux";
-// import { useStore } from "../redux/store";
 import { useStore } from "../store";
 
-function MyApp({ Component, pageProps }) {
+const App = ({ Component, pageProps }) => {
   const store = useStore(pageProps.initialReduxState);
 
   return (
@@ -17,6 +14,6 @@ function MyApp({ Component, pageProps }) {
       <Component {...pageProps} />
     </Provider>
   );
-}
+};
 
-export default MyApp;
+export default App;

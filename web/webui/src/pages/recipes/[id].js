@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Router from "next/router";
 import { Formik, Field, Form } from "formik";
-import NavBar from "../../components/NavBar";
 import Layout from "../../hocs/Layout";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
-  console.log("SENTDATA", sentData);
-  console.log("ID", sentData.id);
-  console.log("TITLE", sentData.title);
-  console.log("DESC", sentData.description);
-  console.log("CAT", sentData.category);
-  console.log("RATING", sentData.rating);
+  // console.log("SENTDATA", sentData);
+  // console.log("ID", sentData.id);
+  // console.log("TITLE", sentData.title);
+  // console.log("DESC", sentData.description);
+  // console.log("CAT", sentData.category);
+  // console.log("RATING", sentData.rating);
 
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
