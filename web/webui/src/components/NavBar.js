@@ -1,12 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import { API_URL } from "../config/index";
 
 function NavBar() {
+  const [data, setData] = useState([]);
+  const [searchField, setSearchField] = useState("");
+  const [focused, setFocused] = useState(false);
+  const onBlur = () => setFocused(false);
+  const onFocus = () => setFocused(true);
   const router = useRouter();
-
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const searchNotes = () => {
+    fetch(`${API_URL}/search/?search=${searchField}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw res.json();
+        }
+      })
+      .then((json) => {
+        console.log("search result:", json);
+        setData(json);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    searchNotes();
+  }, [searchField]);
 
   const authLinks = (
     <>
@@ -53,13 +85,13 @@ function NavBar() {
 
   return (
     <div className="flex flex-row py-1.5 px-4">
-      <div className="text-3xl font-medium py-2 w-1/3">
+      <div className="text-3xl font-medium py-2 w-1/6">
         <Link href="/">
           <a>CookBook</a>
         </Link>
       </div>
 
-      <div className="w-1/3">
+      <div className="w-1/2">
         <form>
           <label
             htmlFor="default-search"
@@ -89,6 +121,9 @@ function NavBar() {
               id="default-search"
               className="block p-4 pl-10 w-full text-sm text-black rounded-lg dark:bg-stone-200 "
               placeholder="Search Recipes, Ingredients..."
+              onChange={(e) => setSearchField(e.target.value)}
+              onFocus={onFocus}
+              onBlur={onBlur}
               required
             />
             <button
@@ -98,9 +133,25 @@ function NavBar() {
               Search
             </button>
           </div>
+          {focused ? (
+            <div className="flex flex-col bg-stone-200 z-10 ">
+              {data.length > 0 ? (
+                data.map((d) => {
+                  return (
+                    <Link href={"/recipes/" + d.id}>
+                      <a key={d.id}>{d.title}, </a>
+                    </Link>
+                  );
+                })
+              ) : (
+                <p>No Search Results</p>
+              )}
+            </div>
+          ) : null}
         </form>
       </div>
-      <div className="w-1/3 justify-center grid grid-cols-3 content-evenly ml-8 ">
+
+      <div className="w-1/6 justify-center grid grid-cols-3 content-evenly ml-8 ">
         <Link href="/about">
           <a
             className={

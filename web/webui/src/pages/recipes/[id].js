@@ -116,7 +116,10 @@ function SelectedRecipe(data) {
                 {d.title} - {d.created}{" "}
               </div>
             ))}
-            {user.id === sentData.id ? (
+            {user &&
+            user.id === sentData.id &&
+            user !== undefined &&
+            user !== null ? (
               <>
                 <button
                   className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"

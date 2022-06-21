@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from recipes.views import RecipeViewSet
+from recipes.views import RecipeViewSet, SearchResultsList
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -34,6 +34,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/token/verify/', TokenVerifyView.as_view()),
+
+    path("search/", SearchResultsList.as_view(), name="search_results"),
 
     path('auth/', include('users.urls')),
 ]

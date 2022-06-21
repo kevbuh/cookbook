@@ -8,7 +8,7 @@ from recipes.models import Recipes
 from recipes.serializers import RecipesSerializer
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework import status, filters, generics
 
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from .serializers import RecipesSerializer
@@ -31,6 +31,21 @@ class RecipeViewSet(ModelViewSet):
     def delete_recipes(self, request, pk=None):
         pass
 
+class SearchResultsList(generics.ListCreateAPIView):
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['description', 'title']
+    serializer_class = RecipesSerializer
+    # filterset_fields = ['creator']
+    queryset = Recipes.objects.all()
+
+    # def get_queryset(self):
+    #     """
+    #     Optionally restricts the returned purchases to a given user,
+    #     by filtering against a `username` query parameter in the URL.
+    #     """
+    #     queryset = Recipes.objects.filter()
+    #     user = self.request.user
+    #     return Recipes.objects.filter(author=user)
 
 
 
