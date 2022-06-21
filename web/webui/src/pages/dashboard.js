@@ -7,6 +7,7 @@ const Dashboard = () => {
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
+  // console.lof("USER:", user);
   const loading = useSelector((state) => state.auth.loading);
 
   if (typeof window !== "undefined" && !loading && !isAuthenticated)
@@ -15,6 +16,7 @@ const Dashboard = () => {
   return (
     <Layout title="CookBook | Dashboard">
       <p className="text-xl m-6">User Dashboard</p>
+      <p className="text-xl m-6">Welcome, User #{user !== null && user.id}</p>
     </Layout>
   );
 };

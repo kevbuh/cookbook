@@ -36,7 +36,7 @@ const LoginPage = () => {
     router.push("/dashboard");
 
   return (
-    <Layout title="CookBook | Sign Up">
+    <Layout title="CookBook | Login">
       <p className="text-xl ml-6">Login</p>
       <form className="rounded bg-stone-200 w-1/2 ml-6" onSubmit={onSubmit}>
         <div>

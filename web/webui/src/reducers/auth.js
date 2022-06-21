@@ -8,6 +8,8 @@ import {
   LOGIN_FAIL,
   LOGOUT_FAIL,
   LOGOUT_SUCCESS,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAIL,
 } from "../actions/types";
 
 const initialState = {
@@ -21,10 +23,21 @@ const authReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case LOAD_USER_SUCCESS:
+      return {
+        ...state,
+        user: payload.user,
+      };
+    case LOAD_USER_FAIL:
+      return {
+        ...state,
+        user: null,
+      };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         isAuthenticated: false,
+        user: null,
       };
     case LOGOUT_FAIL:
       return {
