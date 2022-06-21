@@ -12,6 +12,8 @@ import {
   LOAD_USER_FAIL,
   AUTHENTICATED_FAIL,
   AUTHENTICATED_SUCCESS,
+  REFRESH_FAIL,
+  REFRESH_SUCCESS,
 } from "../actions/types";
 
 const initialState = {
@@ -25,12 +27,22 @@ const authReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case REFRESH_SUCCESS:
+      return {
+        ...state,
+      };
+    case REFRESH_FAIL:
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+      };
     case AUTHENTICATED_SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
       };
-    case LOAD_USER_FAIL:
+    case AUTHENTICATED_FAIL:
       return {
         ...state,
         isAuthenticated: false,
