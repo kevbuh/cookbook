@@ -32,8 +32,7 @@ const LoginPage = () => {
       dispatch(login(email, password));
   };
 
-  if (typeof window !== "undefined" && isAuthenticated)
-    router.push("/dashboard");
+  if (typeof window !== "undefined" && isAuthenticated) router.push("/profile");
 
   return (
     <Layout title="CookBook | Login">

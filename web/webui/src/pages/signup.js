@@ -30,8 +30,7 @@ function signup() {
     }
   };
 
-  if (typeof window !== "undefined" && isAuthenticated)
-    router.push("/dashboard");
+  if (typeof window !== "undefined" && isAuthenticated) router.push("/profile");
   if (register_success) router.push("/login");
 
   return (

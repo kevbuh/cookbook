@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Layout from "../hocs/Layout";
 import { logout } from "../actions/auth";
 
-const Dashboard = () => {
+const Profile = () => {
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -21,11 +21,11 @@ const Dashboard = () => {
     router.push("/login");
 
   return (
-    <Layout title="CookBook | Dashboard">
+    <Layout title="CookBook | profile">
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
         <div className="w-2/3">
           <div className="bg-stone-100 rounded-lg p-2">
-            <p className="text-2xl m-6 underline">User Dashboard</p>
+            <p className="text-2xl m-6 underline">User Profile</p>
             <p className="text-lg m-6">
               Welcome, User #{user !== null && user.id}
             </p>
@@ -46,4 +46,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Profile;

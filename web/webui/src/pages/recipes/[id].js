@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Field, Form } from "formik";
 import Layout from "../../hocs/Layout";
+import { useSelector, useDispatch } from "react-redux";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
@@ -14,6 +15,10 @@ function SelectedRecipe(data) {
 
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
@@ -32,11 +37,11 @@ function SelectedRecipe(data) {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
-                      Accept: "application/json, text/plain, */*",
-                      "User-Agent": "*",
-                      Authorization:
-                        "Bearer " +
-                        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
+                      Accept: "application/json",
+                      // "User-Agent": "*",
+                      // Authorization:
+                      //   "Bearer " +
+                      //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
                     },
                     body: JSON.stringify(values),
                   })
@@ -51,7 +56,7 @@ function SelectedRecipe(data) {
                     id="author"
                     name="author"
                     placeholder="Author"
-                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                    className="bg-stone-200 rounded p-1 my-2 w-2/4"
                   />
 
                   <label htmlFor="title">Title</label>
@@ -59,7 +64,7 @@ function SelectedRecipe(data) {
                     id="title"
                     name="title"
                     placeholder="Title"
-                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                    className="bg-stone-200 rounded p-1 my-2 w-2/4"
                   />
 
                   <label htmlFor="description">Description</label>
@@ -67,7 +72,7 @@ function SelectedRecipe(data) {
                     id="description"
                     name="description"
                     placeholder="Description"
-                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                    className="bg-stone-200 rounded p-1 my-2 w-2/4"
                   />
 
                   <button
@@ -80,7 +85,7 @@ function SelectedRecipe(data) {
               </Formik>
             </div>
             <button
-              className="bg-slate-400 p-2 mx-3 my-2 rounded text-white font-semibold"
+              className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
               onClick={() => setShowEdit((showEdit) => !showEdit)}
             >
               Save
@@ -91,7 +96,7 @@ function SelectedRecipe(data) {
             <div className="text-xl underline font-semibold">
               <div>Title: {sentData.title}</div>
             </div>
-            <div className="rounded p-1 bg-slate-200 w-1/6">
+            <div className="rounded p-1 bg-stone-200 w-1/6">
               <div>Rating: {sentData.rating}</div>
               <div>Cook Time: {sentData.total_cook_time} mins</div>
               <div>Category:</div>
@@ -111,34 +116,37 @@ function SelectedRecipe(data) {
                 {d.title} - {d.created}{" "}
               </div>
             ))}
-
-            <button
-              className="bg-slate-400 p-2 mx-3 my-2 rounded text-white font-semibold"
-              onClick={() => setShowEdit((showEdit) => !showEdit)}
-            >
-              Edit
-            </button>
-            <button
-              className="bg-slate-400 p-2 rounded text-white font-semibold"
-              onClick={() => {
-                fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
-                  method: "DELETE",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json, text/plain, */*",
-                    "User-Agent": "*",
-                    Authorization:
-                      "Bearer " +
-                      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
-                  },
-                })
-                  .then(console.log("TRIED TO DELETE"))
-                  .catch((error) => console.log("error", error));
-                router.push("/");
-              }}
-            >
-              Delete
-            </button>
+            {user.id === sentData.id ? (
+              <>
+                <button
+                  className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
+                  onClick={() => setShowEdit((showEdit) => !showEdit)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-stone-400 p-2 rounded text-white font-semibold"
+                  onClick={() => {
+                    fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
+                      method: "DELETE",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        // "User-Agent": "*",
+                        // Authorization:
+                        //   "Bearer " +
+                        //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
+                      },
+                    })
+                      // .then(console.log("TRIED TO DELETE"))
+                      .catch((error) => console.log("error", error));
+                    router.push("/");
+                  }}
+                >
+                  Delete
+                </button>
+              </>
+            ) : null}
           </div>
         )}
       </div>
@@ -157,15 +165,15 @@ export async function getServerSideProps(context) {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json, text/plain, */*",
-      "User-Agent": "*",
-      Authorization:
-        "Bearer " +
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
+      Accept: "application/json",
+      // "User-Agent": "*",
+      // Authorization:
+      //   "Bearer " +
+      //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
     },
   });
   const data = await res.json();
-  console.log("SENT DATA", data);
+  // console.log("SENT DATA", data);
 
   // Pass data to the page via props
   return { props: { data } };

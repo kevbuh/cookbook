@@ -10,15 +10,15 @@ function NavBar() {
 
   const authLinks = (
     <>
-      <Link href="/dashboard">
+      <Link href="/profile">
         <a
           className={
-            router.pathname === "/dashboard"
+            router.pathname === "/profile"
               ? "text-xl font-semibold justify-center"
               : "text-xl font-medium justify-center"
           }
         >
-          Dashboard
+          Profile
         </a>
       </Link>
     </>

@@ -9,7 +9,7 @@ export default function Home({ data }) {
   const [showAdd, setShowAdd] = useState(false);
   const [sentData, setSentData] = useState(data);
 
-  console.log(sentData);
+  // console.log(sentData);
 
   return (
     <Layout title="CookBook | Home" content="CookBook Home">
