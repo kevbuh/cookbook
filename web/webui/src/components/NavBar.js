@@ -1,9 +1,75 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../actions/auth";
 
 function NavBar() {
+  const dispatch = useDispatch();
   const router = useRouter();
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const logoutHandler = () => {
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(logout());
+    }
+  };
+
+  const authLinks = (
+    <>
+      <Link href="/dashboard">
+        <a
+          className={
+            router.pathname === "/dashboard"
+              ? "text-xl font-semibold justify-center"
+              : "text-xl font-medium justify-center"
+          }
+        >
+          Dashboard
+        </a>
+      </Link>
+
+      <a
+        className={
+          router.pathname === "/signup"
+            ? "text-xl font-semibold justify-center"
+            : "text-xl font-medium justify-center"
+        }
+        href="#!"
+        onClick={logoutHandler}
+      >
+        Logout
+      </a>
+    </>
+  );
+
+  const guestLinks = (
+    <>
+      <Link href="/login">
+        <a
+          className={
+            router.pathname === "/login"
+              ? "text-xl font-semibold justify-center"
+              : "text-xl font-medium justify-center"
+          }
+        >
+          Log In
+        </a>
+      </Link>
+      <Link href="/signup">
+        <a
+          className={
+            router.pathname === "/signup"
+              ? "text-xl font-semibold justify-center"
+              : "text-xl font-medium justify-center"
+          }
+        >
+          Sign Up
+        </a>
+      </Link>
+    </>
+  );
 
   return (
     <div className="flex flex-row py-1.5 px-4">
@@ -12,6 +78,7 @@ function NavBar() {
           <a>CookBook</a>
         </Link>
       </div>
+
       <div className="w-1/3">
         <form>
           <label
@@ -65,28 +132,7 @@ function NavBar() {
             About
           </a>
         </Link>
-        <Link href="/login">
-          <a
-            className={
-              router.pathname === "/login"
-                ? "text-xl font-semibold justify-center"
-                : "text-xl font-medium justify-center"
-            }
-          >
-            Log In
-          </a>
-        </Link>
-        <Link href="/signup">
-          <a
-            className={
-              router.pathname === "/signup"
-                ? "text-xl font-semibold justify-center"
-                : "text-xl font-medium justify-center"
-            }
-          >
-            Sign Up
-          </a>
-        </Link>
+        {isAuthenticated ? authLinks : guestLinks}
       </div>
     </div>
   );
