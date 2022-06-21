@@ -1,20 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../actions/auth";
+import { useSelector } from "react-redux";
 
 function NavBar() {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  const logoutHandler = () => {
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(logout());
-    }
-  };
 
   const authLinks = (
     <>
@@ -29,18 +21,6 @@ function NavBar() {
           Dashboard
         </a>
       </Link>
-
-      <a
-        className={
-          router.pathname === "/signup"
-            ? "text-xl font-semibold justify-center"
-            : "text-xl font-medium justify-center"
-        }
-        href="#!"
-        onClick={logoutHandler}
-      >
-        Logout
-      </a>
     </>
   );
 

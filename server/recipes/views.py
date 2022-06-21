@@ -17,7 +17,7 @@ from .models import Recipes
 class RecipeViewSet(ModelViewSet):
     serializer_class = RecipesSerializer
     queryset = Recipes.objects.all()
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @action(detail=False)
     def get_list(self, request):

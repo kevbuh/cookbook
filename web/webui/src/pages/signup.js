@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { register } from "../actions/auth";
 import Layout from "../hocs/Layout";
-import router from "next/router";
 
 function signup() {
   const dispatch = useDispatch();
@@ -97,65 +96,3 @@ function signup() {
 }
 
 export default signup;
-
-// import Router from "next/router";
-// import { Formik, Field, Form } from "formik";
-// <div className="ml-6 my-4">
-//   <div className="">
-//     <Formik
-//       initialValues={{
-//         email: "",
-//         password: "",
-//         password2: "",
-//       }}
-//       onSubmit={(values) => {
-//         fetch("http://127.0.0.1:8000/auth/register/", {
-//           method: "POST",
-//           headers: {
-//             "Content-Type": "application/json",
-//             Accept: "application/json, text/plain, */*",
-//             "User-Agent": "*",
-//           },
-//           body: JSON.stringify(values),
-//         })
-//           .then((res) => res.json())
-//           .then((res) => console.log(res.json()))
-//           .catch((error) => console.log("error", error));
-//         Router.reload();
-//       }}
-//     >
-//       <Form className="flex flex-col w-full">
-//         <label htmlFor="email">Email</label>
-//         <Field
-//           id="email"
-//           name="email"
-//           placeholder="email@example.com"
-//           className="bg-slate-200 rounded p-1 my-2 w-2/4"
-//         />
-
-//         <label htmlFor="password">Password</label>
-//         <Field
-//           id="password"
-//           name="password"
-//           placeholder="Password"
-//           className="bg-slate-200 rounded p-1 my-2 w-2/4"
-//         />
-
-//         <label htmlFor="password2">Confirm Password</label>
-//         <Field
-//           id="password2"
-//           name="password2"
-//           placeholder="Confirm Password"
-//           className="bg-slate-200 rounded p-1 my-2 w-2/4"
-//         />
-
-//         <button
-//           type="submit"
-//           className="rounded px-3  py-2 my-2 bg-pink-600 w-1/6 text-white font-medium"
-//         >
-//           Submit
-//         </button>
-//       </Form>
-//     </Formik>
-//   </div>
-// </div>
