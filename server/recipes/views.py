@@ -1,4 +1,3 @@
-from django.shortcuts import render
 
 # Create your views here.
 from recipes.models import Recipes
@@ -7,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework import filters, generics
 
 from rest_framework.viewsets import ModelViewSet
-from .serializers import RecipesSerializer
+from .serializers import RecipesSerializer, ReviewSerializer
 from .models import Recipes, Review
 
 class RecipeViewSet(ModelViewSet):
@@ -31,3 +30,11 @@ class SearchResultsList(generics.ListCreateAPIView):
     search_fields = ['description', 'title']
     serializer_class = RecipesSerializer
     queryset = Recipes.objects.all()
+
+class RatingViewSet(ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing accounts.
+    """
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    # permission_classes = [IsAccountAdminOrReadOnly]

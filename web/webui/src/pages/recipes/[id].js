@@ -8,7 +8,10 @@ function SelectedRecipe(data) {
   const sentData = data.data;
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
+  const [showRate, setShowRate] = useState(false);
+
   const userID = useSelector((state) => state.auth.user?.id);
+
   console.log("USERID:", userID);
 
   return (
@@ -170,7 +173,82 @@ function SelectedRecipe(data) {
                   Delete
                 </button>
               </>
-            ) : null}
+            ) : (
+              <div>
+                {/* <div>Give a rating</div> */}
+
+                {showRate ? (
+                  <div>
+                    <Formik
+                      initialValues={{
+                        user: userID,
+                        rate: "",
+                        recipe: sentData.id,
+                      }}
+                      onSubmit={(values) => {
+                        fetch(`/api/account/post_rating`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(values),
+                        })
+                          .then((res) => res.json())
+                          .catch((error) => console.log("error", error));
+                        router.reload(window.location.pathname);
+                      }}
+                    >
+                      <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-gray-200  mt-6">
+                        <label htmlFor="rate" className=" rounded text-xl">
+                          Rate this recipe below:
+                        </label>
+                        <Field
+                          id="rate"
+                          name="rate"
+                          placeholder="Give a rating 1-5 stars"
+                          className="bg-white rounded p-1 my-2 w-2/4"
+                        />
+
+                        <div className="flex flex-row items-end ">
+                          <button
+                            className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                            onClick={() => setShowRate((showRate) => !showRate)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
+                            // onClick={(values) =>
+                            //   setShowEdit((showEdit) => !showEdit)
+                            // }
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </Form>
+                    </Formik>
+                  </div>
+                ) : (
+                  <button
+                    className="bg-stone-400 p-2 rounded text-white font-semibold"
+                    // onClick={() => {
+                    //   fetch("/api/account/delete_recipe", {
+                    //     method: "POST",
+                    //     headers: {
+                    //       "Content-Type": "application/json",
+                    //     },
+                    //     body: JSON.stringify(sentData.id),
+                    //   }).catch((error) => console.log("error", error));
+                    //   router.push("/");
+                    // }}
+                    onClick={() => setShowRate((showRate) => !showRate)}
+                  >
+                    Rate
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>

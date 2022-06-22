@@ -33,7 +33,7 @@ export default async (req, res) => {
           cookie.serialize("access", data.access, {
             httpOnly: true,
             secure: process.env.NODE_ENV !== "development",
-            maxAge: 60 * 30,
+            maxAge: 60 * 60 * 8,
             sameSite: "strict",
             path: "/api/",
           }),
