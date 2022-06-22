@@ -22,7 +22,6 @@ function SelectedRecipe(data) {
                   author: userID,
                   title: sentData.title,
                   description: sentData.description,
-                  rating: sentData.rating,
                   image: sentData.image,
                   cook_time: sentData.cook_time,
                   price: sentData.price,
@@ -70,14 +69,6 @@ function SelectedRecipe(data) {
                     name="description"
                     placeholder="Description"
                     className="bg-stone-200 rounded p-1 my-2 w-2/4"
-                  />
-
-                  <label htmlFor="author">Rating</label>
-                  <Field
-                    id="rating"
-                    name="rating"
-                    placeholder="Enter Rating"
-                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
                   />
 
                   <label htmlFor="image">Image</label>
@@ -136,7 +127,7 @@ function SelectedRecipe(data) {
               <div>Title: {sentData.title}</div>
             </div>
             <div className="rounded p-1 bg-stone-200 w-1/6">
-              <div>Rating: {sentData.rating}</div>
+              <div>Rating: {sentData.avg_rating}</div>
               <div>Cook Time: {sentData.total_cook_time} mins</div>
               <div>Category:</div>
               {sentData.category.map((d) => (

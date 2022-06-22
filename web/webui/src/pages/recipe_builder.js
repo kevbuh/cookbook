@@ -21,7 +21,6 @@ const AddRecipePage = () => {
                 author: userID,
                 title: "",
                 description: "",
-                rating: "",
                 image: "",
                 cook_time: "",
                 price: "",
@@ -62,14 +61,6 @@ const AddRecipePage = () => {
                   id="description"
                   name="description"
                   placeholder="Description"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                />
-
-                <label htmlFor="author">Rating</label>
-                <Field
-                  id="rating"
-                  name="rating"
-                  placeholder="Enter Rating"
                   className="bg-slate-200 rounded p-1 my-2 w-2/4"
                 />
 

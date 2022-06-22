@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Recipes, Comment, Category
+from .models import Recipes, Comment, Category, Review
 from django.contrib.auth.models import Group
 
 # Register your models here.
@@ -7,6 +7,8 @@ from django.contrib.auth.models import Group
 admin.site.register(Recipes)
 admin.site.register(Comment)
 admin.site.register(Category)
+admin.site.register(Review)
+
 
 
 admin.site.unregister(Group)

@@ -1,11 +1,11 @@
 from django.db import models
 from core.settings import AUTH_USER_MODEL
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db.models import Avg
 
 
 
 # Create your models here.
-
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
@@ -19,12 +19,15 @@ class Recipes(models.Model):
     description = models.TextField(null=True, blank=True, default='')
     private = models.BooleanField(default=False)
     total_cook_time = models.IntegerField(default = 0, null=True, blank=True)
-    rating = models.FloatField(validators=[MinValueValidator(0.0), MaxValueValidator(5.0)],  null=True, blank=True)
+    # rating = models.FloatField(default=0,  null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
+
+    
+        
     
     # ingredient list
     # course
@@ -49,5 +52,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.title
-        
+
+class Review(models.Model):
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews', related_query_name='review')
+    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='reviews', related_query_name='review', blank=True, null=True)
+    rate = models.IntegerField(default=5, validators=[MaxValueValidator(5),MinValueValidator(1)])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
 

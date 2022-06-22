@@ -16,7 +16,6 @@ export default function Home({ data }) {
     }
     return steps;
   };
-
   return (
     <Layout title="CookBook | Home" content="CookBook Home">
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
@@ -29,7 +28,7 @@ export default function Home({ data }) {
                   <Link href={"/recipes/" + d.id}>
                     <a className="underline text-xl font-semibold">{d.title}</a>
                   </Link>
-                  <p>Rating: {d.rating ? getStars(d.rating) : "N/A"}</p>
+                  <p>Rating: {d.avg_rating ? getStars(d.avg_rating) : "N/A"}</p>
                   <p>Time: {d.total_cook_time} mins</p>
                   <p>Description: {d.description}</p>
                 </div>

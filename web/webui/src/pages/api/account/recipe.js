@@ -7,22 +7,13 @@ export default async (req, res) => {
     const access = cookies.access ?? false;
     console.log("ACCESS", access);
     console.log("req body:", req.body);
-    const {
-      author,
-      title,
-      description,
-      rating,
-      image,
-      cook_time,
-      price,
-      source,
-    } = req.body;
+    const { author, title, description, image, cook_time, price, source } =
+      req.body;
 
     const body = JSON.stringify({
       author,
       title,
       description,
-      rating,
       image,
       cook_time,
       price,
