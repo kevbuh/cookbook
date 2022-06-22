@@ -9,10 +9,11 @@ function SelectedRecipe(data) {
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
+  const [liked, setLiked] = useState(false);
 
   const userID = useSelector((state) => state.auth.user?.id);
 
-  console.log("USERID:", userID);
+  // console.log("USERID:", userID);
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
@@ -36,11 +37,6 @@ function SelectedRecipe(data) {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
-                      // Accept: "application/json",
-                      // "User-Agent": "*",
-                      // Authorization:
-                      //   "Bearer " +
-                      //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
                     },
                     body: JSON.stringify(values),
                   })
@@ -50,14 +46,6 @@ function SelectedRecipe(data) {
                 }}
               >
                 <Form className="flex flex-col">
-                  {/* <label htmlFor="author">Author</label>
-                  <Field
-                    id="author"
-                    name="author"
-                    placeholder="Author"
-                    className="bg-stone-200 rounded p-1 my-2 w-2/4"
-                  /> */}
-
                   <label htmlFor="title">Title</label>
                   <Field
                     id="title"
@@ -115,7 +103,6 @@ function SelectedRecipe(data) {
                     <button
                       type="submit"
                       className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
-                      // onClick={() => setShowEdit((showEdit) => !showEdit)}
                     >
                       Save
                     </button>
@@ -137,6 +124,34 @@ function SelectedRecipe(data) {
                 <div>{d.name}</div>
               ))}
               <div>Price: ${sentData.price}</div>
+              {userID && userID === sentData.author ? null : (
+                <div>
+                  {!liked ? (
+                    <button
+                      type="submit"
+                      className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold"
+                      onClick={() => {
+                        fetch("/api/account/like_recipe", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            liked_recipe: sentData.id,
+                            user: userID,
+                          }),
+                        }).catch((error) => console.log("error", error));
+                        // router.push("/");
+                        setLiked((liked) => !liked);
+                      }}
+                    >
+                      Like
+                    </button>
+                  ) : (
+                    <div>You liked this recipe!</div>
+                  )}
+                </div>
+              )}
             </div>
             <div>Private: {sentData.private}</div>
             <div>Image: {sentData.header_image}</div>
@@ -144,6 +159,8 @@ function SelectedRecipe(data) {
             <div>Source: {sentData.source}</div>
             <div>Created: {sentData.created}</div>
             <div>Comments:</div>
+            <div>Number of likes: {sentData.num_likes}</div>
+
             {sentData.comments.map((d) => (
               <div>
                 {d.title} - {d.created}{" "}

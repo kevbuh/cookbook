@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from recipes.models import Recipes, Category, Comment, Review
+from recipes.models import Recipes, Category, Comment, Review, Favorites
 from django.db.models import Avg
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -17,12 +17,19 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
+class LikedPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorites
+        fields = '__all__'
+
 class RecipesSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, required=False)
     category = CategorySerializer(many=True, required=False)
     comments = CommentSerializer(many=True, required=False)
 
     avg_rating = serializers.SerializerMethodField()
+    num_likes = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Recipes
@@ -30,3 +37,9 @@ class RecipesSerializer(serializers.ModelSerializer):
 
     def get_avg_rating(self, obj):
         return obj.reviews.all().aggregate(Avg('rate'))['rate__avg']
+
+    def get_num_likes(self, obj):
+        recipe = Recipes.objects.get(id=obj.id)
+        return recipe.favorites.count()
+
+    

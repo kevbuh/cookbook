@@ -31,6 +31,7 @@ export default function Home({ data }) {
                   <p>Rating: {d.avg_rating ? getStars(d.avg_rating) : "N/A"}</p>
                   <p>Time: {d.total_cook_time} mins</p>
                   <p>Description: {d.description}</p>
+                  <p>Likes: {d.num_likes}</p>
                 </div>
               ))}
             </div>

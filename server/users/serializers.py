@@ -6,10 +6,13 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from core.settings import AUTH_USER_MODEL
 from .models import CustomUser
+from recipes.serializers import RecipesSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     days_since_joined = serializers.SerializerMethodField()
+    favorite_recipes = serializers.SerializerMethodField()
+
     class Meta:
         model = CustomUser
         fields = '__all__'
@@ -17,16 +20,9 @@ class UserSerializer(serializers.ModelSerializer):
     def get_days_since_joined(self, obj):
         return (now() - obj.date_joined).days
 
-
-# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
-
-#         # Add custom claims
-#         token['email'] = user.email
-#         return token
-
+    def get_favorite_recipes(self, obj):
+        user = CustomUser.objects.get(id=obj.id)
+        return user.favorites.values('liked_recipe')
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(

@@ -25,10 +25,6 @@ class Recipes(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
-
-    
-        
-    
     # ingredient list
     # course
     # cuisine
@@ -62,3 +58,13 @@ class Review(models.Model):
     def __str__(self):
         return str(self.id)
 
+class Favorites(models.Model):
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites', related_query_name='favorite')
+    liked_recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='favorites', related_query_name='favorite', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
+
+
+    
