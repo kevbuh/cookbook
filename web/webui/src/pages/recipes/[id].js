@@ -8,7 +8,8 @@ function SelectedRecipe(data) {
   const sentData = data.data;
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
-  const user = useSelector((state) => state.auth?.user);
+  const userID = useSelector((state) => state.auth.user?.id);
+  console.log("USERID:", userID);
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
@@ -18,16 +19,22 @@ function SelectedRecipe(data) {
             <div className="p-6 flex flex-col">
               <Formik
                 initialValues={{
-                  author: "1",
+                  author: userID,
                   title: sentData.title,
                   description: sentData.description,
+                  rating: sentData.rating,
+                  image: sentData.image,
+                  cook_time: sentData.cook_time,
+                  price: sentData.price,
+                  source: sentData.source,
+                  recipeID: sentData.id,
                 }}
                 onSubmit={(values) => {
-                  fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
+                  fetch(`/api/account/update_recipe`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
-                      Accept: "application/json",
+                      // Accept: "application/json",
                       // "User-Agent": "*",
                       // Authorization:
                       //   "Bearer " +
@@ -41,13 +48,13 @@ function SelectedRecipe(data) {
                 }}
               >
                 <Form className="flex flex-col">
-                  <label htmlFor="author">Author</label>
+                  {/* <label htmlFor="author">Author</label>
                   <Field
                     id="author"
                     name="author"
                     placeholder="Author"
                     className="bg-stone-200 rounded p-1 my-2 w-2/4"
-                  />
+                  /> */}
 
                   <label htmlFor="title">Title</label>
                   <Field
@@ -65,21 +72,63 @@ function SelectedRecipe(data) {
                     className="bg-stone-200 rounded p-1 my-2 w-2/4"
                   />
 
-                  <button
-                    type="submit"
-                    className="rounded px-3  py-2 my-2 bg-pink-600 w-1/6 text-white font-medium"
-                  >
-                    Submit
-                  </button>
+                  <label htmlFor="author">Rating</label>
+                  <Field
+                    id="rating"
+                    name="rating"
+                    placeholder="Enter Rating"
+                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  />
+
+                  <label htmlFor="image">Image</label>
+                  <Field
+                    id="image"
+                    name="image"
+                    placeholder="Enter image URL"
+                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  />
+
+                  <label htmlFor="cook_time">Cook Time</label>
+                  <Field
+                    id="cook_time"
+                    name="cook_time"
+                    placeholder="Enter cook time"
+                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  />
+
+                  <label htmlFor="price">Price</label>
+                  <Field
+                    id="price"
+                    name="price"
+                    placeholder="Enter cook time"
+                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  />
+
+                  <label htmlFor="source">Source</label>
+                  <Field
+                    id="source"
+                    name="source"
+                    placeholder="Enter cook time"
+                    className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  />
+                  <div className="flex flex-row items-end ">
+                    <button
+                      className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                      onClick={() => setShowEdit((showEdit) => !showEdit)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
+                      // onClick={() => setShowEdit((showEdit) => !showEdit)}
+                    >
+                      Save
+                    </button>
+                  </div>
                 </Form>
               </Formik>
             </div>
-            <button
-              className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
-              onClick={() => setShowEdit((showEdit) => !showEdit)}
-            >
-              Save
-            </button>
           </div>
         ) : (
           <div>
@@ -106,7 +155,7 @@ function SelectedRecipe(data) {
                 {d.title} - {d.created}{" "}
               </div>
             ))}
-            {user && user.id === sentData.author ? (
+            {userID && userID === sentData.author ? (
               <>
                 <button
                   className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
@@ -117,21 +166,13 @@ function SelectedRecipe(data) {
                 <button
                   className="bg-stone-400 p-2 rounded text-white font-semibold"
                   onClick={() => {
-                    console.log("DELETE CLICKED");
                     fetch("/api/account/delete_recipe", {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
-                        // Accept: "application/json",
-                        // "User-Agent": "*",
-                        // Authorization:
-                        //   "Bearer " +
-                        //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
                       },
                       body: JSON.stringify(sentData.id),
-                    })
-                      .then(console.log("DELETED RECIPE"))
-                      .catch((error) => console.log("error", error));
+                    }).catch((error) => console.log("error", error));
                     router.push("/");
                   }}
                 >

@@ -6,12 +6,9 @@ import { useRouter } from "next/router";
 import { Formik, Field, Form } from "formik";
 
 const AddRecipePage = () => {
-  const dispatch = useDispatch();
   const router = useRouter();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const userID = useSelector((state) => state.auth.user?.id);
-  console.log("USERID:", userID);
-  const loading = useSelector((state) => state.auth.loading);
+  // console.log("USERID:", userID);
 
   return (
     <Layout title="CookBook | Add Recipe">

@@ -46,8 +46,8 @@ function NavBar() {
         <a
           className={
             router.pathname === "/recipe_builder"
-              ? "flex text-xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
-              : "flex text-xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
+              ? "flex text-3xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
+              : "flex text-3xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
           }
         >
           +
