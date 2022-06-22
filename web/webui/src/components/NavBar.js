@@ -42,6 +42,17 @@ function NavBar() {
 
   const authLinks = (
     <>
+      <Link href="/recipe_builder">
+        <a
+          className={
+            router.pathname === "/recipe_builder"
+              ? "flex text-xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
+              : "flex text-xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
+          }
+        >
+          +
+        </a>
+      </Link>
       <Link href="/profile">
         <a
           className={
@@ -58,6 +69,17 @@ function NavBar() {
 
   const guestLinks = (
     <>
+      <Link href="/about">
+        <a
+          className={
+            router.pathname === "/about"
+              ? "text-xl font-semibold justify-center"
+              : "text-xl font-medium justify-center"
+          }
+        >
+          About
+        </a>
+      </Link>
       <Link href="/login">
         <a
           className={
@@ -91,7 +113,7 @@ function NavBar() {
         </Link>
       </div>
 
-      <div className="w-1/2">
+      <div className="w-2/3">
         <form>
           <label
             htmlFor="default-search"
@@ -139,7 +161,7 @@ function NavBar() {
                 data.map((d) => {
                   return (
                     <Link href={"/recipes/" + d.id}>
-                      <a key={d.id}>{d.title}, </a>
+                      <a key={d.id}>{d.title} </a>
                     </Link>
                   );
                 })
@@ -152,17 +174,6 @@ function NavBar() {
       </div>
 
       <div className="w-1/6 justify-center grid grid-cols-3 content-evenly ml-8 ">
-        <Link href="/about">
-          <a
-            className={
-              router.pathname === "/about"
-                ? "text-xl font-semibold justify-center"
-                : "text-xl font-medium justify-center"
-            }
-          >
-            About
-          </a>
-        </Link>
         {isAuthenticated ? authLinks : guestLinks}
       </div>
     </div>

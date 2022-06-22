@@ -9,20 +9,27 @@ export default function Home({ data }) {
   const [showAdd, setShowAdd] = useState(false);
   const [sentData, setSentData] = useState(data);
 
-  // console.log(sentData);
+  const getStars = (num_stars) => {
+    const steps = [];
+    for (let i = 1; i <= num_stars; i++) {
+      steps.push("⭐️");
+    }
+    return steps;
+  };
 
   return (
     <Layout title="CookBook | Home" content="CookBook Home">
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
         <div className="w-2/3">
           <div className="bg-stone-100 rounded-lg p-2">
-            <p className="text-2xl my-2 ml-2 font-semibold">For You:</p>
+            <p className="text-2xl my-2 ml-2 font-semibold">For You</p>
             <div className="grid grid-cols-4 ">
               {sentData.map((d) => (
                 <div key={d.id} className="m-2 bg-zinc-200 rounded-lg  p-2">
                   <Link href={"/recipes/" + d.id}>
                     <a className="underline text-xl font-semibold">{d.title}</a>
                   </Link>
+                  <p>Rating: {d.rating ? getStars(d.rating) : "N/A"}</p>
                   <p>Time: {d.total_cook_time} mins</p>
                   <p>Description: {d.description}</p>
                 </div>

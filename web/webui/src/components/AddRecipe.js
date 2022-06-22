@@ -1,42 +1,36 @@
 import React from "react";
 import { Formik, Field, Form } from "formik";
 import Router from "next/router";
+import { API_URL } from "../config";
 
-const AddRecipe = () => (
-  <div className="p-6 flex flex-col">
+const AddRecipe = ({ userID, cookie }) => (
+  <div className="px-6 flex flex-col">
     <Formik
       initialValues={{
-        author: "1",
+        author: userID,
         title: "",
         description: "",
       }}
       onSubmit={(values) => {
-        fetch("http://127.0.0.1:8000/recipe/", {
+        fetch(`/api/account/recipe/`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json, text/plain, */*",
-            "User-Agent": "*",
-            Authorization:
-              "Bearer " +
-              "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
+            // Accept: "application/json",
+            // Authorization:
+            //   "Bearer " +
+            //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY2MTgxLCJpYXQiOjE2NTU4NjQzODEsImp0aSI6ImE0OGQ3MzZlMGFkZDRjNjg4OTFkN2NkNmQwNTA2NDdhIiwidXNlcl9pZCI6MX0.a7W6pyLA_C2ZcT2Nv4LGv_qE_f2TCXTskSJ5VuzOnO8",
           },
           body: JSON.stringify(values),
         })
-          .then((res) => res.json())
+          .then((res) => {
+            res.json();
+            console.log("HERE IS WHAT WE GOT BACK:", res);
+          })
           .catch((error) => console.log("error", error));
-        Router.reload();
       }}
     >
       <Form className="flex flex-col">
-        <label htmlFor="author">Author</label>
-        <Field
-          id="author"
-          name="author"
-          placeholder="Author"
-          className="bg-slate-200 rounded p-1 my-2 w-2/4"
-        />
-
         <label htmlFor="title">Title</label>
         <Field
           id="title"
@@ -44,6 +38,7 @@ const AddRecipe = () => (
           placeholder="Title"
           className="bg-slate-200 rounded p-1 my-2 w-2/4"
         />
+        {console.log("GOT THIS ID:", userID)}
 
         <label htmlFor="description">Description</label>
         <Field
@@ -52,6 +47,46 @@ const AddRecipe = () => (
           placeholder="Description"
           className="bg-slate-200 rounded p-1 my-2 w-2/4"
         />
+        {/*
+        <label htmlFor="author">Rating</label>
+        <Field
+          id="rating"
+          name="rating"
+          placeholder="Enter Rating"
+          className="bg-slate-200 rounded p-1 my-2 w-2/4"
+        />
+
+        <label htmlFor="image">Image</label>
+        <Field
+          id="image"
+          name="image"
+          placeholder="Enter image URL"
+          className="bg-slate-200 rounded p-1 my-2 w-2/4"
+        />
+
+        <label htmlFor="cook_time">Cook Time</label>
+        <Field
+          id="cook_time"
+          name="cook_time"
+          placeholder="Enter cook time"
+          className="bg-slate-200 rounded p-1 my-2 w-2/4"
+        />
+
+        <label htmlFor="price">Price</label>
+        <Field
+          id="price"
+          name="price"
+          placeholder="Enter cook time"
+          className="bg-slate-200 rounded p-1 my-2 w-2/4"
+        />
+
+        <label htmlFor="source">Source</label>
+        <Field
+          id="source"
+          name="source"
+          placeholder="Enter cook time"
+          className="bg-slate-200 rounded p-1 my-2 w-2/4"
+        /> */}
 
         <button
           type="submit"
