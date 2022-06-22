@@ -1,7 +1,9 @@
 import React from "react";
 import { Formik, Field, Form } from "formik";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { API_URL } from "../config";
+
+// const router = useRouter();
 
 const AddRecipe = ({ userID, cookie }) => (
   <div className="px-6 flex flex-col">
@@ -26,6 +28,7 @@ const AddRecipe = ({ userID, cookie }) => (
           .then((res) => {
             res.json();
             console.log("HERE IS WHAT WE GOT BACK:", res);
+            useRouter().push("/");
           })
           .catch((error) => console.log("error", error));
       }}

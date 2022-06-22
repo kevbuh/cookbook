@@ -3,31 +3,14 @@ import { API_URL } from "../../../config/index";
 
 export default async (req, res) => {
   if (req.method === "POST") {
+    console.log("CALLED DELETE API PAGE******");
+
     const cookies = cookie.parse(req.headers.cookie ?? "");
     const access = cookies.access ?? false;
     console.log("ACCESS", access);
     console.log("req body:", req.body);
-    const {
-      author,
-      title,
-      description,
-      rating,
-      image,
-      cook_time,
-      price,
-      source,
-    } = req.body;
 
-    const body = JSON.stringify({
-      author,
-      title,
-      description,
-      rating,
-      image,
-      cook_time,
-      price,
-      source,
-    });
+    const body = JSON.stringify(req.body);
     console.log("body:", body);
 
     if (access === false) {
@@ -37,29 +20,26 @@ export default async (req, res) => {
     }
 
     try {
-      const apiRes = await fetch("http://127.0.0.1:8000/recipe/", {
-        method: "POST",
+      const apiRes = await fetch(`${API_URL}/recipe/${body}/`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + access,
         },
-        body: body,
       });
-      const data = await apiRes.json();
 
-      if (apiRes.status === 200) {
-        return res.status(200).json({
-          success: "ADDED RECIPE!!!!!",
-          data: data,
+      if (apiRes.status === 204) {
+        return res.status(204).json({
+          success: "DELETED RECIPE!!!!!",
         });
       } else {
         return res.status(apiRes.status).json({
-          success: "FAILED ADD RECIPE",
+          success: "FAILED DELETED RECIPE",
         });
       }
     } catch (err) {
       return res.status(500).json({
-        error: "Something went wrong when retrieving user",
+        error: "Something went wrong when DELETED recipe",
       });
     }
   } else {

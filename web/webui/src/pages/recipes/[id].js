@@ -2,23 +2,13 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Field, Form } from "formik";
 import Layout from "../../hocs/Layout";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
-  // console.log("SENTDATA", sentData);
-  // console.log("ID", sentData.id);
-  // console.log("TITLE", sentData.title);
-  // console.log("DESC", sentData.description);
-  // console.log("CAT", sentData.category);
-  // console.log("RATING", sentData.rating);
-
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth?.user);
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
@@ -116,10 +106,7 @@ function SelectedRecipe(data) {
                 {d.title} - {d.created}{" "}
               </div>
             ))}
-            {user &&
-            user.id === sentData.id &&
-            user !== undefined &&
-            user !== null ? (
+            {user && user.id === sentData.author ? (
               <>
                 <button
                   className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
@@ -130,18 +117,20 @@ function SelectedRecipe(data) {
                 <button
                   className="bg-stone-400 p-2 rounded text-white font-semibold"
                   onClick={() => {
-                    fetch(`http://127.0.0.1:8000/recipe/${sentData.id}/`, {
-                      method: "DELETE",
+                    console.log("DELETE CLICKED");
+                    fetch("/api/account/delete_recipe", {
+                      method: "POST",
                       headers: {
                         "Content-Type": "application/json",
-                        Accept: "application/json",
+                        // Accept: "application/json",
                         // "User-Agent": "*",
                         // Authorization:
                         //   "Bearer " +
                         //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
                       },
+                      body: JSON.stringify(sentData.id),
                     })
-                      // .then(console.log("TRIED TO DELETE"))
+                      .then(console.log("DELETED RECIPE"))
                       .catch((error) => console.log("error", error));
                     router.push("/");
                   }}
@@ -169,14 +158,9 @@ export async function getServerSideProps(context) {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      // "User-Agent": "*",
-      // Authorization:
-      //   "Bearer " +
-      //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1NzYwNTIwLCJpYXQiOjE2NTU3NTg3MjAsImp0aSI6IjU3NjcxMDJlNmNmYjQ3Yjg4Mjg0YjJlYjAxMjZmMGQyIiwidXNlcl9pZCI6MX0.Pd1cgrdCnelSXWNFajfG-jT1PVNYMQZmumXzX5U5C4k",
     },
   });
   const data = await res.json();
-  // console.log("SENT DATA", data);
 
   // Pass data to the page via props
   return { props: { data } };

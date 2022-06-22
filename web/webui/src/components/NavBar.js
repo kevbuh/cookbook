@@ -28,7 +28,7 @@ function NavBar() {
         }
       })
       .then((json) => {
-        console.log("search result:", json);
+        // console.log("search result:", json);
         setData(json);
       })
       .catch((error) => {
