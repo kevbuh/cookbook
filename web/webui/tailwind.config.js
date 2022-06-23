@@ -9,6 +9,15 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      sans: [
+        "San Francisco",
+        "Helvetica Neue",
+        "ui-sans-serif",
+        "system-ui",
+        "-apple-system",
+      ],
+    },
   },
   plugins: [],
 };

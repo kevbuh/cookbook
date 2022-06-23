@@ -43,25 +43,13 @@ function NavBar() {
   const authLinks = (
     <>
       <Link href="/recipe_builder">
-        <a
-          className={
-            router.pathname === "/recipe_builder"
-              ? "flex text-3xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
-              : "flex text-3xl font-medium justify-center rounded-full bg-stone-200 w-1/2 items-center"
-          }
-        >
-          +
+        <a className="flex text-xl font-medium  justify-center items-center ">
+          Add+
         </a>
       </Link>
       <Link href="/profile">
-        <a
-          className={
-            router.pathname === "/profile"
-              ? "text-xl font-semibold justify-center"
-              : "text-xl font-medium justify-center"
-          }
-        >
-          Profile
+        <a className="flex text-xl font-medium  justify-center items-center">
+          Account
         </a>
       </Link>
     </>
@@ -106,10 +94,10 @@ function NavBar() {
   );
 
   return (
-    <div className="flex flex-row py-1.5 px-4">
-      <div className="text-3xl font-medium py-2 w-1/6">
+    <div className="flex flex-row py-2 ">
+      <div className="w-1/6 flex items-center justify-center">
         <Link href="/">
-          <a>CookBook</a>
+          <a className="text-2xl font-medium ">CookBook</a>
         </Link>
       </div>
 
@@ -141,7 +129,7 @@ function NavBar() {
             <input
               type="search"
               id="default-search"
-              className="block p-4 pl-10 w-full text-sm text-black rounded-lg dark:bg-stone-200 "
+              className="block p-4 pl-10 w-full text-sm text-black rounded-lg dark:bg-stone-100 "
               placeholder="Search Recipes, Ingredients..."
               onChange={(e) => setSearchField(e.target.value)}
               onFocus={onFocus}
@@ -173,7 +161,7 @@ function NavBar() {
         </form>
       </div>
 
-      <div className="w-1/6 justify-center grid grid-cols-3 content-evenly ml-8 ">
+      <div className="justify-center w-1/6 grid grid-cols-2 content-evenly items-center">
         {isAuthenticated ? authLinks : guestLinks}
       </div>
     </div>

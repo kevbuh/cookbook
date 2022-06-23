@@ -92,8 +92,8 @@ const AddRecipePage = () => {
                 <Field
                   id="source"
                   name="source"
-                  placeholder="Enter cook time"
                   className="bg-slate-200 rounded p-1 my-2 w-2/4"
+                  placeholder="Enter source"
                 />
 
                 <button
