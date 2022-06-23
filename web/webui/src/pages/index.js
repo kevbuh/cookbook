@@ -24,12 +24,12 @@ export default function Home({ data }) {
             <div className="grid grid-cols-4 ">
               {sentData.map((d) => (
                 <div key={d.id} className="m-2 bg-zinc-200 rounded-lg p-3">
-                  {d.header_image ? (
+                  {/* {d?.uploaded_images[0]?.img ? (
                     <Link href={"/recipes/" + d.id}>
                       <Image
                         className="rounded-3xl cursor-pointer"
-                        loader={() => d.header_image}
-                        src={d.header_image}
+                        loader={() => d.uploaded_images[0].img}
+                        src={d.uploaded_images[0].img}
                         unoptimized={true}
                         width="100%"
                         height="100%"
@@ -37,7 +37,7 @@ export default function Home({ data }) {
                         objectFit="contain"
                       />
                     </Link>
-                  ) : null}
+                  ) : null} */}
                   <Link href={"/recipes/" + d.id}>
                     <a className="text-lg font-semibold ">{d.title}</a>
                   </Link>
@@ -75,6 +75,7 @@ export async function getServerSideProps() {
   });
 
   const data = await res.json();
+  // console.log("data:::", JSON.stringify(res.data));
 
   // Pass data to the page via props
   return { props: { data } };

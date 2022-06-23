@@ -1,5 +1,3 @@
-import React from "react";
-import NavBar from "../components/NavBar";
 import Layout from "../hocs/Layout";
 
 function about() {

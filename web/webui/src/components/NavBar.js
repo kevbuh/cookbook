@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -57,7 +57,7 @@ function NavBar() {
 
   const guestLinks = (
     <>
-      <Link href="/about">
+      {/* <Link href="/about">
         <a
           className={
             router.pathname === "/about"
@@ -67,13 +67,13 @@ function NavBar() {
         >
           About
         </a>
-      </Link>
+      </Link> */}
       <Link href="/login">
         <a
           className={
             router.pathname === "/login"
-              ? "text-xl font-semibold justify-center"
-              : "text-xl font-medium justify-center"
+              ? "ml-8 text-xl font-semibold justify-center"
+              : "ml-8 text-xl font-medium justify-center"
           }
         >
           Log In

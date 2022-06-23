@@ -3,5 +3,8 @@ venv
 
 server/core/settings.py
 
-web/node_modules
-web/package-lock.json
+web/webui/package-lock.json
+web/webui/node_modules
+server/media/images
+web/webui/node_modules 2/
+server/recipes/__pycache__

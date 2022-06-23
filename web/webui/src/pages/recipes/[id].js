@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { Formik, Field, Form } from "formik";
 import Layout from "../../hocs/Layout";
@@ -35,7 +35,7 @@ function SelectedRecipe(data) {
                     author: userID,
                     title: sentData.title,
                     description: sentData.description,
-                    image: sentData.image,
+                    // image: sentData.image,
                     cook_time: sentData.cook_time,
                     price: sentData.price,
                     source: sentData.source,
@@ -71,13 +71,13 @@ function SelectedRecipe(data) {
                       className="bg-stone-100 rounded p-2 my-2 w-2/4 "
                     />
 
-                    <label htmlFor="image">Image</label>
+                    {/* <label htmlFor="image">Image</label>
                     <Field
                       id="image"
                       name="image"
                       placeholder="Enter image URL"
                       className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
+                    /> */}
 
                     <label htmlFor="cook_time">Cook Time</label>
                     <Field
@@ -122,12 +122,12 @@ function SelectedRecipe(data) {
             </div>
           ) : (
             <div>
-              {sentData.header_image ? (
+              {sentData.uploaded_images[0]?.img ? (
                 <div className="w-1/6">
                   <Image
                     className="rounded-3xl"
-                    loader={() => sentData.header_image}
-                    src={sentData.header_image}
+                    loader={() => sentData.uploaded_images[0]?.img}
+                    src={sentData.uploaded_images[0]?.img}
                     unoptimized={true}
                     width="10%"
                     height="10%"
@@ -188,7 +188,7 @@ function SelectedRecipe(data) {
                 )}
               </div>
               <div>Private: {sentData.private}</div>
-              <div>Image: {sentData.header_image}</div>
+              <div>Image: {sentData.uploaded_images[0]?.img}</div>
               <div className="py-4">Description: {sentData.description}</div>
               <div>Source: {sentData.source}</div>
               <div>Created: {sentData.created}</div>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Formik, Field, Form } from "formik";
 import Router, { useRouter } from "next/router";
 import { API_URL } from "../config";
@@ -14,14 +13,10 @@ const AddRecipe = ({ userID, cookie }) => (
         description: "",
       }}
       onSubmit={(values) => {
-        fetch(`/api/account/recipe/`, {
+        fetch("/api/account/recipe/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // Accept: "application/json",
-            // Authorization:
-            //   "Bearer " +
-            //   "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjU1ODY2MTgxLCJpYXQiOjE2NTU4NjQzODEsImp0aSI6ImE0OGQ3MzZlMGFkZDRjNjg4OTFkN2NkNmQwNTA2NDdhIiwidXNlcl9pZCI6MX0.a7W6pyLA_C2ZcT2Nv4LGv_qE_f2TCXTskSJ5VuzOnO8",
           },
           body: JSON.stringify(values),
         })

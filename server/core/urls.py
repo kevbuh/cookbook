@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet, CommentViewSet
+from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet, CommentViewSet, UploadedImageViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -30,19 +30,20 @@ router.register(r'recipe', RecipeViewSet, basename='Recipe')
 router.register(r'rating', RatingViewSet, basename='Review')
 router.register(r'like', LikeRecipeViewSet, basename='LikeRecipe')
 router.register(r'comment', CommentViewSet, basename='Comment')
+router.register(r'upload', UploadedImageViewSet, basename='Image')
 
 
 
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('auth/', include('users.urls')),
+    path("search/", SearchResultsList.as_view(), name="search_results"),
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/token/verify/', TokenVerifyView.as_view()),
-
-    path("search/", SearchResultsList.as_view(), name="search_results"),
-
-    path('auth/', include('users.urls')),
+    # path('upload/', ImageUploadView.as_view()),
+    # path('fetch-images/', GetImagesView.as_view()),
 ]
 
 if settings.DEBUG:

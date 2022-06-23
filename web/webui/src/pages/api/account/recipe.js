@@ -7,17 +7,16 @@ export default async (req, res) => {
     const access = cookies.access ?? false;
     console.log("ACCESS", access);
     console.log("req body:", req.body);
-    const { author, title, description, image, cook_time, price, source } =
+    const { author, title, description, total_cook_time, price, source } =
       req.body;
 
     const body = JSON.stringify({
       author,
       title,
       description,
-      image,
-      cook_time,
-      price,
-      source,
+      // total_cook_time,
+      // price,
+      // source,
     });
     console.log("body:", body);
 
@@ -28,7 +27,7 @@ export default async (req, res) => {
     }
 
     try {
-      const apiRes = await fetch("http://127.0.0.1:8000/recipe/", {
+      const apiRes = await fetch(`${API_URL}/recipe/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

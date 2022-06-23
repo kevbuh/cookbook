@@ -1,9 +1,6 @@
 from django.db import models
 from core.settings import AUTH_USER_MODEL
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models import Avg
-
-
 
 # Create your models here.
 class Category(models.Model):
@@ -12,14 +9,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Recipes(models.Model):
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
-    header_image = models.ImageField(null=True, blank=True, upload_to="images/")
     title =  models.CharField(max_length=255, blank=True, default='')
     description = models.TextField(null=True, blank=True, default='')
     private = models.BooleanField(default=False)
     total_cook_time = models.IntegerField(default = 0, null=True, blank=True)
-    # rating = models.FloatField(default=0,  null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
@@ -37,6 +33,15 @@ class Recipes(models.Model):
 
     def __str__(self):
         return self.title
+
+class UploadedImage(models.Model):
+    image = models.ImageField(null=True, blank=True, upload_to="images/")
+    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image', blank=True, null=True)
+    # user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image')
+    created = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
 
 class Comment(models.Model):
     title = models.CharField(max_length=255)
