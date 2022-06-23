@@ -10,10 +10,9 @@ function SelectedRecipe(data) {
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [comment, setComment] = useState(false);
 
   const userID = useSelector((state) => state.auth.user?.id);
-
-  // console.log("USERID:", userID);
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
@@ -192,8 +191,6 @@ function SelectedRecipe(data) {
               </>
             ) : (
               <div>
-                {/* <div>Give a rating</div> */}
-
                 {showRate ? (
                   <div>
                     <Formik
@@ -236,9 +233,6 @@ function SelectedRecipe(data) {
                           <button
                             type="submit"
                             className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
-                            // onClick={(values) =>
-                            //   setShowEdit((showEdit) => !showEdit)
-                            // }
                           >
                             Submit
                           </button>
@@ -249,19 +243,76 @@ function SelectedRecipe(data) {
                 ) : (
                   <button
                     className="bg-stone-400 p-2 rounded text-white font-semibold"
-                    // onClick={() => {
-                    //   fetch("/api/account/delete_recipe", {
-                    //     method: "POST",
-                    //     headers: {
-                    //       "Content-Type": "application/json",
-                    //     },
-                    //     body: JSON.stringify(sentData.id),
-                    //   }).catch((error) => console.log("error", error));
-                    //   router.push("/");
-                    // }}
                     onClick={() => setShowRate((showRate) => !showRate)}
                   >
                     Rate
+                  </button>
+                )}
+                {comment ? (
+                  <div>
+                    <Formik
+                      initialValues={{
+                        user: userID,
+                        title: "",
+                        content: "",
+                        recipe: sentData.id,
+                      }}
+                      onSubmit={(values) => {
+                        fetch(`/api/account/post_comment`, {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify(values),
+                        })
+                          .then((res) => res.json())
+                          .catch((error) => console.log("error", error));
+                        router.reload(window.location.pathname);
+                      }}
+                    >
+                      <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-gray-200  mt-6">
+                        <label htmlFor="title" className=" rounded text-xl">
+                          Title
+                        </label>
+                        <Field
+                          id="title"
+                          name="title"
+                          placeholder="Enter a comment title"
+                          className="bg-white rounded p-1 my-2 w-2/4"
+                        />
+                        <label htmlFor="content" className=" rounded text-xl">
+                          Content
+                        </label>
+                        <Field
+                          id="content"
+                          name="content"
+                          placeholder="Give a description"
+                          className="bg-white rounded p-1 my-2 w-2/4"
+                        />
+
+                        <div className="flex flex-row items-end ">
+                          <button
+                            className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                            onClick={() => setComment((comment) => !comment)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </Form>
+                    </Formik>
+                  </div>
+                ) : (
+                  <button
+                    className="bg-stone-400 p-2 rounded text-white font-semibold ml-4"
+                    onClick={() => setComment((comment) => !comment)}
+                  >
+                    Comment
                   </button>
                 )}
               </div>

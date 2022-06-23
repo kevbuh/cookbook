@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet
+from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet, CommentViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,6 +29,8 @@ router = DefaultRouter()
 router.register(r'recipe', RecipeViewSet, basename='Recipe')
 router.register(r'rating', RatingViewSet, basename='Review')
 router.register(r'like', LikeRecipeViewSet, basename='LikeRecipe')
+router.register(r'comment', CommentViewSet, basename='Comment')
+
 
 
 urlpatterns = [

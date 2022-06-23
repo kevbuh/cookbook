@@ -6,8 +6,8 @@ from rest_framework.decorators import action
 from rest_framework import filters, generics
 
 from rest_framework.viewsets import ModelViewSet
-from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer
-from .models import Recipes, Review, Favorites
+from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer, CommentSerializer
+from .models import Recipes, Review, Favorites, Comment
 
 class RecipeViewSet(ModelViewSet):
     serializer_class = RecipesSerializer
@@ -45,4 +45,12 @@ class LikeRecipeViewSet(ModelViewSet):
     """
     queryset = Favorites.objects.all()
     serializer_class = LikedPostSerializer
+    # permission_classes = [IsAccountAdminOrReadOnly]
+
+class CommentViewSet(ModelViewSet):
+    """
+    A simple ViewSet for viewing and editing accounts.
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
     # permission_classes = [IsAccountAdminOrReadOnly]
