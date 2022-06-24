@@ -3,9 +3,14 @@ import Link from "next/link";
 import Layout from "../hocs/Layout";
 import { API_URL } from "../config";
 import Image from "next/image";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 export default function Home({ data }) {
   const [sentData, setSentData] = useState(data);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loading = useSelector((state) => state.auth.loading);
+  const router = useRouter();
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -14,6 +19,9 @@ export default function Home({ data }) {
     }
     return steps;
   };
+
+  if (typeof window !== "undefined" && !loading && !isAuthenticated)
+    router.push("/about");
 
   return (
     <Layout title="CookBook | Home" content="CookBook Home">
@@ -29,18 +37,23 @@ export default function Home({ data }) {
                       <Image
                         className="rounded-3xl cursor-pointer"
                         loader={() => d.image}
+                        // layout="fill"
+                        objectFit="cover"
                         src={d.image}
-                        unoptimized={true}
+                        // unoptimized={true}
                         width="100%"
                         height="100%"
-                        layout="responsive"
-                        objectFit="contain"
+                        // layout="fill"
+                        position="relative"
+                        // objectFit="contain"
                       />
                     </Link>
                   ) : null}
-                  <Link href={"/recipes/" + d.id}>
-                    <a className="text-lg font-semibold ">{d.title}</a>
-                  </Link>
+                  <div>
+                    <Link href={"/recipes/" + d.id}>
+                      <a className="text-lg font-semibold ">{d.title}</a>
+                    </Link>
+                  </div>
                   {d.avg_rating ? (
                     <div>
                       {d.avg_rating.toFixed(2)}{" "}

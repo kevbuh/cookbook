@@ -98,6 +98,7 @@ export const request_refresh = () => async (dispatch) => {
 
 export const register = (email, password, password2) => async (dispatch) => {
   const body = JSON.stringify({ email, password, password2 });
+  console.log("register dispatch", body);
   dispatch({
     type: SET_AUTH_LOADING,
   });

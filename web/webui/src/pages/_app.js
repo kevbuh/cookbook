@@ -9,7 +9,7 @@ const App = ({ Component, pageProps }) => {
   return (
     <Provider store={store}>
       <Head>
-        <title>CookBook, the one-stop shop for everything food</title>
+        <title>CookBook, the Food Platform</title>
       </Head>
       <Component {...pageProps} />
     </Provider>
