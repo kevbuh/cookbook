@@ -4,18 +4,78 @@ import Layout from "../hocs/Layout";
 import { logout } from "../actions/auth";
 import { API_URL } from "../config";
 import Link from "next/link";
+import { useState } from "react";
 
 const Profile = () => {
   const dispatch = useDispatch();
+  const [reset, setReset] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth?.user);
   const loading = useSelector((state) => state.auth.loading);
+  const userID = useSelector((state) => state.auth.user?.id);
+
+  const [formData, setFormData] = useState({
+    old_password: "",
+    password: "",
+    password2: "",
+  });
+
+  const { old_password, password, password2 } = formData;
+
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const logoutHandler = () => {
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(logout());
+    }
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    // if (dispatch && dispatch !== null && dispatch !== undefined) {
+    //   dispatch(register(email, password, password2));
+    // }
+
+    try {
+      const res = await fetch(`/api/account/file_test`, {
+        // gets the user token
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        // body: formData,
+      });
+      const token = await res.json();
+      // console.log(token.token);
+      // console.log("GOT TOKEN");
+
+      // console.log("form data in profile", formData);
+
+      const res2 = await fetch(`${API_URL}/auth/change_password/${userID}/`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token.token,
+          // Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      // console.log(res2.status);
+
+      if (res2.status === 200) {
+        // setUpdated(!updated);
+        console.log("SUCCESS RESET PASSWORD AYY");
+        setSuccess(!success);
+        setReset(!reset);
+      }
+    } catch (err) {
+      console.log("failed at profile.js catch");
     }
   };
 
@@ -33,23 +93,23 @@ const Profile = () => {
               Welcome, User #{user !== null && user.id}
             </p>
           </div>
-          {console.log("user1:::::", user.favorite_recipes)}
+          {/* {console.log("user1:::::", user?.favorite_recipes)} */}
           <p className="text-lg m-6">Your favorites:</p>
           <div className="flex flex-col ">
-            {user.favorite_recipes ? (
+            {user?.favorite_recipes ? (
               user.favorite_recipes.map((d) => {
-                console.log("user2:::::", user.favorite_recipes);
+                // console.log("user2:::::", user.favorite_recipes);
 
-                console.log("favorites:::::", d.liked_recipe);
-                console.log("data id:::::", d.id);
+                // console.log("favorites:::::", d.liked_recipe);
+                // console.log("data id:::::", d.id);
 
                 return (
                   <Link href={"/recipes/" + d.liked_recipe}>
                     <a
                       className="text-lg underline bg-stone-100 rounded p-2 my-2 w-1/4 items-center"
-                      key={d.liked_recipe}
+                      key={d?.liked_recipe}
                     >
-                      Recipe #{d.liked_recipe}{" "}
+                      Recipe #{d?.liked_recipe}{" "}
                     </a>
                   </Link>
                 );
@@ -63,6 +123,69 @@ const Profile = () => {
           </p> */}
 
           <p className="text-lg m-6">Recently Viewed:</p>
+          {success ? <div>Changed Password Successfully!</div> : null}
+          {!reset ? (
+            <button
+              className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+              onClick={() => setReset((reset) => !reset)}
+            >
+              Reset password
+            </button>
+          ) : (
+            <div>
+              <div>
+                <label htmlFor="old_password">
+                  <strong>old_password*</strong>
+                </label>
+                <input
+                  type="text"
+                  name="old_password"
+                  placeholder="old_password"
+                  onChange={onChange}
+                  value={old_password}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="password">
+                  <strong>Password*</strong>
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  onChange={onChange}
+                  value={password}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="password2">
+                  <strong>Confirm Password*</strong>
+                </label>
+                <input
+                  type="password"
+                  name="password2"
+                  placeholder="Confirm Password"
+                  onChange={onChange}
+                  value={password2}
+                  required
+                />
+              </div>
+              <button
+                className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                onClick={() => setReset((reset) => !reset)}
+              >
+                Cancel
+              </button>
+              <button
+                className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                onClick={onSubmit}
+              >
+                Confirm
+              </button>
+            </div>
+          )}
           <p className="text-lg m-6">Settings:</p>
           <a
             className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
