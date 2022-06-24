@@ -21,6 +21,8 @@ class Recipes(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
+    image = models.ImageField(null=True, blank=True, upload_to="images/")
+
     # ingredient list
     # course
     # cuisine
@@ -34,14 +36,14 @@ class Recipes(models.Model):
     def __str__(self):
         return self.title
 
-class UploadedImage(models.Model):
-    image = models.ImageField(null=True, blank=True, upload_to="images/")
-    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image', blank=True, null=True)
-    # user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image')
-    created = models.DateField(auto_now_add=True)
+# class UploadedImage(models.Model):
+#     image = models.ImageField(null=True, blank=True, upload_to="images/")
+#     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image', blank=True, null=True)
+#     # user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='uploaded_images', related_query_name='uploaded_image')
+#     created = models.DateField(auto_now_add=True)
 
-    def __str__(self):
-        return str(self.id)
+#     def __str__(self):
+#         return str(self.id)
 
 class Comment(models.Model):
     title = models.CharField(max_length=255)

@@ -4,16 +4,26 @@ import { Formik, Field, Form } from "formik";
 import Layout from "../../hocs/Layout";
 import { useSelector } from "react-redux";
 import Image from "next/image";
+import { API_URL } from "../../config/index";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
+  const [newFile, setNewFile] = useState(false);
+
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState(false);
 
   const userID = useSelector((state) => state.auth.user?.id);
+
+  const [image, setImage] = useState(sentData.image);
+  const [title, setTitle] = useState(sentData.title);
+  const [description, setDescription] = useState(sentData.description);
+  const [cookTime, setCookTime] = useState(sentData.total_cook_time);
+  const [price, setPrice] = useState(sentData.price);
+  const [updated, setUpdated] = useState(false);
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -23,6 +33,74 @@ function SelectedRecipe(data) {
     return steps;
   };
 
+  const onFileChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+  const onTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+  const onDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const onCookTimeChange = (e) => {
+    setCookTime(e.target.value);
+  };
+
+  const onPriceChange = (e) => {
+    setPrice(e.target.value);
+  };
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    // formData.append("image", image);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("total_cook_time", cookTime);
+    formData.append("price", price);
+    formData.append("author", userID);
+
+    try {
+      // console.log("SENT");
+      // console.log("sending:::", title, userID, sentData.id);
+      // console.log("UPDATING RECIPE");
+      const res = await fetch(`/api/account/file_test`, {
+        // gets the user token
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+        body: formData,
+      });
+      const token = await res.json();
+      console.log(token.token);
+      console.log(`${API_URL}/recipe/${sentData.id}/`);
+
+      const res2 = await fetch(`${API_URL}/recipe/${sentData.id}/`, {
+        method: "PUT",
+        headers: {
+          Authorization: "Bearer " + token.token,
+          Accept: "application/json",
+          // "Content-Type": "multipart/form-data", // DON'T PUT THIS IT DOESN'T WORK IF YOU DO
+        },
+        body: formData,
+      });
+      // const data = await apiRes.json();
+      // console.log("MADE IT PAST RES2", data);
+      // console.log("got this ststus:", res2.status);
+      if (res2.status === 200) {
+        setUpdated(!updated);
+        console.log("SUCCESS RECIPE UPDATED AYY");
+      }
+      // setShowEdit((showEdit) => !showEdit);
+      router.reload(window.location.pathname);
+    } catch (err) {
+      console.log("failed at [id] catch");
+    }
+  };
+
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
       <div className=" flex flex-col justify-self-center self-center items-center">
@@ -30,7 +108,7 @@ function SelectedRecipe(data) {
           {showEdit ? (
             <div>
               <div className="p-6 flex flex-col">
-                <Formik
+                {/* <Formik
                   initialValues={{
                     author: userID,
                     title: sentData.title,
@@ -61,17 +139,17 @@ function SelectedRecipe(data) {
                       name="title"
                       placeholder="Title"
                       className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
+                    /> */}
 
-                    <label htmlFor="description">Description</label>
-                    <Field
-                      id="description"
-                      name="description"
-                      placeholder="Description"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
+                {/* <label htmlFor="description">Description</label>
+                <Field
+                  id="description"
+                  name="description"
+                  placeholder="Description"
+                  className="bg-stone-100 rounded p-2 my-2 w-2/4 "
+                /> */}
 
-                    {/* <label htmlFor="image">Image</label>
+                {/* <label htmlFor="image">Image</label>
                     <Field
                       id="image"
                       name="image"
@@ -79,7 +157,7 @@ function SelectedRecipe(data) {
                       className="bg-stone-100 rounded p-2 my-2 w-2/4 "
                     /> */}
 
-                    <label htmlFor="cook_time">Cook Time</label>
+                {/* <label htmlFor="cook_time">Cook Time</label>
                     <Field
                       id="cook_time"
                       name="cook_time"
@@ -117,17 +195,107 @@ function SelectedRecipe(data) {
                       </button>
                     </div>
                   </Form>
-                </Formik>
+                </Formik> */}
+                <form onSubmit={onSubmit}>
+                  <div>
+                    <label htmlFor="title">Recipe Name</label>
+                    <input
+                      type="text"
+                      name="title"
+                      onChange={onTitleChange}
+                      value={title}
+                      required
+                      className="p-2 ml-2 "
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="description">
+                      <strong>Description*</strong>
+                    </label>
+                    <input
+                      type="text"
+                      name="description"
+                      placeholder="Description"
+                      onChange={onDescriptionChange}
+                      value={description}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="total_cook_time">
+                      <strong>total_cook_time*</strong>
+                    </label>
+                    <input
+                      type="number"
+                      name="total_cook_time"
+                      placeholder="total_cook_time"
+                      onChange={onCookTimeChange}
+                      value={cookTime}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="price">
+                      <strong>price*</strong>
+                    </label>
+                    <input
+                      type="number"
+                      name="price"
+                      placeholder="price"
+                      onChange={onPriceChange}
+                      value={price}
+                      required
+                    />
+                  </div>
+                  {/* {!newFile ? (
+                    <button onClick={() => setNewFile((newFile) => !newFile)}>
+                      Edit Photo
+                    </button>
+                  ) : (
+                    <div>
+                      <div>
+                        <label htmlFor="image">Image Upload</label>
+                        <input
+                          type="file"
+                          name="image"
+                          onChange={onFileChange}
+                          // value={image}
+                          // src={`${image}`}
+                          required
+                          className="p-2 ml-2 "
+                        />
+                      </div>
+                      <button onClick={() => setNewFile((newFile) => !newFile)}>
+                        Cancel
+                      </button>
+                    </div>
+                  )} */}
+                  <div className="flex flex-row items-end ">
+                    <button
+                      className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                      onClick={() => setShowEdit((showEdit) => !showEdit)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="bg-emerald-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                      type="submit"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+                {updated ? <div>Edited recipe!</div> : null}
               </div>
             </div>
           ) : (
             <div>
-              {sentData.uploaded_images[0]?.img ? (
+              {sentData.image ? (
                 <div className="w-1/6">
                   <Image
                     className="rounded-3xl"
-                    loader={() => sentData.uploaded_images[0]?.img}
-                    src={sentData.uploaded_images[0]?.img}
+                    loader={() => sentData.image}
+                    src={sentData.image}
                     unoptimized={true}
                     width="10%"
                     height="10%"
@@ -188,7 +356,7 @@ function SelectedRecipe(data) {
                 )}
               </div>
               <div>Private: {sentData.private}</div>
-              <div>Image: {sentData.uploaded_images[0]?.img}</div>
+              <div>Image: {sentData.image}</div>
               <div className="py-4">Description: {sentData.description}</div>
               <div>Source: {sentData.source}</div>
               <div>Created: {sentData.created}</div>

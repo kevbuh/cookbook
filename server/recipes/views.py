@@ -8,8 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from rest_framework.viewsets import ModelViewSet
-from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer, CommentSerializer, UploadedImageSerializer
-from .models import Recipes, Review, Favorites, Comment, UploadedImage
+from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer, CommentSerializer
+from .models import Recipes, Review, Favorites, Comment
 from rest_framework.parsers import MultiPartParser
 
 
@@ -51,9 +51,9 @@ class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
-class UploadedImageViewSet(ModelViewSet):
-    queryset = UploadedImage.objects.all()
-    serializer_class = UploadedImageSerializer
+# class UploadedImageViewSet(ModelViewSet):
+#     queryset = UploadedImage.objects.all()
+#     serializer_class = UploadedImageSerializer
 
 # class UploadedImageViewSet(generics.ListAPIView):
 #     # parser_classes = (MultiPartParser,)

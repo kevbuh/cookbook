@@ -24,12 +24,12 @@ export default function Home({ data }) {
             <div className="grid grid-cols-4 ">
               {sentData.map((d) => (
                 <div key={d.id} className="m-2 bg-zinc-200 rounded-lg p-3">
-                  {/* {d?.uploaded_images[0]?.img ? (
+                  {d?.image ? (
                     <Link href={"/recipes/" + d.id}>
                       <Image
                         className="rounded-3xl cursor-pointer"
-                        loader={() => d.uploaded_images[0].img}
-                        src={d.uploaded_images[0].img}
+                        loader={() => d.image}
+                        src={d.image}
                         unoptimized={true}
                         width="100%"
                         height="100%"
@@ -37,18 +37,18 @@ export default function Home({ data }) {
                         objectFit="contain"
                       />
                     </Link>
-                  ) : null} */}
+                  ) : null}
                   <Link href={"/recipes/" + d.id}>
                     <a className="text-lg font-semibold ">{d.title}</a>
                   </Link>
                   {d.avg_rating ? (
                     <div>
                       {d.avg_rating.toFixed(2)}{" "}
-                      {d.avg_rating ? getStars(d.avg_rating) : "N/A"} - (
+                      {d.avg_rating ? getStars(d.avg_rating) : "No rating"} - (
                       {d.reviews.length})
                     </div>
                   ) : (
-                    <div>N/A</div>
+                    <div>No Rating</div>
                   )}
                   <p>Time: {d.total_cook_time} mins</p>
                   <p>Description: {d.description}</p>

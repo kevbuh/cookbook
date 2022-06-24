@@ -7,7 +7,11 @@ import { API_URL } from "../config";
 
 const AddRecipePage = () => {
   const [image, setImage] = useState(null);
-  const [images, setImages] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [cookTime, setCookTime] = useState(null);
+  const [price, setPrice] = useState(null);
+
   const [updated, setUpdated] = useState(false);
   const router = useRouter();
   const userID = useSelector((state) => state.auth.user?.id);
@@ -34,22 +38,37 @@ const AddRecipePage = () => {
 
   const onFileChange = (e) => {
     setImage(e.target.files[0]);
-    console.log("changed image in react state");
+  };
+  const onTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+  const onDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const onCookTimeChange = (e) => {
+    setCookTime(e.target.value);
+  };
+
+  const onPriceChange = (e) => {
+    setPrice(e.target.value);
   };
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("DOING FORM DATA");
     const formData = new FormData();
 
     formData.append("image", image);
-    // formData.append("user1", userID);
-    formData.append("recipe", 23);
-    // console.log("NEW", JSON.stringify(Object.fromEntries(formData)));
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("total_cook_time", cookTime);
+    formData.append("price", price);
+    formData.append("author", userID);
 
     try {
       const res = await fetch(`/api/account/file_test`, {
+        // gets the user token
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -60,11 +79,9 @@ const AddRecipePage = () => {
       const token = await res.json();
       console.log(token.token);
 
-      const res2 = await fetch(`${API_URL}/upload/`, {
+      const res2 = await fetch(`${API_URL}/recipe/`, {
         method: "POST",
         headers: {
-          // Accept: "application/json",
-          // "Content-Type": "multipart/form-data",
           Authorization: "Bearer " + token.token,
         },
         body: formData,
@@ -72,7 +89,7 @@ const AddRecipePage = () => {
 
       if (res2.status === 201) {
         setUpdated(!updated);
-        console.log("SUCCESS FILE ADDED AYY");
+        console.log("SUCCESS RECIPE ADDED AYY");
       }
     } catch (err) {
       console.log("failed at file_test.js catch");
@@ -171,6 +188,55 @@ const AddRecipePage = () => {
             </Formik> */}
             <form onSubmit={onSubmit}>
               <div>
+                <label htmlFor="title">Recipe Name</label>
+                <input
+                  type="text"
+                  name="title"
+                  onChange={onTitleChange}
+                  required
+                  className="p-2 ml-2 "
+                />
+              </div>
+              <div>
+                <label htmlFor="description">
+                  <strong>Description*</strong>
+                </label>
+                <input
+                  type="text"
+                  name="description"
+                  placeholder="Description"
+                  onChange={onDescriptionChange}
+                  value={description}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="total_cook_time">
+                  <strong>total_cook_time*</strong>
+                </label>
+                <input
+                  type="number"
+                  name="total_cook_time"
+                  placeholder="total_cook_time"
+                  onChange={onCookTimeChange}
+                  value={cookTime}
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="price">
+                  <strong>price*</strong>
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  placeholder="price"
+                  onChange={onPriceChange}
+                  value={price}
+                  required
+                />
+              </div>
+              <div>
                 <label htmlFor="image">Image Upload</label>
                 <input
                   type="file"
@@ -181,10 +247,10 @@ const AddRecipePage = () => {
                 />
               </div>
               <button className="p-2 mt-5 bg-emerald-400 rounded" type="submit">
-                Upload Image
+                Create
               </button>
             </form>
-            {updated ? <div>Submitted image!</div> : null}
+            {updated ? <div>Submitted recipe!</div> : null}
           </div>
         </div>
       </div>

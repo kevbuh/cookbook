@@ -6,28 +6,28 @@ export default async (req, res) => {
     const cookies = cookie.parse(req.headers.cookie ?? "");
     const access = cookies.access ?? false;
     // console.log("ACCESS", access);
-    // console.log("req body:", req.body);
-    const {
-      author,
-      title,
-      description,
-      image,
-      cook_time,
-      price,
-      source,
-      recipeID,
-    } = req.body;
+    console.log("req body in update_recipe.js:", req.body.recipeID);
+    // const {
+    //   author,
+    //   title,
+    //   description,
+    //   image,
+    //   cook_time,
+    //   price,
+    //   source,
+    //   recipeID,
+    // } = req.body;
 
-    const body = JSON.stringify({
-      author,
-      title,
-      description,
-      image,
-      cook_time,
-      price,
-      source,
-      recipeID,
-    });
+    // const body = JSON.stringify({
+    //   author,
+    //   title,
+    //   description,
+    //   image,
+    //   cook_time,
+    //   price,
+    //   source,
+    //   recipeID,
+    // });
     // console.log("body:", body);
 
     if (access === false) {
@@ -43,7 +43,7 @@ export default async (req, res) => {
           "Content-Type": "application/json",
           Authorization: "Bearer " + access,
         },
-        body: body,
+        body: req.body,
       });
       const data = await apiRes.json();
 
