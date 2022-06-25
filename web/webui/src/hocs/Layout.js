@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { request_refresh, check_auth_status } from "../actions/auth";
+import Footer from "../components/Footer";
 
 function Layout({ title, content, children }) {
   const dispatch = useDispatch();
@@ -20,6 +21,7 @@ function Layout({ title, content, children }) {
       </Head>
       <NavBar />
       <div>{children}</div>
+      <Footer />
     </>
   );
 }

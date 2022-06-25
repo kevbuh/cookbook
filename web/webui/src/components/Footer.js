@@ -1,10 +1,4 @@
-import Head from "next/head";
-import NavBar from "../components/NavBar";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { request_refresh, check_auth_status } from "../actions/auth";
-
-function Footer() {
+const Footer = () => {
   return (
     <footer className="footer p-10 bg-base-300 text-base-content">
       <div>
@@ -61,6 +55,6 @@ function Footer() {
       </div>
     </footer>
   );
-}
+};
 
 export default Footer;

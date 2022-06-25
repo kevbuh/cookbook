@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { register, login, reset_register_success } from "../actions/auth";
 import Link from "next/link";
 // import Footer from "../hocs/Footer";
+import Footer from "../components/Footer";
 
 function about() {
   const dispatch = useDispatch();

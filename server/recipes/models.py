@@ -22,7 +22,8 @@ class Recipes(models.Model):
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/")
-
+    # caption
+    # number of clicks/views
     # ingredient list
     # course
     # cuisine

@@ -5,6 +5,7 @@ import Layout from "../../hocs/Layout";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { API_URL } from "../../config/index";
+import Footer from "../../components/Footer";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
@@ -336,9 +337,25 @@ function SelectedRecipe(data) {
                   {/* <div></div> */}
                   {/* <div className="stat"> */}
                   <div className="flex flex-col items-center justify-center">
-                    <div className="stat-title">Time</div>
+                    <div className="stat-title flex flex-row">
+                      Time{" "}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
                     <div className="stat-value">
-                      {sentData.total_cook_time} mins
+                      <p>{sentData.total_cook_time} mins</p>
                     </div>
                     <div class="stat-desc">↗︎ 400 (22%)</div>
                   </div>
@@ -590,6 +607,7 @@ function SelectedRecipe(data) {
           )}
         </div>
       </div>
+      {/* <Footer /> */}
     </Layout>
   );
 }
