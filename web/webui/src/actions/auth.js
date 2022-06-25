@@ -18,6 +18,8 @@ import {
 
 export const load_user = () => async (dispatch) => {
   try {
+    console.log("GOT HERE 11");
+
     const res = await fetch("/api/account/user", {
       method: "GET",
       headers: {
@@ -25,7 +27,9 @@ export const load_user = () => async (dispatch) => {
       },
     });
 
+    console.log("GOT HERE 22");
     const data = await res.json();
+    console.log("GOT HERE 33,", res.status);
 
     if (res.status === 200) {
       dispatch({
