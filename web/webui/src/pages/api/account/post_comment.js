@@ -8,7 +8,8 @@ export default async (req, res) => {
     // console.log("ACCESS", access);
     // console.log("req body:", req.body);
     const { title, content, user, recipe } = req.body;
-    console.log("REQ BODY", req.body);
+    // console.log("REQ BODY", req.body);
+    console.log("IN COMMENT API");
 
     const body = JSON.stringify({
       title,

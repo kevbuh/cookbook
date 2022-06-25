@@ -25,6 +25,8 @@ function SelectedRecipe(data) {
   const [price, setPrice] = useState(sentData.price);
   const [updated, setUpdated] = useState(false);
 
+  console.log(sentData);
+
   const getStars = (num_stars) => {
     const steps = [];
     for (let i = 1; i <= num_stars; i++) {
@@ -272,13 +274,13 @@ function SelectedRecipe(data) {
                   )} */}
                   <div className="flex flex-row items-end ">
                     <button
-                      className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                      className=" p-2 mr-3 my-2 rounded font-semibold w-1/6"
                       onClick={() => setShowEdit((showEdit) => !showEdit)}
                     >
                       Cancel
                     </button>
                     <button
-                      className="bg-emerald-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                      className="bg-pink-600 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
                       type="submit"
                     >
                       Save
@@ -315,119 +317,113 @@ function SelectedRecipe(data) {
                     />
                   </div>
                 ) : null}
-                <div class="stats stats-vertical shadow ml-8">
-                  <div class="stat">
-                    <div class="stat-title">Rating</div>
-                    <div class="stat-value">
-                      {sentData.avg_rating.toFixed(2)} ⭐️
+
+                <div className="stats stats-vertical shadow ml-8 border  ">
+                  <div className="stat">
+                    <div className="stat-title">Rating</div>
+                    <div className="stat-value">
+                      {sentData?.avg_rating ? (
+                        <p>{sentData.avg_rating.toFixed(2)} ⭐️</p>
+                      ) : (
+                        <p>No ratings yet!</p>
+                      )}
                     </div>
-                    <div class="stat-desc">
-                      {/* {sentData.avg_rating
-                        ? getStars(sentData.avg_rating)
-                        : "N/A"}{" "} */}
+                    <div className="stat-desc">
                       {sentData.num_likes} Saves, ({sentData.reviews.length})
                       Reviews
                     </div>
                   </div>
-
-                  <div class="stat">
-                    <div class="stat-title">Time</div>
-                    <div class="stat-value">
+                  {/* <div></div> */}
+                  {/* <div className="stat"> */}
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="stat-title">Time</div>
+                    <div className="stat-value">
                       {sentData.total_cook_time} mins
                     </div>
-                    {/* <div class="stat-desc">↗︎ 400 (22%)</div> */}
+                    <div class="stat-desc">↗︎ 400 (22%)</div>
                   </div>
 
-                  <div class="stat">
-                    <div class="stat-title">Cost</div>
-                    <div class="stat-value">${sentData.price}</div>
-                    {/* <div class="stat-desc">↘︎ 90 (14%)</div> */}
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="stat-title">Cost</div>
+                    <div className="stat-value">${sentData.price}</div>
+                    <div class="stat-desc">↘︎ 90 (14%)</div>
                   </div>
-                </div>
-                {/* <div className="rounded bg-stone-100 ml-8 w-1/3 flex flex-col items-center">
-                  {sentData.avg_rating ? (
-                    <div className="text-2xl pt-5">
-                      <p className="text-2xl">
-                        {sentData.avg_rating.toFixed(2)}{" "}
-                        {sentData.avg_rating
-                          ? getStars(sentData.avg_rating)
-                          : "N/A"}{" "}
-                        - ({sentData.reviews.length})
-                      </p>
-                    </div>
-                  ) : (
-                    <div>No rating</div>
-                  )}
-                  <div>
-                    <p className="text-xl font-bold">
-                      Time: {sentData.total_cook_time} mins
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">
-                      {sentData.num_likes} Saves
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xl font-bold">${sentData.price}</p>
-                  </div>
-                </div> */}
-              </div>
-              {userID && userID === sentData.author ? null : (
-                <div>
-                  {!liked ? (
-                    <button
-                      type="submit"
-                      className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold"
-                      onClick={() => {
-                        fetch("/api/account/like_recipe", {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            liked_recipe: sentData.id,
-                            user: userID,
-                          }),
-                        }).catch((error) => console.log("error", error));
-                        // router.push("/");
-                        setLiked((liked) => !liked);
-                      }}
-                    >
-                      Like
-                    </button>
-                  ) : (
-                    <div>You liked this recipe!</div>
-                  )}
-                </div>
-              )}
-              <div className="rounded p-1 bg-stone-200 w-1/6">
-                <div>Private: {sentData.private}</div>
-                <div className="py-4">
-                  <p>Description: {sentData.description}</p>
-                </div>
-                <div>Source: {sentData.source}</div>
-                <div>Created: {sentData.created}</div>
-              </div>
-              {/* <div>Image: {sentData.image}</div> */}
-              <div className="bg-white my-5 p-2 rounded">
-                <div className="text-xl">Comments:</div>
 
-                {sentData.comments.map((d) => (
-                  <div>
-                    {d.title} - {d.created}{" "}
-                  </div>
-                ))}
+                  <button
+                    className={liked ? "bg-pink-600" : null}
+                    onClick={() => {
+                      fetch("/api/account/like_recipe", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          liked_recipe: sentData.id,
+                          user: userID,
+                        }),
+                      }).catch((error) => console.log("error", error));
+                      // router.push("/");
+                      setLiked((liked) => !liked);
+                    }}
+                  >
+                    {userID && userID === sentData.author ? null : (
+                      <div className=" flex justify-center items-center">
+                        {!liked ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                            />
+                          </svg>
+                        ) : (
+                          <div className="flex flex-col text-white">
+                            {/* <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                            </svg> */}
+                            <p className="text-xl">Saved!</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded py-2">
+                {sentData.private ? (
+                  <p className="text-xl">Private Recipe </p>
+                ) : null}
+                <div className="my-4 border rounded p-3 shadow w-6/12">
+                  <p className="text-xl">Description</p>
+                  <p className="text-lg">{sentData.description}</p>
+                </div>
+                {sentData.source ? <div>Source: {sentData.source}</div> : null}
+                <div>Created at {sentData.created}</div>
+              </div>
+              <div className="">
                 {userID && userID === sentData.author ? (
                   <>
                     <button
-                      className="bg-stone-400 p-2 mx-3 my-2 rounded text-white font-semibold"
+                      className="bg-stone-200 p-2 mx-3 my-2 rounded font-semibold"
                       onClick={() => setShowEdit((showEdit) => !showEdit)}
                     >
-                      Edit
+                      Edit Recipe
                     </button>
                     <button
-                      className="bg-stone-400 p-2 rounded text-white font-semibold"
+                      className="bg-red-500 p-2 rounded text-white font-semibold"
                       onClick={() => {
                         fetch("/api/account/delete_recipe", {
                           method: "POST",
@@ -439,13 +435,13 @@ function SelectedRecipe(data) {
                         router.push("/");
                       }}
                     >
-                      Delete
+                      Delete Recipe
                     </button>
                   </>
                 ) : (
-                  <div>
+                  <div className="mt-6">
                     {showRate ? (
-                      <div>
+                      <div className="mb-4">
                         <Formik
                           initialValues={{
                             user: userID,
@@ -465,7 +461,7 @@ function SelectedRecipe(data) {
                             router.reload(window.location.pathname);
                           }}
                         >
-                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-gray-200  mt-6">
+                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-stone-200  mt-6">
                             <label htmlFor="rate" className=" rounded text-xl">
                               Rate this recipe below:
                             </label>
@@ -478,7 +474,7 @@ function SelectedRecipe(data) {
 
                             <div className="flex flex-row items-end ">
                               <button
-                                className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
+                                className="bg-stone-200 p-2 mr-3 my-2 rounded font-semibold w-1/6"
                                 onClick={() =>
                                   setShowRate((showRate) => !showRate)
                                 }
@@ -487,7 +483,7 @@ function SelectedRecipe(data) {
                               </button>
                               <button
                                 type="submit"
-                                className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
+                                className="bg-pink-600 p-2 my-2 rounded text-white font-semibold w-1/6"
                               >
                                 Submit
                               </button>
@@ -497,14 +493,14 @@ function SelectedRecipe(data) {
                       </div>
                     ) : (
                       <button
-                        className="bg-stone-400 p-2 rounded text-white font-semibold"
+                        className="bg-pink-600 p-2 rounded text-white font-semibold"
                         onClick={() => setShowRate((showRate) => !showRate)}
                       >
                         Rate
                       </button>
                     )}
                     {comment ? (
-                      <div>
+                      <div className="mt-6">
                         <Formik
                           initialValues={{
                             user: userID,
@@ -521,11 +517,14 @@ function SelectedRecipe(data) {
                               body: JSON.stringify(values),
                             })
                               .then((res) => res.json())
+                              .then(() =>
+                                router.reload(window.location.pathname)
+                              )
                               .catch((error) => console.log("error", error));
-                            router.reload(window.location.pathname);
+                            // router.reload(window.location.pathname);
                           }}
                         >
-                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-gray-200  mt-6">
+                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-stone-100  mt-6">
                             <label htmlFor="title" className=" rounded text-xl">
                               Title
                             </label>
@@ -559,7 +558,7 @@ function SelectedRecipe(data) {
                               </button>
                               <button
                                 type="submit"
-                                className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
+                                className="bg-pink-600 p-2 my-2 rounded text-white font-semibold w-1/6"
                               >
                                 Submit
                               </button>
@@ -569,7 +568,7 @@ function SelectedRecipe(data) {
                       </div>
                     ) : (
                       <button
-                        className="bg-stone-400 p-2 rounded text-white font-semibold ml-4"
+                        className="bg-pink-600 p-2 rounded text-white font-semibold ml-4"
                         onClick={() => setComment((comment) => !comment)}
                       >
                         Comment
@@ -577,6 +576,15 @@ function SelectedRecipe(data) {
                     )}
                   </div>
                 )}
+                <div className="text-xl mt-6">Comments</div>
+
+                {sentData.comments.map((d) => (
+                  <div className="my-2 rounded w-1/3 border shadow p-3">
+                    <p className="text-lg">{d.title}</p>
+                    <p>{d.content}</p>
+                    <p className="text-sm">- {d.created}</p>
+                  </div>
+                ))}
               </div>
             </div>
           )}

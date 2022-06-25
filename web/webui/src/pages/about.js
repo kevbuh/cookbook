@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { register, login, reset_register_success } from "../actions/auth";
 import Link from "next/link";
+// import Footer from "../hocs/Footer";
 
 function about() {
   const dispatch = useDispatch();
@@ -78,7 +79,7 @@ function about() {
       <div>
         <div className=" flex flex-col items-center justify-self-center">
           <div className="flex flex-col items-center justify-self-center">
-            <div className="flex flex-row text-6xl my-8 h-60">
+            <div className="flex flex-row text-6xl my-8 h-30">
               <div className="flex flex-col m-auto items-center ">
                 <p className="mb-4">CookBook</p>
                 <p className=" flex justify-center items-center text-xl">
@@ -262,6 +263,7 @@ function about() {
             </div>
           </div>
         </div>
+        {/* <Footer /> */}
       </div>
     </div>
   );
