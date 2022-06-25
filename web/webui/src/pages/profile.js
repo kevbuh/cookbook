@@ -162,7 +162,7 @@ const Profile = () => {
               </div>
 
               {/* {console.log("user1:::::", user?.favorite_recipes)} */}
-              <p className="text-lg m-6">Your favorites:</p>
+              <p className="text-lg m-6">Your favorites</p>
               <div className="flex flex-col ">
                 {user?.favorite_recipes ? (
                   user.favorite_recipes.map((d) => {

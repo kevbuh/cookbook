@@ -16,26 +16,6 @@ const AddRecipePage = () => {
   const router = useRouter();
   const userID = useSelector((state) => state.auth.user?.id);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const config = {
-  //       headers: {
-  //         Accept: "application/json",
-  //       },
-  //     };
-
-  //     try {
-  //       const res = await fetch(`${API_URL}/fetch-images/`, config);
-
-  //       if (res.status === 200) {
-  //         setImages(res.data.images);
-  //       }
-  //     } catch (err) {}
-  //   };
-
-  //   fetchData();
-  // }, [updated]);
-
   const onFileChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -86,10 +66,12 @@ const AddRecipePage = () => {
         },
         body: formData,
       });
+      const gotBack = await res2.json();
 
       if (res2.status === 201) {
         setUpdated(!updated);
         console.log("SUCCESS RECIPE ADDED AYY");
+        router.push(`/recipes/${gotBack.id}/`);
       }
     } catch (err) {
       console.log("failed at file_test.js catch");
@@ -99,156 +81,94 @@ const AddRecipePage = () => {
   return (
     <Layout title="CookBook | Add Recipe">
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
-        <div className="w-2/3 bg-stone-100 rounded-lg p-2">
-          <p className="text-2xl m-6 underline">Create Recipe</p>
+        <div className="w-2/3 flex flex-col">
+          <div className="flex flex-col items-center my-10">
+            <p className="text-3xl my-6">Create Recipe</p>
+          </div>
           <div className="px-6 flex flex-col">
-            {/* <Formik
-              initialValues={{
-                author: userID,
-                title: "",
-                description: "",
-                // image: "",
-                // total_cook_time: "",
-                // price: "",
-                // source: "",
-              }}
-              onSubmit={(values) => {
-                fetch("/api/account/recipe/", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values),
-                })
-                  .then((res) => {
-                    res.json();
-                    console.log("HERE IS WHAT WE GOT BACK:", res);
-                  })
-                  .catch((error) => console.log("error", error));
-                router.push("/");
-              }}
-            >
-              <Form className="flex flex-col">
-                <label htmlFor="title">Title</label>
-                <Field
-                  id="title"
-                  name="title"
-                  placeholder="Title"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                />
-                {console.log("GOT THIS ID:", userID)}
-
-                <label htmlFor="description">Description</label>
-                <Field
-                  id="description"
-                  name="description"
-                  placeholder="Description"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                /> */}
-
-            {/* <label htmlFor="image">Image</label>
-                <Field
-                  id="image"
-                  name="image"
-                  placeholder="Enter image URL"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                /> */}
-            {/* 
-                <label htmlFor="total_cook_time">Cook Time</label>
-                <Field
-                  id="total_cook_time"
-                  name="total_cook_time"
-                  placeholder="Enter cook time"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                />
-
-                <label htmlFor="price">Price</label>
-                <Field
-                  id="price"
-                  name="price"
-                  placeholder="Enter cook time"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                />
-
-                <label htmlFor="source">Source</label>
-                <Field
-                  id="source"
-                  name="source"
-                  className="bg-slate-200 rounded p-1 my-2 w-2/4"
-                  placeholder="Enter source"
-                /> */}
-
-            {/* <button
-                  type="submit"
-                  className="rounded px-3  py-2 my-2 bg-pink-600 w-1/6 text-white font-medium"
-                >
-                  Submit
-                </button>
-              </Form>
-            </Formik> */}
-            <form onSubmit={onSubmit}>
-              <div>
-                <label htmlFor="title">Recipe Name</label>
-                <input
-                  type="text"
-                  name="title"
-                  onChange={onTitleChange}
-                  required
-                  className="p-2 ml-2 "
-                />
+            <form onSubmit={onSubmit} className="">
+              <div className="flex flex-row ">
+                <div className="flex flex-col">
+                  <label htmlFor="image">
+                    <p className="text-lg p-2 w-full rounded my-2">Image</p>
+                  </label>
+                  <label htmlFor="title">
+                    <p className="text-lg p-2 w-full rounded my-2">Name</p>
+                  </label>
+                  <label htmlFor="description">
+                    <p className="text-lg p-2 w-full rounded mt-2 mb-4">
+                      Description
+                    </p>
+                  </label>
+                  <label htmlFor="total_cook_time">
+                    <p className="text-lg p-2 w-full rounded my-2">Cook Time</p>
+                  </label>
+                  <label htmlFor="price">
+                    <p className="text-lg p-2 w-full rounded my-2">Price</p>
+                  </label>
+                </div>
+                <div className="flex flex-col w-full ml-8">
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={onFileChange}
+                    required
+                    className="p-2 bg-stone-100 w-full rounded my-2"
+                  />
+                  <input
+                    type="text"
+                    name="title"
+                    onChange={onTitleChange}
+                    placeholder="Recipe Name"
+                    required
+                    className="p-2 bg-stone-100 w-full rounded my-2"
+                  />
+                  <textarea
+                    type="text"
+                    name="description"
+                    placeholder="Recipe description"
+                    onChange={onDescriptionChange}
+                    value={description}
+                    required
+                    className="pt-2 pl-2 bg-stone-100 w-full rounded my-2"
+                  />
+                  <input
+                    type="number"
+                    name="total_cook_time"
+                    placeholder="Cook time"
+                    onChange={onCookTimeChange}
+                    value={cookTime}
+                    required
+                    className="p-2 bg-stone-100 w-full rounded my-2"
+                  />
+                  <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    onChange={onPriceChange}
+                    value={price}
+                    required
+                    className="p-2 bg-stone-100 w-full rounded my-2"
+                  />
+                </div>
               </div>
-              <div>
-                <label htmlFor="description">
-                  <strong>Description*</strong>
-                </label>
-                <input
-                  type="text"
-                  name="description"
-                  placeholder="Description"
-                  onChange={onDescriptionChange}
-                  value={description}
-                  required
-                />
+              <div className="flex flex-col items-center mt-8">
+                {title && description && image && price ? (
+                  <button
+                    className="p-2 mt-4 bg-pink-600 rounded text-white w-2/5"
+                    type="submit"
+                  >
+                    Create Recipe!
+                  </button>
+                ) : (
+                  <p
+                    className="p-2 bg-stone-400 rounded cursor-default w-1/4 text-white"
+                    type="submit"
+                  >
+                    Fill out all required fields
+                  </p>
+                )}
               </div>
-              <div>
-                <label htmlFor="total_cook_time">
-                  <strong>total_cook_time*</strong>
-                </label>
-                <input
-                  type="number"
-                  name="total_cook_time"
-                  placeholder="total_cook_time"
-                  onChange={onCookTimeChange}
-                  value={cookTime}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="price">
-                  <strong>price*</strong>
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  placeholder="price"
-                  onChange={onPriceChange}
-                  value={price}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="image">Image Upload</label>
-                <input
-                  type="file"
-                  name="image"
-                  onChange={onFileChange}
-                  required
-                  className="p-2 ml-2 "
-                />
-              </div>
-              <button className="p-2 mt-5 bg-emerald-400 rounded" type="submit">
-                Create
-              </button>
             </form>
             {updated ? <div>Submitted recipe!</div> : null}
           </div>

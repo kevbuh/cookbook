@@ -87,7 +87,7 @@ function about() {
                 </p>
               </div>
             </div>
-            <div className="flex flex-row">
+            {/* <div className="flex flex-row">
               <div className="mr-20">
                 <p className="text-lg">Find recipes personalized to you</p>
                 <p className="text-lg">Plan Less, Eat Better</p>
@@ -100,9 +100,9 @@ function about() {
                 <p className="text-lg">Find your future favorite meal</p>
                 <p className="text-lg">Make your next meal an experience</p>
               </div>
-            </div>
+            </div> */}
 
-            <div className="mt-20 mb-20">
+            <div className="mt-10 mb-20">
               <div className="">
                 {shouldShowLogin ? (
                   <form
@@ -124,7 +124,7 @@ function about() {
                         className="my-2 p-2 rounded"
                       />
                     </div>
-                    {emailLogin.length < 8 && emailLogin ? (
+                    {emailLogin.length < 8 && passwordLogin ? (
                       <div className="text-red-400">What's your email?</div>
                     ) : null}
                     <div className="my-2">
@@ -140,7 +140,7 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
-                      {passwordLogin && passwordLogin < 8 ? (
+                      {emailLogin && passwordLogin < 8 ? (
                         <div className="text-red-400">
                           8 characters or more!
                         </div>
@@ -152,7 +152,7 @@ function about() {
                       </div>
                     ) : (
                       <div>
-                        {emailLogin.length > 8 && passwordLogin.length > 8 ? (
+                        {emailLogin.length > 7 && passwordLogin.length > 7 ? (
                           <button
                             className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
                             onClick={() => setSubmittedLogin(() => true)}
