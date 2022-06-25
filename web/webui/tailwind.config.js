@@ -13,5 +13,5 @@ module.exports = {
       sans: ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto"],
     },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };

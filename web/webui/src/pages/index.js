@@ -70,6 +70,15 @@ export default function Home({ data }) {
               ))}
             </div>
           </div>
+          <div className="bg-stone-100 rounded-lg p-2 my-4">
+            <p className="text-2xl my-2 ml-2 font-medium">Most Popular</p>
+          </div>
+          <div className="bg-stone-100 rounded-lg p-2 my-4">
+            <p className="text-2xl my-2 ml-2 font-medium">Trending</p>
+          </div>
+          <div className="bg-stone-100 rounded-lg p-2 my-4">
+            <p className="text-2xl my-2 ml-2 font-medium">Expert Recommended</p>
+          </div>
         </div>
       </div>
     </Layout>

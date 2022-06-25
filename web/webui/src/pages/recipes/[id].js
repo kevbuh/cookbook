@@ -104,7 +104,7 @@ function SelectedRecipe(data) {
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
       <div className=" flex flex-col justify-self-center self-center items-center">
-        <div className="w-2/3 bg-stone-200 p-2 rounded-3xl my-5">
+        <div className="w-2/3 my-10">
           {showEdit ? (
             <div>
               <div className="p-6 flex flex-col">
@@ -290,76 +290,126 @@ function SelectedRecipe(data) {
             </div>
           ) : (
             <div>
-              {sentData.image ? (
-                <div className="w-1/6">
-                  <Image
-                    className="rounded-3xl"
-                    loader={() => sentData.image}
-                    src={sentData.image}
-                    unoptimized={true}
-                    width="10%"
-                    height="10%"
-                    layout="responsive"
-                    objectFit="contain"
-                  />
-                </div>
-              ) : null}
-              <div className="flex flex-col">
-                <div className="text-xl font-bold">{sentData.title}</div>
-                {sentData.avg_rating ? (
-                  <div className="text-lg font-semibold">
-                    {sentData.avg_rating.toFixed(2)}{" "}
-                    {sentData.avg_rating
-                      ? getStars(sentData.avg_rating)
-                      : "N/A"}{" "}
-                    - ({sentData.reviews.length})
-                  </div>
-                ) : (
-                  <div>No rating</div>
-                )}
-              </div>
-              <div className="rounded p-1 bg-stone-200 w-1/6">
-                <div>Favorited {sentData.num_likes} times</div>
-                <div>Cook Time: {sentData.total_cook_time} mins</div>
-                <div>Category:</div>
+              <div className="flex flex-row mb-4 align-middle">
+                <div className="text-4xl mr-4 ">{sentData.title}</div>
                 {sentData.category.map((d) => (
-                  <div>{d.name}</div>
-                ))}
-                <div>Price: ${sentData.price}</div>
-                {userID && userID === sentData.author ? null : (
                   <div>
-                    {!liked ? (
-                      <button
-                        type="submit"
-                        className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold"
-                        onClick={() => {
-                          fetch("/api/account/like_recipe", {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              liked_recipe: sentData.id,
-                              user: userID,
-                            }),
-                          }).catch((error) => console.log("error", error));
-                          // router.push("/");
-                          setLiked((liked) => !liked);
-                        }}
-                      >
-                        Like
-                      </button>
-                    ) : (
-                      <div>You liked this recipe!</div>
-                    )}
+                    <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
+                      {d.name}
+                    </button>
                   </div>
-                )}
+                ))}
               </div>
-              <div>Private: {sentData.private}</div>
-              <div>Image: {sentData.image}</div>
-              <div className="py-4">Description: {sentData.description}</div>
-              <div>Source: {sentData.source}</div>
-              <div>Created: {sentData.created}</div>
+              <div className="flex flex-row">
+                {sentData.image ? (
+                  <div className="w-1/2">
+                    <Image
+                      className="rounded-2xl my-4"
+                      loader={() => sentData.image}
+                      src={sentData.image}
+                      unoptimized={true}
+                      width="100%"
+                      height="100%"
+                      layout="responsive"
+                      objectFit="contain"
+                    />
+                  </div>
+                ) : null}
+                <div class="stats stats-vertical shadow ml-8">
+                  <div class="stat">
+                    <div class="stat-title">Rating</div>
+                    <div class="stat-value">
+                      {sentData.avg_rating.toFixed(2)} ⭐️
+                    </div>
+                    <div class="stat-desc">
+                      {/* {sentData.avg_rating
+                        ? getStars(sentData.avg_rating)
+                        : "N/A"}{" "} */}
+                      {sentData.num_likes} Saves, ({sentData.reviews.length})
+                      Reviews
+                    </div>
+                  </div>
+
+                  <div class="stat">
+                    <div class="stat-title">Time</div>
+                    <div class="stat-value">
+                      {sentData.total_cook_time} mins
+                    </div>
+                    {/* <div class="stat-desc">↗︎ 400 (22%)</div> */}
+                  </div>
+
+                  <div class="stat">
+                    <div class="stat-title">Cost</div>
+                    <div class="stat-value">${sentData.price}</div>
+                    {/* <div class="stat-desc">↘︎ 90 (14%)</div> */}
+                  </div>
+                </div>
+                {/* <div className="rounded bg-stone-100 ml-8 w-1/3 flex flex-col items-center">
+                  {sentData.avg_rating ? (
+                    <div className="text-2xl pt-5">
+                      <p className="text-2xl">
+                        {sentData.avg_rating.toFixed(2)}{" "}
+                        {sentData.avg_rating
+                          ? getStars(sentData.avg_rating)
+                          : "N/A"}{" "}
+                        - ({sentData.reviews.length})
+                      </p>
+                    </div>
+                  ) : (
+                    <div>No rating</div>
+                  )}
+                  <div>
+                    <p className="text-xl font-bold">
+                      Time: {sentData.total_cook_time} mins
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">
+                      {sentData.num_likes} Saves
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xl font-bold">${sentData.price}</p>
+                  </div>
+                </div> */}
+              </div>
+              {userID && userID === sentData.author ? null : (
+                <div>
+                  {!liked ? (
+                    <button
+                      type="submit"
+                      className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold"
+                      onClick={() => {
+                        fetch("/api/account/like_recipe", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            liked_recipe: sentData.id,
+                            user: userID,
+                          }),
+                        }).catch((error) => console.log("error", error));
+                        // router.push("/");
+                        setLiked((liked) => !liked);
+                      }}
+                    >
+                      Like
+                    </button>
+                  ) : (
+                    <div>You liked this recipe!</div>
+                  )}
+                </div>
+              )}
+              <div className="rounded p-1 bg-stone-200 w-1/6">
+                <div>Private: {sentData.private}</div>
+                <div className="py-4">
+                  <p>Description: {sentData.description}</p>
+                </div>
+                <div>Source: {sentData.source}</div>
+                <div>Created: {sentData.created}</div>
+              </div>
+              {/* <div>Image: {sentData.image}</div> */}
               <div className="bg-white my-5 p-2 rounded">
                 <div className="text-xl">Comments:</div>
 
