@@ -124,7 +124,7 @@ function about() {
                         className="my-2 p-2 rounded"
                       />
                     </div>
-                    {emailLogin.length < 8 ? (
+                    {emailLogin.length < 8 && emailLogin ? (
                       <div className="text-red-400">What's your email?</div>
                     ) : null}
                     <div className="my-2">
@@ -140,7 +140,7 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
-                      {password.length < 8 ? (
+                      {passwordLogin && passwordLogin < 8 ? (
                         <div className="text-red-400">
                           8 characters or more!
                         </div>
@@ -185,7 +185,7 @@ function about() {
                     className="rounded-lg bg-stone-100 p-8 flex flex-col items-center"
                     onSubmit={onSubmit}
                   >
-                    <p className="text-xl mb-4">Sign Up To Start Eating!</p>
+                    <p className="text-xl my-4">Sign Up To Start Eating!</p>
                     <div className="">
                       <label htmlFor="email">
                         <p>Email</p>
@@ -199,7 +199,7 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
-                      {email.length < 8 ? (
+                      {email.length < 8 && email ? (
                         <div className="text-red-400">What's your email?</div>
                       ) : null}
                     </div>
@@ -216,7 +216,7 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
-                      {password.length < 8 ? (
+                      {password.length < 8 && password ? (
                         <div className="text-red-400">
                           8 characters or more!
                         </div>

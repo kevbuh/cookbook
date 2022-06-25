@@ -96,6 +96,8 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
+    first_name = serializers.CharField(required=True)
+
 
     class Meta:
         model = CustomUser
@@ -126,6 +128,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         # instance.first_name = validated_data['first_name']
         # instance.last_name = validated_data['last_name']
         instance.email = validated_data['email']
+        instance.first_name = validated_data['first_name']
+
         # instance.username = validated_data['username']
 
         instance.save()
