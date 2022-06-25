@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { register, login, reset_register_success } from "../actions/auth";
@@ -19,11 +19,6 @@ function about() {
     password2: "",
   });
 
-  // const [formDataLogin, setFormDataLogin] = useState({
-  //   emailLogin: "",
-  //   passwordLogin: "",
-  // });
-
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
 
@@ -36,23 +31,16 @@ function about() {
   };
 
   const { email, password, password2 } = formData;
-  // const { emailLogin, passwordLogin } = formDataLogin;
 
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  // const onChangeLogin = (e) => {
-  //   () =>
-  //     setFormDataLogin({ ...formDataLogin, [e.target.name]: e.target.value });
-  //   console.log("he", emailLogin);
-  // };
 
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("FORM DATA:", email, password, password2);
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(register(email, password, password2));
+      dispatch(register(email, password, password));
     }
   };
 
@@ -81,16 +69,7 @@ function about() {
   return (
     <div className=" flex flex-col  mx-6 my-5 self-center ">
       <div className="grid justify-items-end">
-        {!isAuthenticated ? (
-          <div>
-            <Link href="/login">
-              <a className="text-lg">Log In &nbsp;</a>
-            </Link>
-            <Link href="/signup">
-              <a className="text-lg">Sign Up </a>
-            </Link>
-          </div>
-        ) : (
+        {!isAuthenticated ? null : ( // </div> //   </Link> //     <a className="text-lg">Sign Up </a> //   <Link href="/signup"> //   </Link> //     <a className="text-lg">Log In &nbsp;</a> //   <Link href="/login"> // <div>
           <Link href="/profile">
             <a className="text-lg">Your Account </a>
           </Link>
@@ -120,9 +99,6 @@ function about() {
                 </p>
                 <p className="text-lg">Find your future favorite meal</p>
                 <p className="text-lg">Make your next meal an experience</p>
-                {/* <p className="text-lg">
-                  The food platform for everybody, everywhere
-                </p> */}
               </div>
             </div>
 
@@ -148,6 +124,9 @@ function about() {
                         className="my-2 p-2 rounded"
                       />
                     </div>
+                    {emailLogin.length < 8 ? (
+                      <div className="text-red-400">What's your email?</div>
+                    ) : null}
                     <div className="my-2">
                       <label htmlFor="password">
                         <p>Password</p>
@@ -161,6 +140,11 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
+                      {password.length < 8 ? (
+                        <div className="text-red-400">
+                          8 characters or more!
+                        </div>
+                      ) : null}
                     </div>
                     {loading ? (
                       <div>
@@ -171,18 +155,12 @@ function about() {
                         {emailLogin.length > 8 && passwordLogin.length > 8 ? (
                           <button
                             className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
-                            // type="submit"
-                            onClick={() =>
-                              setSubmittedLogin((submittedLogin) => true)
-                            }
+                            onClick={() => setSubmittedLogin(() => true)}
                           >
                             Continue!
                           </button>
                         ) : (
-                          <p
-                            className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default"
-                            // type="submit"
-                          >
+                          <p className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default">
                             Fill out all fields!
                           </p>
                         )}
@@ -221,6 +199,9 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
+                      {email.length < 8 ? (
+                        <div className="text-red-400">What's your email?</div>
+                      ) : null}
                     </div>
                     <div className="my-2">
                       <label htmlFor="password">
@@ -235,31 +216,20 @@ function about() {
                         required
                         className="my-2 p-2 rounded"
                       />
+                      {password.length < 8 ? (
+                        <div className="text-red-400">
+                          8 characters or more!
+                        </div>
+                      ) : null}
                     </div>
-                    <div>
-                      <label htmlFor="password2">
-                        <p>Confirm Password</p>
-                      </label>
-                      <input
-                        type="password"
-                        name="password2"
-                        placeholder="Confirm password"
-                        onChange={onChange}
-                        value={password2}
-                        required
-                        className="my-2 p-2 rounded"
-                      />
-                    </div>
+
                     {loading ? (
                       <div>
                         <h1>LOADING</h1>
                       </div>
                     ) : (
                       <div>
-                        {email.length > 8 &&
-                        password.length > 8 &&
-                        password2.length > 8 &&
-                        password == password2 ? (
+                        {email.length > 8 && password.length > 8 ? (
                           <button
                             className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
                             type="submit"
@@ -267,27 +237,11 @@ function about() {
                             Continue!
                           </button>
                         ) : (
-                          <p
-                            className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default"
-                            // type="submit"
-                          >
+                          <p className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default">
                             Fill out all fields!
                           </p>
                         )}
                       </div>
-
-                      // <button
-                      //   className={
-                      //     password2.length > 8 &&
-                      //     email.length > 8 &&
-                      //     password.length > 8
-                      //       ? "rounded p-2 mt-2 bg-pink-600 text-white w-2/3"
-                      //       : "rounded p-2 mt-2 bg-stone-400 text-white w-1/2"
-                      //   }
-                      //   type="submit"
-                      // >
-                      //   Continue
-                      // </button>
                     )}
                     <div className="mt-2 flex  items-center ">
                       Already eating? &nbsp;

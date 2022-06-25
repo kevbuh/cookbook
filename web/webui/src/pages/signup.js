@@ -31,7 +31,7 @@ function signup() {
   };
 
   if (typeof window !== "undefined" && isAuthenticated) router.push("/profile");
-  if (register_success) router.push("/login");
+  if (register_success) router.push("/about");
 
   return (
     <Layout title="CookBook | Sign Up">

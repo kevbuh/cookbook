@@ -8,10 +8,10 @@ import { useState } from "react";
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const [reset, setReset] = useState(false);
-  const [success, setSuccess] = useState(false);
-
   const router = useRouter();
+
+  const [success, setSuccess] = useState(false);
+  const [reset, setReset] = useState(false);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth?.user);
   const loading = useSelector((state) => state.auth.loading);
@@ -37,10 +37,6 @@ const Profile = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // if (dispatch && dispatch !== null && dispatch !== undefined) {
-    //   dispatch(register(email, password, password2));
-    // }
-
     try {
       const res = await fetch(`/api/account/file_test`, {
         // gets the user token
@@ -49,28 +45,19 @@ const Profile = () => {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        // body: formData,
       });
       const token = await res.json();
-      // console.log(token.token);
-      // console.log("GOT TOKEN");
-
-      // console.log("form data in profile", formData);
 
       const res2 = await fetch(`${API_URL}/auth/change_password/${userID}/`, {
         method: "PUT",
         headers: {
           Authorization: "Bearer " + token.token,
-          // Accept: "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      // console.log(res2.status);
 
       if (res2.status === 200) {
-        // setUpdated(!updated);
-        console.log("SUCCESS RESET PASSWORD AYY");
         setSuccess(!success);
         setReset(!reset);
       }
@@ -80,7 +67,7 @@ const Profile = () => {
   };
 
   if (typeof window !== "undefined" && !loading && !isAuthenticated)
-    router.push("/login");
+    router.push("/about");
 
   return (
     <Layout title="CookBook | profile">
@@ -90,7 +77,7 @@ const Profile = () => {
             <p className="text-2xl m-6 underline">User Profile</p>
 
             <p className="text-lg m-6">
-              Welcome, User #{user !== null && user.id}
+              Welcome, {user !== null && user.email}
             </p>
           </div>
           {/* {console.log("user1:::::", user?.favorite_recipes)} */}
