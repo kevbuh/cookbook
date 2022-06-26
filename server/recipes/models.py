@@ -11,6 +11,19 @@ class Category(models.Model):
 
 
 class Recipes(models.Model):
+    CHEAP = '$'
+    MEDIUM = '$$'
+    EXPENSIVE = '$$$'
+    PRICE_CHOICES = [
+        (CHEAP, '33'),
+        (MEDIUM, '66'),
+        (EXPENSIVE, '99'),
+    ]
+    price = models.CharField(
+        max_length=3,
+        choices=PRICE_CHOICES,
+        default=CHEAP,
+    )
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     title =  models.CharField(max_length=255, blank=True, default='')
     description = models.TextField(null=True, blank=True, default='')
@@ -18,12 +31,13 @@ class Recipes(models.Model):
     total_cook_time = models.IntegerField(default = 0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
+    # price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/")
     # caption
     # number of clicks/views
+    views = models.IntegerField(default=0)
     # ingredient list
     # course
     # cuisine
@@ -74,5 +88,9 @@ class Favorites(models.Model):
     def __str__(self):
         return str(self.id)
 
+class Ingredients(models.Model):
+    name = models.CharField(max_length=255)
+    amount = models.CharField(max_length=255)
+    recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='ingredients', related_query_name='ingredient', blank=True, null=True)
 
     

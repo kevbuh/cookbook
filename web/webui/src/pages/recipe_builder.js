@@ -1,14 +1,16 @@
 import Layout from "../hocs/Layout";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { Formik, Field, Form } from "formik";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { API_URL } from "../config";
 
 const AddRecipePage = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState(null);
   const [description, setDescription] = useState(null);
+  const [ingredient, setIngredient] = useState(null);
+  const [showIngredient, setShowIngredient] = useState(false);
+
   const [cookTime, setCookTime] = useState(null);
   const [price, setPrice] = useState(null);
   const [sliderValue, setSliderValue] = useState(33);
@@ -22,6 +24,9 @@ const AddRecipePage = () => {
   };
   const onTitleChange = (e) => {
     setTitle(e.target.value);
+  };
+  const onIngredientChange = (e) => {
+    setIngredient(e.target.files[0]);
   };
   const onDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -37,6 +42,7 @@ const AddRecipePage = () => {
 
   const onSliderValueChange = (e) => {
     setSliderValue(e.target.value);
+    console.log(sliderValue);
   };
 
   const onSubmit = async (e) => {
@@ -48,8 +54,16 @@ const AddRecipePage = () => {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("total_cook_time", cookTime);
-    formData.append("price", price);
     formData.append("author", userID);
+    if (sliderValue == 33) {
+      formData.append("price", "$");
+    }
+    if (sliderValue == 66) {
+      formData.append("price", "$$");
+    }
+    if (sliderValue == 99) {
+      formData.append("price", "$$$");
+    }
 
     try {
       const res = await fetch(`/api/account/file_test`, {
@@ -76,7 +90,7 @@ const AddRecipePage = () => {
       if (res2.status === 201) {
         setUpdated(!updated);
         // console.log("SUCCESS RECIPE ADDED AYY");
-        router.push(`/recipes/${gotBack.id}/`);
+        // router.push(`/recipes/${gotBack.id}/`);
       }
     } catch (err) {
       console.log("failed at file_test.js catch");
@@ -100,6 +114,11 @@ const AddRecipePage = () => {
                   <label htmlFor="title">
                     <p className="text-lg p-2 w-full rounded my-2">Name</p>
                   </label>
+                  <label htmlFor="title">
+                    <p className="text-lg p-2 w-full rounded my-2">
+                      Ingredients
+                    </p>
+                  </label>
                   <label htmlFor="description">
                     <p className="text-lg p-2 w-full rounded mt-2 mb-4">
                       Description
@@ -122,12 +141,7 @@ const AddRecipePage = () => {
                     onChange={onFileChange}
                     required
                     // className="p-2 bg-stone-100 w-full rounded my-2"
-                    className="block w-full text-sm text-black 
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold
-      file:bg-stone-100
-      hover:file:bg-pink-600 my-3 hover:file:text-white hover:file:cursor-pointer"
+                    className="block w-full text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-stone-100 hover:file:bg-pink-600 my-3 hover:file:text-white hover:file:cursor-pointer"
                   />
                   <input
                     type="text"
@@ -137,6 +151,58 @@ const AddRecipePage = () => {
                     required
                     className="p-2 bg-stone-100 w-full rounded my-2"
                   />
+                  {showIngredient ? (
+                    <div>
+                      <input
+                        type="text"
+                        name="ingredient_name"
+                        placeholder="Name"
+                        onChange={onIngredientChange}
+                        value={ingredient}
+                        required
+                        className="p-2 bg-stone-100 rounded my-2 w-1/3 mr-4"
+                      />
+                      <input
+                        type="text"
+                        name="ingredients_amount"
+                        placeholder="Amount"
+                        onChange={onIngredientChange}
+                        value={ingredient}
+                        required
+                        className="p-2 bg-stone-100 rounded my-2 w-1/3 mr-4"
+                      />
+                      <button className="p-2 mt-4 bg-pink-600 rounded text-white w-1/7">
+                        Add
+                      </button>
+                      <button
+                        className="btn btn-circle btn-outline ml-4"
+                        onClick={() => setShowIngredient(false)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                      <button></button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setShowIngredient(true)}
+                      className="w-1/4 bg-stone-100 mt-6 mb-4 rounded"
+                    >
+                      <p>Show ingredients</p>
+                    </button>
+                  )}
                   <textarea
                     type="text"
                     name="description"
@@ -156,29 +222,14 @@ const AddRecipePage = () => {
                     className="p-2 bg-stone-100 w-full rounded my-2"
                   />
                   <input
-                    type="number"
-                    name="price"
-                    placeholder="Price"
-                    onChange={onPriceChange}
-                    value={price}
-                    required
-                    className="p-2 bg-stone-100 w-full rounded my-2"
-                  />
-                  {/* <p>slide value: {sliderValue}</p> */}
-                  <input
                     type="range"
                     min="33"
+                    name="price"
                     max="99"
                     step="33"
                     value={sliderValue}
                     onChange={onSliderValueChange}
-                    className="form-range h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer w-1/2 mt-6"
-                    // appearance-none
-                    // w-1/2
-                    //       h-6
-                    //       // p-0
-                    //       // bg-transparent
-                    //       // focus:outline-none focus:ring-0 focus:shadow-none"
+                    className="form-range h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer w-1/2 mt-6 required"
                   />
                   <div className="w-1/2 flex justify-between text-lg font-semibold  px-1">
                     <span>$ &nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -187,11 +238,10 @@ const AddRecipePage = () => {
                     <span></span>
                     <span>$$$</span>
                   </div>
-                  {/* <input type="checkbox" className=" bg-stone-100" checked /> */}
                 </div>
               </div>
               <div className="flex flex-col items-center mt-8">
-                {title && description && image && price ? (
+                {title && description && image && sliderValue && cookTime ? (
                   <button
                     className="p-2 mt-4 bg-pink-600 rounded text-white w-2/5"
                     type="submit"
@@ -199,10 +249,7 @@ const AddRecipePage = () => {
                     Create Recipe!
                   </button>
                 ) : (
-                  <p
-                    className="p-2 bg-stone-400 rounded cursor-default w-1/4 text-white"
-                    type="submit"
-                  >
+                  <p className="p-2 bg-stone-400 rounded cursor-default w-1/4 text-white">
                     Fill out all required fields
                   </p>
                 )}

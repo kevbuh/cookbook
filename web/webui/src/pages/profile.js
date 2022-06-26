@@ -53,6 +53,7 @@ const Profile = () => {
         },
       });
       const token = await res.json();
+      console.log(token.token);
 
       const res2 = await fetch(`${API_URL}/auth/change_password/${userID}/`, {
         method: "PUT",

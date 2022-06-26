@@ -262,7 +262,7 @@ function SelectedRecipe(data) {
 
                   <div className="flex flex-col items-center justify-center">
                     <div className="stat-title">Cost</div>
-                    <div className="stat-value">${sentData.price}</div>
+                    <div className="stat-value">{sentData.price}</div>
                     <div class="stat-desc">↘︎ 90 (14%)</div>
                   </div>
                   {userID && userID === sentData.author ? null : (
@@ -324,12 +324,27 @@ function SelectedRecipe(data) {
                 {sentData.private ? (
                   <p className="text-xl">Private Recipe </p>
                 ) : null}
+                {sentData.ingredients.length > 0 ? (
+                  <div>
+                    <div className="text-xl mt-6">Ingredients</div>
+                    <div className="my-2 rounded w-1/3 border shadow p-3 divide-y">
+                      {sentData.ingredients.map((d) => (
+                        <div className="pt-1 pb-2">
+                          <p className="text-lg">{d.name}</p>
+                          <p>{d.amount}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-xl mt-6">No ingredients listed</div>
+                )}
                 <div className="my-4 border rounded p-3 shadow w-6/12">
                   <p className="text-xl">Description</p>
                   <p className="text-lg">{sentData.description}</p>
+                  <div>Created at {sentData.created}</div>
                 </div>
                 {sentData.source ? <div>Source: {sentData.source}</div> : null}
-                <div>Created at {sentData.created}</div>
               </div>
               <div className="">
                 {userID && userID === sentData.author ? (
@@ -494,15 +509,21 @@ function SelectedRecipe(data) {
                     )}
                   </div>
                 )}
-                <div className="text-xl mt-6">Comments</div>
+                {sentData.comments.length > 0 ? (
+                  <div>
+                    <div className="text-xl mt-6">Comments</div>
 
-                {sentData.comments.map((d) => (
-                  <div className="my-2 rounded w-1/3 border shadow p-3">
-                    <p className="text-lg">{d.title}</p>
-                    <p>{d.content}</p>
-                    <p className="text-sm">- {d.created}</p>
+                    {sentData.comments.map((d) => (
+                      <div className="my-2 rounded w-1/3 border shadow p-3">
+                        <p className="text-lg">{d.title}</p>
+                        <p>{d.content}</p>
+                        <p className="text-sm">- {d.created}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="text-xl mt-6">No Comments</div>
+                )}
               </div>
             </div>
           )}
