@@ -18,7 +18,7 @@ import {
 
 export const load_user = () => async (dispatch) => {
   try {
-    console.log("GOT HERE 11");
+    // console.log("GOT HERE 11");
 
     const res = await fetch("/api/account/user", {
       method: "GET",
@@ -27,9 +27,9 @@ export const load_user = () => async (dispatch) => {
       },
     });
 
-    console.log("GOT HERE 22");
+    // console.log("GOT HERE 22");
     const data = await res.json();
-    console.log("GOT HERE 33,", res.status);
+    // console.log("GOT HERE 33,", res.status);
 
     if (res.status === 200) {
       dispatch({
@@ -102,7 +102,7 @@ export const request_refresh = () => async (dispatch) => {
 
 export const register = (email, password, password2) => async (dispatch) => {
   const body = JSON.stringify({ email, password, password2 });
-  console.log("register dispatch", body);
+  // console.log("register dispatch", body);
   dispatch({
     type: SET_AUTH_LOADING,
   });

@@ -39,7 +39,7 @@ function about() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("FORM DATA:", email, password, password2);
+    // console.log("FORM DATA:", email, password, password2);
 
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(register(email, password, password));
@@ -48,16 +48,16 @@ function about() {
 
   if (register_success) {
     // sign user in
-    console.log("SINGING USER IN!");
+    // console.log("SINGING USER IN!");
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(login(email, password));
 
-    console.log("UN SUCCESS REGISTER USER IN!");
+    // console.log("UN SUCCESS REGISTER USER IN!");
 
     if (dispatch && dispatch !== null && dispatch !== undefined)
       dispatch(reset_register_success());
 
-    console.log("PUSHING!");
+    // console.log("PUSHING!");
   }
 
   if (submittedLogin) {
@@ -264,7 +264,8 @@ function about() {
             </div>
           </div>
         </div>
-        {/* <Footer /> */}
+
+        <Footer />
       </div>
     </div>
   );

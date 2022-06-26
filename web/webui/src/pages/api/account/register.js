@@ -4,7 +4,7 @@ export default async (req, res) => {
   if (req.method === "POST") {
     const { email, password, password2 } = req.body;
     const body = JSON.stringify({ email, password, password2 });
-    console.log("NEXT API HERRE", body);
+    // console.log("NEXT API HERRE", body);
     try {
       const apiRes = await fetch(`${API_URL}/auth/register/`, {
         method: "POST",
@@ -16,7 +16,7 @@ export default async (req, res) => {
       });
 
       const data = await apiRes.json();
-      console.log("GOT STATUS", apiRes.status);
+      // console.log("GOT STATUS", apiRes.status);
 
       if (apiRes.status === 201) {
         return res.status(201).json({ success: data.success });

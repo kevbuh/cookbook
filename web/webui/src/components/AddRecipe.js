@@ -22,7 +22,7 @@ const AddRecipe = ({ userID, cookie }) => (
         })
           .then((res) => {
             res.json();
-            console.log("HERE IS WHAT WE GOT BACK:", res);
+            // console.log("HERE IS WHAT WE GOT BACK:", res);
             useRouter().push("/");
           })
           .catch((error) => console.log("error", error));

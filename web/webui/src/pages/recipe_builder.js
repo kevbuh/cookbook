@@ -11,6 +11,7 @@ const AddRecipePage = () => {
   const [description, setDescription] = useState(null);
   const [cookTime, setCookTime] = useState(null);
   const [price, setPrice] = useState(null);
+  const [sliderValue, setSliderValue] = useState(33);
 
   const [updated, setUpdated] = useState(false);
   const router = useRouter();
@@ -32,6 +33,10 @@ const AddRecipePage = () => {
 
   const onPriceChange = (e) => {
     setPrice(e.target.value);
+  };
+
+  const onSliderValueChange = (e) => {
+    setSliderValue(e.target.value);
   };
 
   const onSubmit = async (e) => {
@@ -57,7 +62,7 @@ const AddRecipePage = () => {
         body: formData,
       });
       const token = await res.json();
-      console.log(token.token);
+      // console.log(token.token);
 
       const res2 = await fetch(`${API_URL}/recipe/`, {
         method: "POST",
@@ -70,7 +75,7 @@ const AddRecipePage = () => {
 
       if (res2.status === 201) {
         setUpdated(!updated);
-        console.log("SUCCESS RECIPE ADDED AYY");
+        // console.log("SUCCESS RECIPE ADDED AYY");
         router.push(`/recipes/${gotBack.id}/`);
       }
     } catch (err) {
@@ -106,6 +111,9 @@ const AddRecipePage = () => {
                   <label htmlFor="price">
                     <p className="text-lg p-2 w-full rounded my-2">Price</p>
                   </label>
+                  {/* <label htmlFor="private">
+                    <p className="text-lg p-2 w-full rounded my-2">Private</p>
+                  </label> */}
                 </div>
                 <div className="flex flex-col w-full ml-8">
                   <input
@@ -113,7 +121,13 @@ const AddRecipePage = () => {
                     name="image"
                     onChange={onFileChange}
                     required
-                    className="p-2 bg-stone-100 w-full rounded my-2"
+                    // className="p-2 bg-stone-100 w-full rounded my-2"
+                    className="block w-full text-sm text-black 
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold
+      file:bg-stone-100
+      hover:file:bg-pink-600 my-3 hover:file:text-white hover:file:cursor-pointer"
                   />
                   <input
                     type="text"
@@ -150,6 +164,30 @@ const AddRecipePage = () => {
                     required
                     className="p-2 bg-stone-100 w-full rounded my-2"
                   />
+                  {/* <p>slide value: {sliderValue}</p> */}
+                  <input
+                    type="range"
+                    min="33"
+                    max="99"
+                    step="33"
+                    value={sliderValue}
+                    onChange={onSliderValueChange}
+                    className="form-range h-2 bg-stone-100 rounded-lg appearance-none cursor-pointer w-1/2 mt-6"
+                    // appearance-none
+                    // w-1/2
+                    //       h-6
+                    //       // p-0
+                    //       // bg-transparent
+                    //       // focus:outline-none focus:ring-0 focus:shadow-none"
+                  />
+                  <div className="w-1/2 flex justify-between text-lg font-semibold  px-1">
+                    <span>$ &nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span></span>
+                    <span>$$</span>
+                    <span></span>
+                    <span>$$$</span>
+                  </div>
+                  {/* <input type="checkbox" className=" bg-stone-100" checked /> */}
                 </div>
               </div>
               <div className="flex flex-col items-center mt-8">

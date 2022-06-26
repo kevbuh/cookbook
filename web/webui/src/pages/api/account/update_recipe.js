@@ -6,7 +6,7 @@ export default async (req, res) => {
     const cookies = cookie.parse(req.headers.cookie ?? "");
     const access = cookies.access ?? false;
     // console.log("ACCESS", access);
-    console.log("req body in update_recipe.js:", req.body.recipeID);
+    // console.log("req body in update_recipe.js:", req.body.recipeID);
     // const {
     //   author,
     //   title,

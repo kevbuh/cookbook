@@ -9,7 +9,7 @@ export default async (req, res) => {
     // console.log("req body:", req.body);
     const { title, content, user, recipe } = req.body;
     // console.log("REQ BODY", req.body);
-    console.log("IN COMMENT API");
+    // console.log("IN COMMENT API");
 
     const body = JSON.stringify({
       title,
@@ -17,7 +17,7 @@ export default async (req, res) => {
       user,
       recipe,
     });
-    console.log("comment body:", body);
+    // console.log("comment body:", body);
 
     if (access === false) {
       return res.status(401).json({

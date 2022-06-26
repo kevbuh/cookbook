@@ -5,8 +5,8 @@ export default async (req, res) => {
   if (req.method === "POST") {
     const cookies = cookie.parse(req.headers.cookie ?? "");
     const access = cookies.access ?? false;
-    console.log("ACCESS", access);
-    console.log("req body:", req.body);
+    // console.log("ACCESS", access);
+    // console.log("req body:", req.body);
     const { author, title, description, total_cook_time, price, source } =
       req.body;
 
@@ -18,7 +18,7 @@ export default async (req, res) => {
       // price,
       // source,
     });
-    console.log("body:", body);
+    // console.log("body:", body);
 
     if (access === false) {
       return res.status(401).json({

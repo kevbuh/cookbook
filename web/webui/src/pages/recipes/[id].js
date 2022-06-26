@@ -65,9 +65,6 @@ function SelectedRecipe(data) {
     formData.append("author", userID);
 
     try {
-      // console.log("SENT");
-      // console.log("sending:::", title, userID, sentData.id);
-      // console.log("UPDATING RECIPE");
       const res = await fetch(`/api/account/file_test`, {
         // gets the user token
         method: "POST",
@@ -78,8 +75,6 @@ function SelectedRecipe(data) {
         body: formData,
       });
       const token = await res.json();
-      console.log(token.token);
-      console.log(`${API_URL}/recipe/${sentData.id}/`);
 
       const res2 = await fetch(`${API_URL}/recipe/${sentData.id}/`, {
         method: "PUT",
@@ -90,14 +85,9 @@ function SelectedRecipe(data) {
         },
         body: formData,
       });
-      // const data = await apiRes.json();
-      // console.log("MADE IT PAST RES2", data);
-      // console.log("got this ststus:", res2.status);
       if (res2.status === 200) {
         setUpdated(!updated);
-        console.log("SUCCESS RECIPE UPDATED AYY");
       }
-      // setShowEdit((showEdit) => !showEdit);
       router.reload(window.location.pathname);
     } catch (err) {
       console.log("failed at [id] catch");
@@ -111,94 +101,6 @@ function SelectedRecipe(data) {
           {showEdit ? (
             <div>
               <div className="p-6 flex flex-col">
-                {/* <Formik
-                  initialValues={{
-                    author: userID,
-                    title: sentData.title,
-                    description: sentData.description,
-                    // image: sentData.image,
-                    cook_time: sentData.cook_time,
-                    price: sentData.price,
-                    source: sentData.source,
-                    recipeID: sentData.id,
-                  }}
-                  onSubmit={(values) => {
-                    fetch(`/api/account/update_recipe`, {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify(values),
-                    })
-                      .then((res) => res.json())
-                      .catch((error) => console.log("error", error));
-                    router.push("/");
-                  }}
-                >
-                  <Form className="flex flex-col">
-                    <label htmlFor="title">Title</label>
-                    <Field
-                      id="title"
-                      name="title"
-                      placeholder="Title"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    /> */}
-
-                {/* <label htmlFor="description">Description</label>
-                <Field
-                  id="description"
-                  name="description"
-                  placeholder="Description"
-                  className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                /> */}
-
-                {/* <label htmlFor="image">Image</label>
-                    <Field
-                      id="image"
-                      name="image"
-                      placeholder="Enter image URL"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    /> */}
-
-                {/* <label htmlFor="cook_time">Cook Time</label>
-                    <Field
-                      id="cook_time"
-                      name="cook_time"
-                      placeholder="Enter cook time"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
-
-                    <label htmlFor="price">Price</label>
-                    <Field
-                      id="price"
-                      name="price"
-                      placeholder="Enter cook time"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
-
-                    <label htmlFor="source">Source</label>
-                    <Field
-                      id="source"
-                      name="source"
-                      placeholder="Enter cook time"
-                      className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                    />
-                    <div className="flex flex-row items-end ">
-                      <button
-                        className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
-                        onClick={() => setShowEdit((showEdit) => !showEdit)}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="bg-emerald-400 p-2 my-2 rounded text-white font-semibold w-1/6"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </Form>
-                </Formik> */}
                 <form onSubmit={onSubmit}>
                   <div>
                     <label htmlFor="title">Recipe Name</label>
@@ -334,8 +236,6 @@ function SelectedRecipe(data) {
                       Reviews
                     </div>
                   </div>
-                  {/* <div></div> */}
-                  {/* <div className="stat"> */}
                   <div className="flex flex-col items-center justify-center">
                     <div className="stat-title flex flex-row">
                       Time{" "}
@@ -365,57 +265,58 @@ function SelectedRecipe(data) {
                     <div className="stat-value">${sentData.price}</div>
                     <div class="stat-desc">↘︎ 90 (14%)</div>
                   </div>
-
-                  <button
-                    className={liked ? "bg-pink-600" : null}
-                    onClick={() => {
-                      fetch("/api/account/like_recipe", {
-                        method: "POST",
-                        headers: {
-                          "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                          liked_recipe: sentData.id,
-                          user: userID,
-                        }),
-                      }).catch((error) => console.log("error", error));
-                      // router.push("/");
-                      setLiked((liked) => !liked);
-                    }}
-                  >
-                    {userID && userID === sentData.author ? null : (
-                      <div className=" flex justify-center items-center">
-                        {!liked ? (
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                            />
-                          </svg>
-                        ) : (
-                          <div className="flex flex-col text-white">
-                            {/* <svg
+                  {userID && userID === sentData.author ? null : (
+                    <button
+                      className={liked ? "bg-pink-600" : null}
+                      onClick={() => {
+                        fetch("/api/account/like_recipe", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            liked_recipe: sentData.id,
+                            user: userID,
+                          }),
+                        }).catch((error) => console.log("error", error));
+                        // router.push("/");
+                        setLiked((liked) => !liked);
+                      }}
+                    >
+                      {userID && userID === sentData.author ? null : (
+                        <div className=" flex justify-center items-center">
+                          {!liked ? (
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-6 w-6"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                              strokeWidth={2}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                              />
+                            </svg>
+                          ) : (
+                            <div className="flex flex-col text-white">
+                              {/* <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-5 w-5"
                               viewBox="0 0 20 20"
                               fill="currentColor"
-                            >
+                              >
                               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                             </svg> */}
-                            <p className="text-xl">Saved!</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </button>
+                              <p className="text-xl">Saved!</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  )}
                 </div>
               </div>
 
