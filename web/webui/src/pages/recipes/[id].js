@@ -5,14 +5,12 @@ import Layout from "../../hocs/Layout";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { API_URL } from "../../config/index";
-import Footer from "../../components/Footer";
 
 function SelectedRecipe(data) {
   const sentData = data.data;
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
-  // const [newFile, setNewFile] = useState(false);
 
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState(false);
@@ -25,8 +23,6 @@ function SelectedRecipe(data) {
   const [cookTime, setCookTime] = useState(sentData.total_cook_time);
   const [price, setPrice] = useState(sentData.price);
   const [updated, setUpdated] = useState(false);
-
-  // console.log(sentData);
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -57,7 +53,6 @@ function SelectedRecipe(data) {
   const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    // formData.append("image", image);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("total_cook_time", cookTime);
@@ -96,8 +91,8 @@ function SelectedRecipe(data) {
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData.id}>
-      <div className=" flex flex-col justify-self-center self-center items-center">
-        <div className="w-2/3 my-10">
+      <div className="flex justify-center w-11/12 mx-auto">
+        <div className=" my-10 w-full">
           {showEdit ? (
             <div>
               <div className="p-6 flex flex-col">
@@ -152,29 +147,6 @@ function SelectedRecipe(data) {
                       required
                     />
                   </div>
-                  {/* {!newFile ? (
-                    <button onClick={() => setNewFile((newFile) => !newFile)}>
-                      Edit Photo
-                    </button>
-                  ) : (
-                    <div>
-                      <div>
-                        <label htmlFor="image">Image Upload</label>
-                        <input
-                          type="file"
-                          name="image"
-                          onChange={onFileChange}
-                          // value={image}
-                          // src={`${image}`}
-                          required
-                          className="p-2 ml-2 "
-                        />
-                      </div>
-                      <button onClick={() => setNewFile((newFile) => !newFile)}>
-                        Cancel
-                      </button>
-                    </div>
-                  )} */}
                   <div className="flex flex-row items-end ">
                     <button
                       className=" p-2 mr-3 my-2 rounded font-semibold w-1/6"
@@ -195,116 +167,102 @@ function SelectedRecipe(data) {
             </div>
           ) : (
             <div>
-              <div className="flex flex-row mb-4 align-middle">
-                <div className="text-4xl mr-4 ">{sentData.title}</div>
-                {sentData.category.map((d) => (
-                  <div>
-                    <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
-                      {d.name}
-                    </button>
+              <div className="flex flex-row items-center">
+                <div className="flex flex-col">
+                  <div className="flex flex-row mb-4 align-middle">
+                    <div className="text-4xl mr-4 ">{sentData.title}</div>
+                    {sentData.category.map((d) => (
+                      <div>
+                        <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
+                          {d.name}
+                        </button>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="flex flex-row">
-                {sentData.image ? (
-                  <div className="w-1/2">
-                    <Image
-                      className="rounded-2xl my-4"
-                      loader={() => sentData.image}
-                      src={sentData.image}
-                      // unoptimized={true}
-                      width="90%"
-                      height="90%"
-                      layout="responsive"
-                      objectFit="contain"
-                      priority="true"
-                      quality="20"
-                    />
-                  </div>
-                ) : null}
+                  <div className="stats stats-vertical shadow border ">
+                    <div className="stat">
+                      <div className="stat-title">Rating</div>
+                      <div className="stat-value text-2xl">
+                        {sentData?.avg_rating ? (
+                          <p>{sentData.avg_rating.toFixed(2)} ⭐️</p>
+                        ) : (
+                          <p>No ratings yet!</p>
+                        )}
+                      </div>
+                      <div className="stat-desc">
+                        {sentData.num_likes} Saves, ({sentData.reviews.length})
+                        Reviews
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-center py-2 pl-6">
+                      <div className="stat-title flex flex-row">
+                        Time{" "}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-6 w-6"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="stat-value text-2xl">
+                        <p>{sentData.total_cook_time} mins</p>
+                      </div>
+                      <div className="stat-desc">↗︎ 400 (22%)</div>
+                    </div>
 
-                <div className="stats stats-vertical shadow ml-8 border  ">
-                  <div className="stat">
-                    <div className="stat-title">Rating</div>
-                    <div className="stat-value">
-                      {sentData?.avg_rating ? (
-                        <p>{sentData.avg_rating.toFixed(2)} ⭐️</p>
-                      ) : (
-                        <p>No ratings yet!</p>
-                      )}
+                    <div className="state pl-6 py-2">
+                      <div className="stat-title">Cost</div>
+                      <div className="stat-value text-2xl">
+                        {sentData.price}
+                      </div>
+                      <div className="stat-desc">↘︎ 90 (14%)</div>
                     </div>
-                    <div className="stat-desc">
-                      {sentData.num_likes} Saves, ({sentData.reviews.length})
-                      Reviews
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="stat-title flex flex-row">
-                      Time{" "}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
+                    {userID && userID === sentData.author ? null : (
+                      <button
+                        className={liked ? "bg-pink-600" : null}
+                        onClick={() => {
+                          fetch("/api/account/like_recipe", {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              liked_recipe: sentData.id,
+                              user: userID,
+                            }),
+                          }).catch((error) => console.log("error", error));
+                          // router.push("/");
+                          setLiked((liked) => !liked);
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </div>
-                    <div className="stat-value">
-                      <p>{sentData.total_cook_time} mins</p>
-                    </div>
-                    <div className="stat-desc">↗︎ 400 (22%)</div>
-                  </div>
-
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="stat-title">Cost</div>
-                    <div className="stat-value">{sentData.price}</div>
-                    <div className="stat-desc">↘︎ 90 (14%)</div>
-                  </div>
-                  {userID && userID === sentData.author ? null : (
-                    <button
-                      className={liked ? "bg-pink-600" : null}
-                      onClick={() => {
-                        fetch("/api/account/like_recipe", {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            liked_recipe: sentData.id,
-                            user: userID,
-                          }),
-                        }).catch((error) => console.log("error", error));
-                        // router.push("/");
-                        setLiked((liked) => !liked);
-                      }}
-                    >
-                      {userID && userID === sentData.author ? null : (
-                        <div className=" flex justify-center items-center">
-                          {!liked ? (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                              />
-                            </svg>
-                          ) : (
-                            <div className="flex flex-col text-white">
-                              {/* <svg
+                        {userID && userID === sentData.author ? null : (
+                          <div className="flex justify-center items-center p-2">
+                            {!liked ? (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                                />
+                              </svg>
+                            ) : (
+                              <div className="text-white">
+                                {/* <svg
                               xmlns="http://www.w3.org/2000/svg"
                               className="h-5 w-5"
                               viewBox="0 0 20 20"
@@ -312,14 +270,31 @@ function SelectedRecipe(data) {
                               >
                               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                             </svg> */}
-                              <p className="text-xl">Saved!</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </button>
-                  )}
+                                <p className="text-xl">Saved!</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    )}
+                  </div>
                 </div>
+                {sentData.image ? (
+                  <div className="w-2/5 ml-16">
+                    <Image
+                      className="rounded-2xl"
+                      loader={() => sentData.image}
+                      src={sentData.image}
+                      unoptimized={true}
+                      width={500}
+                      height={400}
+                      // layout="responsive"
+                      objectFit="contain"
+                      priority="true"
+                      // quality={100}
+                    />
+                  </div>
+                ) : null}
               </div>
 
               <div className="rounded py-2">
@@ -394,8 +369,10 @@ function SelectedRecipe(data) {
                               body: JSON.stringify(values),
                             })
                               .then((res) => res.json())
+                              .then(() =>
+                                router.reload(window.location.pathname)
+                              )
                               .catch((error) => console.log("error", error));
-                            router.reload(window.location.pathname);
                           }}
                         >
                           <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-stone-200  mt-6">
@@ -531,6 +508,44 @@ function SelectedRecipe(data) {
               </div>
             </div>
           )}
+        </div>
+        <div className="flex justify-center w-1/5 my-10">
+          {/* <p>test</p> */}
+          <div className=" shadow rounded-lg p-2 ml-4 w-full h-64">
+            <div className="flex flex-row items-center">
+              <div className="flex flex-row items-center m-auto">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
+                </svg>
+                <p className="text-2xl my-2 ml-2 font-medium">Trending </p>
+              </div>
+            </div>
+            <ul className="menu w-56 rounded-box">
+              <li>
+                <a>Chicken Pot Pie</a>
+              </li>
+              <li>
+                <a>Pork Dumplings</a>
+              </li>
+              <li>
+                <a>Tower of Waffles</a>
+              </li>
+              <li>
+                <a>Chocolate Shortbread</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       {/* <Footer /> */}

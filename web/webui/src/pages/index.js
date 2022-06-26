@@ -28,7 +28,7 @@ export default function Home({ data }) {
       <div className="flex justify-center">
         <div className=" flex flex-row w-11/12  align-self-center">
           <div className="w-full">
-            <div className="bg-white rounded-xl p-2 shadow-lg ">
+            <div className="rounded-xl p-2 shadow-lg ">
               <p className="text-2xl my-2 ml-2 font-medium">Recipes For You</p>
               <div className="grid grid-cols-4 ">
                 {sentData.map((d) => (
