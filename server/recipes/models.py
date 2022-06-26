@@ -27,6 +27,8 @@ class Recipes(models.Model):
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
     title =  models.CharField(max_length=255, blank=True, default='')
     description = models.TextField(null=True, blank=True, default='')
+    caption = models.TextField(null=True, blank=True, default='')
+    ingredient_list = models.TextField(null=True, blank=True, default='')
     private = models.BooleanField(default=False)
     total_cook_time = models.IntegerField(default = 0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -35,7 +37,7 @@ class Recipes(models.Model):
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/")
-    # caption
+    
     # number of clicks/views
     views = models.IntegerField(default=0)
     # ingredient list

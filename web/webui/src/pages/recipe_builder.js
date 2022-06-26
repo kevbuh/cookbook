@@ -7,10 +7,16 @@ import { API_URL } from "../config";
 const AddRecipePage = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [ingredient, setIngredient] = useState(null);
-  const [showIngredient, setShowIngredient] = useState(false);
+  const [description, setDescription] = useState("");
+  const [ingredient, setIngredient] = useState("");
 
+  const [ingredientArr, setIngredientArr] = useState({
+    name: "",
+    amount: "",
+  });
+  const { name, amount } = ingredientArr;
+
+  const [showIngredient, setShowIngredient] = useState(false);
   const [cookTime, setCookTime] = useState(null);
   const [price, setPrice] = useState(null);
   const [sliderValue, setSliderValue] = useState(33);
@@ -19,6 +25,14 @@ const AddRecipePage = () => {
   const router = useRouter();
   const userID = useSelector((state) => state.auth.user?.id);
 
+  // const addIngredient = (e) => {
+  //   setIngredientArr({ ...ingredientArr, [e.target.name]: e.target.value });
+  //   console.log(ingredientArr);
+  // };
+  // const onIngredientAmountChange = (e) => {
+  //   setIngredientAmount(e.target.value);
+  // };
+
   const onFileChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -26,7 +40,7 @@ const AddRecipePage = () => {
     setTitle(e.target.value);
   };
   const onIngredientChange = (e) => {
-    setIngredient(e.target.files[0]);
+    setIngredient(e.target.value);
   };
   const onDescriptionChange = (e) => {
     setDescription(e.target.value);
@@ -53,6 +67,7 @@ const AddRecipePage = () => {
     formData.append("image", image);
     formData.append("title", title);
     formData.append("description", description);
+    formData.append("ingredient_list", ingredient);
     formData.append("total_cook_time", cookTime);
     formData.append("author", userID);
     if (sliderValue == 33) {
@@ -90,7 +105,7 @@ const AddRecipePage = () => {
       if (res2.status === 201) {
         setUpdated(!updated);
         // console.log("SUCCESS RECIPE ADDED AYY");
-        // router.push(`/recipes/${gotBack.id}/`);
+        router.push(`/recipes/${gotBack.id}/`);
       }
     } catch (err) {
       console.log("failed at file_test.js catch");
@@ -114,14 +129,14 @@ const AddRecipePage = () => {
                   <label htmlFor="title">
                     <p className="text-lg p-2 w-full rounded my-2">Name</p>
                   </label>
-                  <label htmlFor="title">
+                  <label htmlFor="ingredient_list">
                     <p className="text-lg p-2 w-full rounded my-2">
                       Ingredients
                     </p>
                   </label>
                   <label htmlFor="description">
                     <p className="text-lg p-2 w-full rounded mt-2 mb-4">
-                      Description
+                      Directions:
                     </p>
                   </label>
                   <label htmlFor="total_cook_time">
@@ -151,62 +166,19 @@ const AddRecipePage = () => {
                     required
                     className="p-2 bg-stone-100 w-full rounded my-2"
                   />
-                  {showIngredient ? (
-                    <div>
-                      <input
-                        type="text"
-                        name="ingredient_name"
-                        placeholder="Name"
-                        onChange={onIngredientChange}
-                        value={ingredient}
-                        required
-                        className="p-2 bg-stone-100 rounded my-2 w-1/3 mr-4"
-                      />
-                      <input
-                        type="text"
-                        name="ingredients_amount"
-                        placeholder="Amount"
-                        onChange={onIngredientChange}
-                        value={ingredient}
-                        required
-                        className="p-2 bg-stone-100 rounded my-2 w-1/3 mr-4"
-                      />
-                      <button className="p-2 mt-4 bg-pink-600 rounded text-white w-1/7">
-                        Add
-                      </button>
-                      <button
-                        className="btn btn-circle btn-outline ml-4"
-                        onClick={() => setShowIngredient(false)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-6 w-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                      <button></button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => setShowIngredient(true)}
-                      className="w-1/4 bg-stone-100 mt-6 mb-4 rounded"
-                    >
-                      <p>Show ingredients</p>
-                    </button>
-                  )}
+                  <textarea
+                    type="text"
+                    name="ingredient_list"
+                    placeholder="Ingredients..."
+                    onChange={onIngredientChange}
+                    value={ingredient}
+                    required
+                    className="pt-2 pl-2 bg-stone-100 w-full rounded my-2"
+                  />
                   <textarea
                     type="text"
                     name="description"
-                    placeholder="Recipe description"
+                    placeholder="Enter the directions for this recipe"
                     onChange={onDescriptionChange}
                     value={description}
                     required

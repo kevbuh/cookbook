@@ -12,7 +12,7 @@ function SelectedRecipe(data) {
   const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
-  const [newFile, setNewFile] = useState(false);
+  // const [newFile, setNewFile] = useState(false);
 
   const [liked, setLiked] = useState(false);
   const [comment, setComment] = useState(false);
@@ -26,7 +26,7 @@ function SelectedRecipe(data) {
   const [price, setPrice] = useState(sentData.price);
   const [updated, setUpdated] = useState(false);
 
-  console.log(sentData);
+  // console.log(sentData);
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -212,11 +212,13 @@ function SelectedRecipe(data) {
                       className="rounded-2xl my-4"
                       loader={() => sentData.image}
                       src={sentData.image}
-                      unoptimized={true}
-                      width="100%"
-                      height="100%"
+                      // unoptimized={true}
+                      width="90%"
+                      height="90%"
                       layout="responsive"
                       objectFit="contain"
+                      priority="true"
+                      quality="20"
                     />
                   </div>
                 ) : null}
@@ -257,13 +259,13 @@ function SelectedRecipe(data) {
                     <div className="stat-value">
                       <p>{sentData.total_cook_time} mins</p>
                     </div>
-                    <div class="stat-desc">↗︎ 400 (22%)</div>
+                    <div className="stat-desc">↗︎ 400 (22%)</div>
                   </div>
 
                   <div className="flex flex-col items-center justify-center">
                     <div className="stat-title">Cost</div>
                     <div className="stat-value">{sentData.price}</div>
-                    <div class="stat-desc">↘︎ 90 (14%)</div>
+                    <div className="stat-desc">↘︎ 90 (14%)</div>
                   </div>
                   {userID && userID === sentData.author ? null : (
                     <button
@@ -324,27 +326,29 @@ function SelectedRecipe(data) {
                 {sentData.private ? (
                   <p className="text-xl">Private Recipe </p>
                 ) : null}
-                {sentData.ingredients.length > 0 ? (
+                {sentData.ingredient_list ? (
                   <div>
                     <div className="text-xl mt-6">Ingredients</div>
-                    <div className="my-2 rounded w-1/3 border shadow p-3 divide-y">
-                      {sentData.ingredients.map((d) => (
-                        <div className="pt-1 pb-2">
-                          <p className="text-lg">{d.name}</p>
-                          <p>{d.amount}</p>
-                        </div>
-                      ))}
+                    <div className="my-2 rounded w-1/3 border shadow p-3 divide-y whitespace-pre-line">
+                      {sentData.ingredient_list}
                     </div>
                   </div>
                 ) : (
                   <div className="text-xl mt-6">No ingredients listed</div>
                 )}
-                <div className="my-4 border rounded p-3 shadow w-6/12">
-                  <p className="text-xl">Description</p>
-                  <p className="text-lg">{sentData.description}</p>
-                  <div>Created at {sentData.created}</div>
+                <p className="text-xl mt-6">Directions</p>
+                <div className="mb-4  my-2 border rounded p-3 shadow w-6/12">
+                  <p className="text-medium whitespace-pre-line">
+                    {sentData.description}
+                  </p>
+                  <div className="text-xs mt-1">Created {sentData.created}</div>
                 </div>
-                {sentData.source ? <div>Source: {sentData.source}</div> : null}
+                {sentData.source ? (
+                  <div>
+                    Source:
+                    <a className="text-xs">{sentData.source}</a>
+                  </div>
+                ) : null}
               </div>
               <div className="">
                 {userID && userID === sentData.author ? (

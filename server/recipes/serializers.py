@@ -31,7 +31,7 @@ class RecipesSerializer(serializers.ModelSerializer):
     reviews = ReviewSerializer(many=True, required=False)
     category = CategorySerializer(many=True, required=False)
     comments = CommentSerializer(many=True, required=False)
-    ingredients = IngredientSerializer(many=True, required=False)
+    # ingredients = IngredientSerializer(many=True, required=False)
 
     # uploaded_images = UploadedImageSerializer(many=True, required=False)
 

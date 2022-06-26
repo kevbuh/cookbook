@@ -54,14 +54,14 @@ export default function Home({ data }) {
                         ) : null}
                       </figure>
                       <div className="card-actions justify-center self-center pt-4">
-                        <div className="badge badge-outline">
+                        <div className="badge badge-outline border-stone-400 w-2/5">
                           {d.total_cook_time} mins
                         </div>
-                        <div className="badge badge-outline">
+                        <div className="badge badge-outline border-stone-400 w-2/5">
                           {d.num_likes} saves
                         </div>
                       </div>
-                      <div className="card-body px-4 py-2">
+                      <div className="card-body px-4 pt-2 pb-4">
                         <Link href={"/recipes/" + d.id}>
                           <a className="text-xl font-semibold">{d.title}</a>
                         </Link>
@@ -76,7 +76,7 @@ export default function Home({ data }) {
                         ) : (
                           <div>No Rating</div>
                         )}
-                        <p>{d.description}</p>
+                        {/* <p>{d.description}</p> */}
                       </div>
                     </div>
 
