@@ -121,7 +121,11 @@ const Profile = () => {
           Authorization: "Bearer " + token.token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ first_name: firstName, email: user.email }),
+        body: JSON.stringify({
+          first_name: firstName,
+          email: user.email,
+          is_premium: user.is_premium,
+        }),
       });
 
       if (res2.status === 200) {

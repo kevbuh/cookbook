@@ -5,6 +5,8 @@ server/core/settings.py
 
 web/webui/package-lock.json
 web/webui/node_modules
+web/webui/.env
+web/webui/env
 server/media/images
 web/webui/node_modules 2/
 server/recipes/__pycache__

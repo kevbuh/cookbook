@@ -1,7 +1,34 @@
+import { useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import Layout from "../hocs/Layout";
 import { API_URL } from "../config/index";
+import { useRouter } from "next/router";
 
-const premiumPage = () => {
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+const PremiumPage = () => {
+  const router = useRouter();
+  const { success, canceled } = router.query;
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    // const query = new URLSearchParams(window.location.search);
+
+    if (success !== undefined || canceled !== undefined) {
+      if (success) {
+        console.log("Order placed! You will receive an email confirmation.");
+      }
+
+      if (canceled) {
+        console.log(
+          "Order canceled -- continue to shop around and checkout when you’re ready."
+        );
+      }
+    }
+  }, [success, canceled]);
+
   return (
     <Layout>
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
@@ -34,9 +61,21 @@ const premiumPage = () => {
             </div>
           </div>
         </div>
+        <form action="/api/checkout_sessions" method="POST">
+          <section>
+            <button
+              type="submit"
+              role="link"
+              className="bg-pink-600 text-white text-lg px-4 py-2 rounded-lg "
+            >
+              Get CookBook+
+            </button>
+          </section>
+        </form>
       </div>
+      //{" "}
     </Layout>
   );
 };
 
-export default premiumPage;
+export default PremiumPage;

@@ -97,11 +97,11 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     first_name = serializers.CharField(required=True)
-
+    is_premium = serializers.BooleanField(required=True)
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'first_name', 'last_name', 'email')
+        fields = ('username', 'first_name', 'last_name', 'email', 'is_premium')
         # extra_kwargs = {
             # 'first_name': {'required': True},
             # 'last_name': {'required': True},
@@ -122,6 +122,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user = self.context['request'].user
 
+        print("HERE IN STRIPE:::", validated_data)
+
         if user.pk != instance.pk:
             raise serializers.ValidationError({"authorize": "You dont have permission for this user."})
 
@@ -129,6 +131,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         # instance.last_name = validated_data['last_name']
         instance.email = validated_data['email']
         instance.first_name = validated_data['first_name']
+        instance.is_premium = validated_data['is_premium']
+
 
         # instance.username = validated_data['username']
 
