@@ -66,11 +66,27 @@ function NavBar() {
 
   const authLinks = (
     <>
+      <Link href="/filter">
+        <button className="m-auto">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
+      </Link>
       <Link href="/recipe_builder">
         {/* <a className="flex text-xl font-medium  justify-center items-center ">
           Add+
         </a> */}
-        <button className="m-auto text-pink-600">
+        <button className="m-auto ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -89,7 +105,7 @@ function NavBar() {
         {/* <a className="flex text-xl font-medium  justify-center items-center">
           Account
         </a> */}
-        <button className="mr-auto">
+        <button className="m-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -219,7 +235,7 @@ function NavBar() {
           </form>
         </div>
       ) : null}
-      <div className="justify-center w-1/6 grid grid-cols-2 content-evenly items-center">
+      <div className="justify-center w-1/6 grid grid-cols-3 content-evenly items-center">
         {isAuthenticated ? authLinks : guestLinks}
       </div>
     </div>
