@@ -24,6 +24,22 @@ class RecipeViewSet(ModelViewSet):
     def delete_recipes(self, request, pk=None):
         pass
 
+class RecipesCreatedByUser(generics.ListCreateAPIView):
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ['text', 'title']
+    serializer_class = RecipesSerializer
+    # filterset_fields = ['creator']
+    # queryset = Note.objects.all()
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        queryset = Recipes.objects.filter()
+        user = self.request.user
+        return Recipes.objects.filter(author=user)
+
 class SearchResultsList(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)
     search_fields = ['description', 'title']

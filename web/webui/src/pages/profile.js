@@ -4,7 +4,7 @@ import Layout from "../hocs/Layout";
 import { logout } from "../actions/auth";
 import { API_URL } from "../config";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ const Profile = () => {
   const user = useSelector((state) => state.auth?.user);
   const loading = useSelector((state) => state.auth.loading);
   const userID = useSelector((state) => state.auth.user?.id);
+  const [myRecipes, setMyRecipes] = useState(null);
 
   const [firstName, setFirstName] = useState("");
 
@@ -24,6 +25,33 @@ const Profile = () => {
     password: "",
     password2: "",
   });
+
+  const your_recipes = async () => {
+    const res = await fetch(`/api/account/file_test`, {
+      // gets the user token
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const token = await res.json();
+    // console.log(token.token);
+
+    const res2 = await fetch(`${API_URL}/my_recipes/`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token.token,
+      },
+    });
+    const data2 = await res2.json();
+    console.log("DATA2", data2);
+    setMyRecipes(() => data2);
+  };
+
+  useEffect(() => {
+    your_recipes();
+  }, []);
 
   const { old_password, password, password2 } = formData;
 
@@ -192,6 +220,19 @@ const Profile = () => {
           </p> */}
 
               <p className="text-lg m-6">Recently Viewed</p>
+              <p className="text-lg mt-6 mx-6 mb-1">Recipes You've Uploaded</p>
+              {myRecipes
+                ? myRecipes.map((d) => (
+                    <div>
+                      <Link href={"/recipes/" + d.id}>
+                        <button className="border-stone-100 mx-2 my-1 border-2 rounded-2xl py-1 px-3 ml-6 ">
+                          {d.title}
+                        </button>
+                      </Link>
+                    </div>
+                  ))
+                : null}
+
               {success ? <div>Changed Password Successfully!</div> : null}
               {!reset ? (
                 <button
