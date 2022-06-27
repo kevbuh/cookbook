@@ -8,6 +8,7 @@ from recipes.models import Recipes
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
+    is_premium = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

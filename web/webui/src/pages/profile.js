@@ -188,6 +188,24 @@ const Profile = () => {
                 <p className="text-lg m-6">
                   Welcome, {user !== null && user.first_name}!
                 </p>
+                <p className="text-sm m-6">
+                  Joined {user?.days_since_joined} days ago
+                </p>
+                {user?.is_premium ? (
+                  <div>
+                    <button className="p-2 bg-pink-600 text-white rounded mx-6 mb-4">
+                      Premium Member
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <Link href="/premium">
+                      <button className="p-2 bg-pink-600 text-white rounded mx-6 mb-4">
+                        Join Cook Book Premium
+                      </button>
+                    </Link>
+                  </div>
+                )}
               </div>
 
               {/* {console.log("user1:::::", user?.favorite_recipes)} */}
@@ -195,11 +213,6 @@ const Profile = () => {
               <div className="flex flex-col ">
                 {user?.favorite_recipes ? (
                   user.favorite_recipes.map((d) => {
-                    // console.log("user2:::::", user.favorite_recipes);
-
-                    // console.log("favorites:::::", d.liked_recipe);
-                    // console.log("data id:::::", d.id);
-
                     return (
                       <Link href={"/recipes/" + d.liked_recipe}>
                         <a
@@ -215,9 +228,6 @@ const Profile = () => {
                   <p>No liked recipes!</p>
                 )}
               </div>
-              {/* <p className="text-lg m-6">
-            Days since joined: {user.days_since_joined}
-          </p> */}
 
               <p className="text-lg m-6">Recently Viewed</p>
               <p className="text-lg mt-6 mx-6 mb-1">Recipes You've Uploaded</p>
