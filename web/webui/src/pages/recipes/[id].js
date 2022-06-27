@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Formik, Field, Form } from "formik";
 import Layout from "../../hocs/Layout";
@@ -16,6 +16,9 @@ function SelectedRecipe(data) {
   const [comment, setComment] = useState(false);
 
   const userID = useSelector((state) => state.auth.user?.id);
+  const user = useSelector((state) => state.auth?.user);
+
+  console.log(sentData);
 
   const [image, setImage] = useState(sentData.image);
   const [title, setTitle] = useState(sentData.title);
@@ -23,6 +26,18 @@ function SelectedRecipe(data) {
   const [cookTime, setCookTime] = useState(sentData.total_cook_time);
   const [price, setPrice] = useState(sentData.price);
   const [updated, setUpdated] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      console.log("result::::", 77 in user.favorite_recipes[0]);
+      user.favorite_recipes.map((d) => {
+        if (sentData.id === d["liked_recipe"]) {
+          // console.log(true);
+          setLiked(true);
+        }
+      });
+    }
+  }, [user]);
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -245,7 +260,7 @@ function SelectedRecipe(data) {
                       >
                         {userID && userID === sentData.author ? null : (
                           <div className="flex justify-center items-center p-2">
-                            {!liked ? (
+                            {user?.favorite_recipes.includes(sentData.id) ? (
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"

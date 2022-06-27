@@ -77,6 +77,9 @@ class Review(models.Model):
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='reviews', related_query_name='review', blank=True, null=True)
     rate = models.IntegerField(default=5, validators=[MaxValueValidator(5),MinValueValidator(1)])
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ["user", "recipe"]
 
     def __str__(self):
         return str(self.id)
@@ -85,6 +88,9 @@ class Favorites(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites', related_query_name='favorite')
     liked_recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='favorites', related_query_name='favorite', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ["user", "liked_recipe"]
 
     def __str__(self):
         return str(self.id)

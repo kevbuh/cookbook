@@ -187,9 +187,9 @@ const Profile = () => {
           ) : (
             <div>
               <div className="bg-stone-100 rounded-lg p-2">
-                <p className="text-2xl m-6 underline">User Profile</p>
+                {/* <p className="text-2xl m-6 underline">User Profile</p> */}
 
-                <p className="text-lg m-6">
+                <p className="text-2xl m-6 ">
                   Welcome, {user !== null && user.first_name}!
                 </p>
                 <p className="text-sm m-6">
