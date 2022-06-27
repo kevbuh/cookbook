@@ -67,11 +67,11 @@ export default function Home({ data }) {
                         </Link>
                         {d.avg_rating ? (
                           <div>
-                            {/* {d.avg_rating.toFixed(2)}{" "} */}
+                            {d.avg_rating.toFixed(2)}{" "}
                             {d.avg_rating
                               ? getStars(d.avg_rating)
                               : "No rating"}{" "}
-                            {/* - ({d.reviews.length}) */}
+                            - ({d.reviews.length})
                           </div>
                         ) : (
                           <div>No Rating</div>

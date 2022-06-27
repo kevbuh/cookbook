@@ -36,21 +36,73 @@ function NavBar() {
       });
   };
 
-  useEffect(() => {
-    searchNotes();
-  }, [searchField]);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    router.push(`/search_results?result=${searchField}`);
+
+    // try {
+    //   const res2 = await fetch(`/search_results?result=${searchField}`, {
+    //     method: "POST",
+    //     headers: {
+    //       Authorization: "Bearer " + token.token,
+    //     },
+    //     body: formData,
+    //   });
+
+    //   const gotBack = await res2.json();
+
+    //   if (res2.status === 200) {
+    //     setUpdated(!updated);
+    //   }
+    // } catch (err) {
+    //   console.log("failed at search_results.js catch");
+    // }
+  };
+
+  // useEffect(() => {
+  //   searchNotes();
+  // }, [searchField]);
 
   const authLinks = (
     <>
       <Link href="/recipe_builder">
-        <a className="flex text-xl font-medium  justify-center items-center ">
+        {/* <a className="flex text-xl font-medium  justify-center items-center ">
           Add+
-        </a>
+        </a> */}
+        <button className="m-auto text-pink-600">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
       </Link>
       <Link href="/profile">
-        <a className="flex text-xl font-medium  justify-center items-center">
+        {/* <a className="flex text-xl font-medium  justify-center items-center">
           Account
-        </a>
+        </a> */}
+        <button className="mr-auto">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+              clipRule="evenodd"
+            />
+          </svg>
+        </button>
       </Link>
     </>
   );
@@ -136,14 +188,20 @@ function NavBar() {
                 onBlur={onBlur}
                 required
               />
-              <button
-                type="submit"
-                className="text-white absolute right-2.5 bottom-2.5 bg-stone-800 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-400"
-              >
-                Search
-              </button>
+              {searchField.length > 1 ? (
+                <button
+                  onClick={onSubmit}
+                  className="text-white absolute right-2.5 bottom-2.5 bg-stone-800 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-400"
+                >
+                  Search
+                </button>
+              ) : (
+                <button className="text-white absolute right-2.5 bottom-2.5 bg-stone-800 hover:bg-stone-800 focus:ring-4 focus:outline-none focus:ring-stone-800 font-medium rounded-lg text-sm px-4 py-2 dark:bg-zinc-400">
+                  Search
+                </button>
+              )}
             </div>
-            {focused ? (
+            {/* {focused ? (
               <div className="flex flex-col bg-stone-200 z-10 ">
                 {data.length > 0 ? (
                   data.map((d) => {
@@ -157,7 +215,7 @@ function NavBar() {
                   <p>No Search Results</p>
                 )}
               </div>
-            ) : null}
+            ) : null} */}
           </form>
         </div>
       ) : null}

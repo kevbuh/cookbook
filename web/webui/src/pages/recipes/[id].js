@@ -513,22 +513,10 @@ function SelectedRecipe(data) {
           {/* <p>test</p> */}
           <div className=" shadow rounded-lg p-2 ml-4 w-full h-64">
             <div className="flex flex-row items-center">
-              <div className="flex flex-row items-center m-auto">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
-                <p className="text-2xl my-2 ml-2 font-medium">Trending </p>
+              <div className="flex flex-row items-center ">
+                <p className="text-2xl my-2 ml-2 font-medium">
+                  More Like This{" "}
+                </p>
               </div>
             </div>
             <ul className="menu w-56 rounded-box">
