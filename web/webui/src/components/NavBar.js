@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { API_URL } from "../config/index";
 
 function NavBar() {
-  const [data, setData] = useState([]);
   const [searchField, setSearchField] = useState("");
   const [focused, setFocused] = useState(false);
   const onBlur = () => setFocused(false);
@@ -13,56 +11,11 @@ function NavBar() {
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const searchNotes = () => {
-    fetch(`${API_URL}/search/?search=${searchField}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw res.json();
-        }
-      })
-      .then((json) => {
-        // console.log("search result:", json);
-        setData(json);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
     router.push(`/search_results?result=${searchField}`);
-
-    // try {
-    //   const res2 = await fetch(`/search_results?result=${searchField}`, {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: "Bearer " + token.token,
-    //     },
-    //     body: formData,
-    //   });
-
-    //   const gotBack = await res2.json();
-
-    //   if (res2.status === 200) {
-    //     setUpdated(!updated);
-    //   }
-    // } catch (err) {
-    //   console.log("failed at search_results.js catch");
-    // }
   };
-
-  // useEffect(() => {
-  //   searchNotes();
-  // }, [searchField]);
 
   const authLinks = (
     <>
@@ -83,9 +36,6 @@ function NavBar() {
         </button>
       </Link>
       <Link href="/recipe_builder">
-        {/* <a className="flex text-xl font-medium  justify-center items-center ">
-          Add+
-        </a> */}
         <button className="m-auto ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -102,9 +52,6 @@ function NavBar() {
         </button>
       </Link>
       <Link href="/profile">
-        {/* <a className="flex text-xl font-medium  justify-center items-center">
-          Account
-        </a> */}
         <button className="m-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -217,21 +164,6 @@ function NavBar() {
                 </button>
               )}
             </div>
-            {/* {focused ? (
-              <div className="flex flex-col bg-stone-200 z-10 ">
-                {data.length > 0 ? (
-                  data.map((d) => {
-                    return (
-                      <Link href={"/recipes/" + d.id}>
-                        <a key={d.id}>{d.title} </a>
-                      </Link>
-                    );
-                  })
-                ) : (
-                  <p>No Search Results</p>
-                )}
-              </div>
-            ) : null} */}
           </form>
         </div>
       ) : null}

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useQuery } from "react-query";
 
-function search_results({ data }) {
+function search_results() {
   const { query } = useRouter();
   const getStars = (num_stars) => {
     const steps = [];

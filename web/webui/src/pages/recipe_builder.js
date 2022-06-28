@@ -14,6 +14,7 @@ const AddRecipePage = () => {
     name: "",
     amount: "",
   });
+
   const { name, amount } = ingredientArr;
 
   const [showIngredient, setShowIngredient] = useState(false);

@@ -1,16 +1,35 @@
-import { useState } from "react";
 import Link from "next/link";
 import Layout from "../hocs/Layout";
 import { API_URL } from "../config";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 
 export default function Home({ data }) {
-  const [sentData, setSentData] = useState(data);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const router = useRouter();
+
+  const fetchAllRecipes = async () => {
+    const res = await fetch(`${API_URL}/recipe/`);
+    return res.json();
+  };
+
+  const {
+    isLoading,
+    isError,
+    data: allRecipes,
+    error,
+  } = useQuery("allRecipes", fetchAllRecipes);
+
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -31,7 +50,7 @@ export default function Home({ data }) {
             <div className="rounded-xl p-2 shadow-lg ">
               <p className="text-2xl my-2 ml-2 font-medium">Recipes For You</p>
               <div className="grid grid-cols-4 ">
-                {sentData.map((d) => (
+                {allRecipes.map((d) => (
                   <div key={d.id} className="card w-100 border shadow m-2">
                     <div className="">
                       <figure className="mt-4">
@@ -79,24 +98,6 @@ export default function Home({ data }) {
                         {/* <p>{d.description}</p> */}
                       </div>
                     </div>
-
-                    {/* <div>
-                    <Link href={"/recipes/" + d.id}>
-                      <a className="text-lg font-semibold ">{d.title}</a>
-                    </Link>
-                  </div>
-                  {d.avg_rating ? (
-                    <div>
-                      {d.avg_rating.toFixed(2)}{" "}
-                      {d.avg_rating ? getStars(d.avg_rating) : "No rating"} - (
-                      {d.reviews.length})
-                    </div>
-                  ) : (
-                    <div>No Rating</div>
-                  )}
-                  <p>Time: {d.total_cook_time} mins</p>
-                  <p>Description: {d.description}</p>
-                  <p>Favorited {d.num_likes} times</p> */}
                   </div>
                 ))}
               </div>
@@ -153,22 +154,4 @@ export default function Home({ data }) {
       </div>
     </Layout>
   );
-}
-
-// This gets called on every request
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(`${API_URL}/recipe/`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-
-  const data = await res.json();
-  // console.log("data:::", JSON.stringify(res.data));
-
-  // Pass data to the page via props
-  return { props: { data } };
 }
