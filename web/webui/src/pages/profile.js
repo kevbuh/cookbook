@@ -4,21 +4,19 @@ import Layout from "../hocs/Layout";
 import { logout } from "../actions/auth";
 import { API_URL } from "../config";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const Profile = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const loading = useSelector((state) => state.auth.loading);
 
   const [success, setSuccess] = useState(false);
   const [reset, setReset] = useState(false);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth?.user);
-  const loading = useSelector((state) => state.auth.loading);
-  const userID = useSelector((state) => state.auth.user?.id);
-  const [myRecipes, setMyRecipes] = useState(null);
-
-  const [firstName, setFirstName] = useState("");
 
   const [formData, setFormData] = useState({
     old_password: "",
@@ -26,7 +24,8 @@ const Profile = () => {
     password2: "",
   });
 
-  const your_recipes = async () => {
+  const fetchMyToken = async () => {
+    console.log("FETCHED TOKEN");
     const res = await fetch(`/api/account/file_test`, {
       // gets the user token
       method: "POST",
@@ -36,22 +35,63 @@ const Profile = () => {
       },
     });
     const token = await res.json();
-    // console.log(token.token);
+    return token;
+  };
 
+  const fetchMyRecipes = async (token) => {
     const res2 = await fetch(`${API_URL}/my_recipes/`, {
       method: "GET",
       headers: {
-        Authorization: "Bearer " + token.token,
+        Authorization: "Bearer " + token,
       },
     });
     const data2 = await res2.json();
-    console.log("DATA2", data2);
-    setMyRecipes(() => data2);
+    return data2;
   };
 
-  useEffect(() => {
-    your_recipes();
-  }, []);
+  const fetchMyUser = async (token) => {
+    const res2 = await fetch(`${API_URL}/auth/user/`, {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    const data2 = await res2.json();
+    return data2;
+  };
+
+  const {
+    isLoading: isLoadingToken,
+    isError: isErrorToken,
+    data: myTokenData,
+    error: tokenError,
+  } = useQuery(["userToken"], fetchMyToken);
+
+  const {
+    isLoading: isLoading2,
+    isError: isError2,
+    data: myUserData,
+    error: error2,
+  } = useQuery(["userData"], () => fetchMyUser(myTokenData.token), {
+    enabled: !!myTokenData,
+  });
+
+  const {
+    isLoading,
+    isError,
+    data: rqdata,
+    error,
+  } = useQuery(["userRecipes"], () => fetchMyRecipes(myTokenData.token), {
+    enabled: !!myTokenData,
+  });
+
+  if (isLoading || isLoading2 || isLoadingToken) {
+    return <span>Loading...</span>;
+  }
+
+  if (isErrorToken || isError || isError2) {
+    return <span>Error: {tokenError.message}</span>;
+  }
 
   const { old_password, password, password2 } = formData;
 
@@ -68,8 +108,9 @@ const Profile = () => {
     }
   };
 
-  const onSubmit = async (e) => {
+  const onSubmitPassword = async (e) => {
     e.preventDefault();
+    console.log("HERE");
 
     try {
       const res = await fetch(`/api/account/file_test`, {
@@ -81,57 +122,23 @@ const Profile = () => {
         },
       });
       const token = await res.json();
-      console.log(token.token);
+      console.log(token.token, myUserData.data.id);
 
-      const res2 = await fetch(`${API_URL}/auth/change_password/${userID}/`, {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + token.token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (res2.status === 200) {
-        setSuccess(!success);
-        setReset(!reset);
-      }
-    } catch (err) {
-      console.log("failed at profile.js catch");
-    }
-  };
-
-  const onSubmitFirstName = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await fetch(`/api/account/file_test`, {
-        // gets the user token
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const token = await res.json();
-
-      const res2 = await fetch(`${API_URL}/auth/update_profile/${userID}/`, {
-        method: "PUT",
-        headers: {
-          Authorization: "Bearer " + token.token,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: firstName,
-          email: user.email,
-          is_premium: user.is_premium,
-        }),
-      });
+      const res2 = await fetch(
+        `${API_URL}/auth/change_password/${myUserData.data.id}/`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: "Bearer " + token.token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (res2.status === 200) {
         setSuccess(!success);
         setReset(!reset);
-        router.reload(window.location.pathname);
       }
     } catch (err) {
       console.log("failed at profile.js catch");
@@ -145,44 +152,60 @@ const Profile = () => {
     <Layout title="CookBook | profile">
       <div className=" flex flex-col justify-self-center my-5 self-center items-center">
         <div className="w-2/3">
-          {user !== null && user.first_name === "" ? (
+          {myUserData.user !== null && myUserData.user.first_name === "" ? (
             <div className="flex flex-col items-center">
               <div className="text-3xl my-8">Welcome to CookBook!</div>
               <div className="text-2xl">What's your name?</div>
               <div>
-                <label htmlFor="first_name">
-                  {/* <p>Enter Your Name Below</p> */}
-                </label>
-                <input
-                  type="text"
-                  name="first_name"
-                  placeholder="Enter Your Name"
-                  onChange={onFirstNameChange}
-                  value={firstName}
-                  required
-                  className="p-2 bg-stone-100 rounded mt-8"
-                />
-                {firstName && firstName.length < 2 ? (
-                  <div className="text-red-400 mt-4 text-normal">
-                    Enter your name!
-                  </div>
-                ) : null}
+                <Formik
+                  initialValues={{ firstName: "" }}
+                  validationSchema={Yup.object({
+                    firstName: Yup.string()
+                      .min(2, "Too Short!")
+                      .max(50, "Too Long!")
+                      .required("Required"),
+                  })}
+                  onSubmit={async (values, { setSubmitting }) => {
+                    fetch(
+                      `${API_URL}/auth/update_profile/${myUserData.user.id}/`,
+                      {
+                        method: "PUT",
+                        headers: {
+                          Authorization: "Bearer " + myTokenData.token,
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          first_name: values.firstName,
+                          email: myUserData.user.email,
+                          is_premium: myUserData.user.is_premium,
+                        }),
+                      }
+                    );
+
+                    setSuccess(!success);
+                    setReset(!reset);
+                    setSubmitting(false);
+                    router.reload(window.location.pathname);
+                  }}
+                >
+                  <Form>
+                    <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                      <label htmlFor="firstName"></label>
+                      <Field name="firstName" type="firstName" />
+                      <ErrorMessage name="firstName">
+                        {(msg) => <p className="text-red-600">{msg}</p>}
+                      </ErrorMessage>
+
+                      <button
+                        type="submit"
+                        className="text-lg m-6 py-2 px-3 rounded-lg bg-pink-600 text-white"
+                      >
+                        Continue
+                      </button>
+                    </div>
+                  </Form>
+                </Formik>
               </div>
-              {firstName.length > 1 ? (
-                <button
-                  className="text-lg m-6 py-2 px-3 rounded-lg bg-pink-600 text-white"
-                  onClick={onSubmitFirstName}
-                >
-                  Next
-                </button>
-              ) : (
-                <p
-                  className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200 cursor-default "
-                  // onClick={onSubmitFirstName}
-                >
-                  Next
-                </p>
-              )}
             </div>
           ) : (
             <div>
@@ -190,14 +213,15 @@ const Profile = () => {
                 {/* <p className="text-2xl m-6 underline">User Profile</p> */}
                 <div>
                   <p className="text-2xl mt-6 mx-6 ">
-                    Welcome, {user !== null && user.first_name}!
+                    Welcome,{" "}
+                    {myUserData.user !== null && myUserData.user.first_name}!
                   </p>
                   <p className="text-sm mb-6 mx-6">
-                    Joined {user?.days_since_joined} days ago
+                    Joined {myUserData.user.days_since_joined} days ago
                   </p>
                 </div>
                 <div className="w-8/12">
-                  {user?.is_premium ? (
+                  {myUserData.data?.is_premium ? (
                     <div>
                       <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
                         Premium Member
@@ -218,8 +242,8 @@ const Profile = () => {
               {/* {console.log("user1:::::", user?.favorite_recipes)} */}
               <p className="text-lg m-6">Your favorites</p>
               <div className="flex flex-col ">
-                {user?.favorite_recipes ? (
-                  user.favorite_recipes.map((d) => {
+                {myUserData.user?.favorite_recipes ? (
+                  myUserData.user.favorite_recipes.map((d) => {
                     return (
                       <Link href={"/recipes/" + d.liked_recipe}>
                         <a
@@ -239,8 +263,8 @@ const Profile = () => {
 
               <p className="text-lg m-6">Recently Viewed</p>
               <p className="text-lg mt-6 mx-6 mb-1">Recipes You've Uploaded</p>
-              {myRecipes?.length > 0
-                ? myRecipes.map((d) => (
+              {rqdata?.length > 0
+                ? rqdata.map((d) => (
                     <div>
                       <Link href={"/recipes/" + d.id}>
                         <button className="border-stone-100 mx-2 my-1 border-2 rounded-2xl py-1 px-3 ml-6 ">
@@ -326,7 +350,7 @@ const Profile = () => {
                   old_password.length > 7 ? (
                     <button
                       className="text-lg m-6 py-2 px-3 rounded-lg bg-pink-600 text-white"
-                      onClick={onSubmit}
+                      onClick={onSubmitPassword}
                     >
                       Change Password
                     </button>
@@ -356,24 +380,6 @@ const Profile = () => {
   );
 };
 
-// // This gets called on every request
-// export async function getServerSideProps(context) {
-//   const id = context.query.id; // Get ID from slug `/book/1`
-//   // If routing to `/book/1?name=some-book`
-//   // Outputs: `{ id: '1', name: 'some-book' }`
-
-//   // Fetch data from external API
-//   const res = await fetch(`${API_URL}/user`, {
-//     method: "GET",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Accept: "application/json",
-//     },
-//   });
-//   const data = await res.json();
-
-//   // Pass data to the page via props
-//   return { props: { data } };
-// }
+// 394 before
 
 export default Profile;

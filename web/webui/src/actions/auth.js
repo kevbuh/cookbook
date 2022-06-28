@@ -19,6 +19,7 @@ import {
 export const load_user = () => async (dispatch) => {
   try {
     // console.log("GOT HERE 11");
+    console.log("USER LOADED IN REDUX");
 
     const res = await fetch("/api/account/user", {
       method: "GET",
