@@ -155,7 +155,7 @@ const Profile = () => {
           {myUserData.user !== null && myUserData.user.first_name === "" ? (
             <div className="flex flex-col items-center">
               <div className="text-3xl my-8">Welcome to CookBook!</div>
-              <div className="text-2xl">What's your name?</div>
+              <div className="text-2xl">Enter your display name</div>
               <div>
                 <Formik
                   initialValues={{ firstName: "" }}
