@@ -14,13 +14,13 @@ function filter() {
             </p>
           </div>
           <div className=" flex flex-row gap h-80">
-            <button className=" bg-red-100 m-auto p-5 w-full h-1/2 rounded">
+            <button className="border m-auto p-5 w-full h-1/2 rounded-lg hover:bg-pink-100">
               <p className="text-2xl">Salty</p>
             </button>
             <p className="flex items-center align-center justify-center mx-5">
               OR
             </p>
-            <button className="bg-green-100 m-auto p-5 w-full h-1/2 rounded">
+            <button className=" m-auto p-5 w-full h-1/2 rounded-lg border hover:bg-pink-100">
               <p className="text-2xl">Sweet</p>
             </button>
           </div>

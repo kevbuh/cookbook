@@ -143,12 +143,12 @@ const Profile = () => {
 
   return (
     <Layout title="CookBook | profile">
-      <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
+      <div className=" flex flex-col justify-self-center my-5 self-center items-center">
         <div className="w-2/3">
           {user !== null && user.first_name === "" ? (
             <div className="flex flex-col items-center">
               <div className="text-3xl my-8">Welcome to CookBook!</div>
-              <div className="text-2xl">Whats your name?</div>
+              <div className="text-2xl">What's your name?</div>
               <div>
                 <label htmlFor="first_name">
                   {/* <p>Enter Your Name Below</p> */}
@@ -186,30 +186,33 @@ const Profile = () => {
             </div>
           ) : (
             <div>
-              <div className="bg-stone-100 rounded-lg p-2">
+              <div className="bg-stone-100 rounded-lg p-2 flex flex-row items-center">
                 {/* <p className="text-2xl m-6 underline">User Profile</p> */}
-
-                <p className="text-2xl m-6 ">
-                  Welcome, {user !== null && user.first_name}!
-                </p>
-                <p className="text-sm m-6">
-                  Joined {user?.days_since_joined} days ago
-                </p>
-                {user?.is_premium ? (
-                  <div>
-                    <button className="p-2 bg-pink-600 text-white rounded mx-6 mb-4">
-                      Premium Member
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <Link href="/premium">
-                      <button className="p-2 bg-pink-600 text-white rounded mx-6 mb-4">
-                        Join Cook Book Premium
+                <div>
+                  <p className="text-2xl mt-6 mx-6 ">
+                    Welcome, {user !== null && user.first_name}!
+                  </p>
+                  <p className="text-sm mb-6 mx-6">
+                    Joined {user?.days_since_joined} days ago
+                  </p>
+                </div>
+                <div className="w-8/12">
+                  {user?.is_premium ? (
+                    <div>
+                      <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
+                        Premium Member
                       </button>
-                    </Link>
-                  </div>
-                )}
+                    </div>
+                  ) : (
+                    <div>
+                      <Link href="/premium">
+                        <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
+                          Join Cook Book Premium
+                        </button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* {console.log("user1:::::", user?.favorite_recipes)} */}
@@ -220,7 +223,8 @@ const Profile = () => {
                     return (
                       <Link href={"/recipes/" + d.liked_recipe}>
                         <a
-                          className="text-lg underline bg-stone-100 rounded p-2 my-2 w-1/4 items-center"
+                          // className="text-lg underline bg-stone-100 rounded p-2 my-2 w-1/4 items-center"
+                          className="border-stone-100 mx-2 my-1 border-2 rounded-2xl py-1 px-3 ml-6 w-1/6"
                           key={d?.liked_recipe}
                         >
                           Recipe #{d?.liked_recipe}{" "}
@@ -235,7 +239,7 @@ const Profile = () => {
 
               <p className="text-lg m-6">Recently Viewed</p>
               <p className="text-lg mt-6 mx-6 mb-1">Recipes You've Uploaded</p>
-              {myRecipes
+              {myRecipes?.length > 0
                 ? myRecipes.map((d) => (
                     <div>
                       <Link href={"/recipes/" + d.id}>
@@ -246,11 +250,13 @@ const Profile = () => {
                     </div>
                   ))
                 : null}
+              <p className="text-lg ml-6 mt-6 mb-2">Settings</p>
 
               {success ? <div>Changed Password Successfully!</div> : null}
               {!reset ? (
                 <button
-                  className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                  // className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                  className="bg-stone-100 mx-2 my-1 rounded-2xl py-1 px-3 ml-6"
                   onClick={() => setReset((reset) => !reset)}
                 >
                   Reset password
@@ -334,9 +340,9 @@ const Profile = () => {
                   )}
                 </div>
               )}
-              <p className="text-lg m-6">Settings</p>
               <a
-                className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                // className="text-lg m-6 py-2 px-3 rounded-lg bg-stone-200"
+                className="bg-stone-100 mx-2 my-1 rounded-2xl py-1 px-3 ml-6 mt-2"
                 href="#!"
                 onClick={logoutHandler}
               >

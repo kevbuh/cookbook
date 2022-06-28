@@ -3,67 +3,30 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import { register, login, reset_register_success } from "../actions/auth";
 import Link from "next/link";
-// import Footer from "../hocs/Footer";
 import Footer from "../components/Footer";
 
-function about() {
+import React from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+function AboutPage() {
   const dispatch = useDispatch();
   const router = useRouter();
   const register_success = useSelector((state) => state.auth.register_success);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const loading = useSelector((state) => state.auth.loading);
   const [shouldShowLogin, setShouldShowLogin] = useState(false);
-  const [submittedLogin, setSubmittedLogin] = useState(false);
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    password2: "",
-  });
-
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
 
-  const onEmailLoginChange = (e) => {
-    setEmailLogin(e.target.value);
-  };
-
-  const onPasswordLoginChange = (e) => {
-    setPasswordLogin(e.target.value);
-  };
-
-  const { email, password, password2 } = formData;
-
-  const onChange = (e) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    // console.log("FORM DATA:", email, password, password2);
-
-    if (dispatch && dispatch !== null && dispatch !== undefined) {
-      dispatch(register(email, password, password));
-    }
-  };
-
   if (register_success) {
     // sign user in
-    // console.log("SINGING USER IN!");
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-      dispatch(login(email, password));
-
-    // console.log("UN SUCCESS REGISTER USER IN!");
-
-    if (dispatch && dispatch !== null && dispatch !== undefined)
-      dispatch(reset_register_success());
-
-    // console.log("PUSHING!");
-  }
-
-  if (submittedLogin) {
-    if (dispatch && dispatch !== null && dispatch !== undefined)
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(login(emailLogin, passwordLogin));
-    router.push("/profile"); // break here if you don't add this, also need to fix bug where redux is doing login process  3 times over
+    }
+
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(reset_register_success());
+    }
   }
 
   if (typeof window !== "undefined" && isAuthenticated) router.push("/profile");
@@ -89,85 +52,67 @@ function about() {
                 </p>
               </div>
             </div>
-            {/* <div className="flex flex-row">
-              <div className="mr-20">
-                <p className="text-lg">Find recipes personalized to you</p>
-                <p className="text-lg">Plan Less, Eat Better</p>
-                <p className="text-lg">The best categories for your goals</p>
-              </div>
-              <div className="ml-20">
-                <p className="text-lg">
-                  Spend less time looking, more time enjoying
-                </p>
-                <p className="text-lg">Find your future favorite meal</p>
-                <p className="text-lg">Make your next meal an experience</p>
-              </div>
-            </div> */}
-
             <div className="mt-10 mb-20">
-              <div className="">
+              <div className="bg-stone-100 p-2 rounded flex flex-col ">
                 {shouldShowLogin ? (
-                  <form
-                    className="rounded-lg bg-stone-100 p-8 flex flex-col items-center"
-                    onSubmit={onSubmit}
-                  >
-                    <p className="text-xl mb-4">Login!</p>
-                    <div className="">
-                      <label htmlFor="email">
-                        <p>Email</p>
-                      </label>
-                      <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
-                        onChange={onEmailLoginChange}
-                        value={emailLogin}
-                        required
-                        className="my-2 p-2 rounded"
-                      />
-                    </div>
-                    {emailLogin.length < 8 && passwordLogin ? (
-                      <div className="text-red-400">What's your email?</div>
-                    ) : null}
-                    <div className="my-2">
-                      <label htmlFor="password">
-                        <p>Password</p>
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        placeholder="Enter password"
-                        onChange={onPasswordLoginChange}
-                        value={passwordLogin}
-                        required
-                        className="my-2 p-2 rounded"
-                      />
-                      {emailLogin && passwordLogin < 8 ? (
-                        <div className="text-red-400">
-                          8 characters or more!
-                        </div>
-                      ) : null}
-                    </div>
-                    {loading ? (
-                      <div>
-                        <h1>LOADING</h1>
-                      </div>
-                    ) : (
-                      <div>
-                        {emailLogin.length > 7 && passwordLogin.length > 7 ? (
+                  <div className="flex flex-col items-center">
+                    <p className="text-xl mb-4 flex flex-col items-center">
+                      Login!
+                    </p>
+
+                    <Formik
+                      initialValues={{ email: "", password: "" }}
+                      validationSchema={Yup.object({
+                        email: Yup.string()
+                          .email("Invalid email address")
+                          .required("Required"),
+                        password: Yup.string()
+                          .required("No password provided.")
+                          .min(
+                            8,
+                            "Password is too short - should be 8 chars minimum."
+                          )
+                          .matches(
+                            /[a-zA-Z]/,
+                            "Password can only contain Latin letters."
+                          ),
+                      })}
+                      onSubmit={(values, { setSubmitting }) => {
+                        if (
+                          dispatch &&
+                          dispatch !== null &&
+                          dispatch !== undefined
+                        )
+                          dispatch(login(values.email, values.password));
+                        setSubmitting(false);
+                        router.push("/profile"); // break here if you don't add this, also need to fix bug where redux is doing login process  3 times over
+                      }}
+                    >
+                      <Form>
+                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                          <label htmlFor="email">Email</label>
+                          <Field name="email" type="email" />
+                          <ErrorMessage name="email">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
+                          <label htmlFor="password" className="mt-2">
+                            Password
+                          </label>
+                          <Field name="password" type="password" />
+                          <ErrorMessage name="password">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
                           <button
-                            className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
-                            onClick={() => setSubmittedLogin(() => true)}
+                            type="submit"
+                            className="rounded py-2 px-8 mt-4 bg-pink-600 text-white "
                           >
-                            Continue!
+                            Submit
                           </button>
-                        ) : (
-                          <p className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default">
-                            Fill out all fields!
-                          </p>
-                        )}
-                      </div>
-                    )}
+                        </div>
+                      </Form>
+                    </Formik>
                     <div className="mt-2 flex  items-center ">
                       Haven't Signed Up? &nbsp;
                       <button
@@ -181,70 +126,73 @@ function about() {
                         Sign Up
                       </button>
                     </div>
-                  </form>
+                  </div>
                 ) : (
-                  <form
-                    className="rounded-lg bg-stone-100 p-8 flex flex-col items-center"
-                    onSubmit={onSubmit}
-                  >
-                    <p className="text-xl my-4">Sign Up To Start Eating!</p>
-                    <div className="">
-                      <label htmlFor="email">
-                        <p>Email</p>
-                      </label>
-                      <input
-                        type="text"
-                        name="email"
-                        placeholder="Email"
-                        onChange={onChange}
-                        value={email}
-                        required
-                        className="my-2 p-2 rounded"
-                      />
-                      {email.length < 8 && email ? (
-                        <div className="text-red-400">What's your email?</div>
-                      ) : null}
-                    </div>
-                    <div className="my-2">
-                      <label htmlFor="password">
-                        <p>Password</p>
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        placeholder="Create a password"
-                        onChange={onChange}
-                        value={password}
-                        required
-                        className="my-2 p-2 rounded"
-                      />
-                      {password.length < 8 && password ? (
-                        <div className="text-red-400">
-                          8 characters or more!
-                        </div>
-                      ) : null}
-                    </div>
+                  <div>
+                    <p className="text-xl mb-4">Sign Up!</p>
+                    <Formik
+                      initialValues={{ email: "", password: "" }}
+                      validationSchema={Yup.object({
+                        email: Yup.string()
+                          .email("Invalid email address")
+                          .required("Required"),
+                        password: Yup.string()
+                          .required("No password provided.")
+                          .min(
+                            8,
+                            "Password is too short - should be 8 chars minimum."
+                          )
+                          .matches(
+                            /[a-zA-Z]/,
+                            "Password can only contain Latin letters."
+                          ),
+                      })}
+                      onSubmit={(values, { setSubmitting }) => {
+                        if (
+                          dispatch &&
+                          dispatch !== null &&
+                          dispatch !== undefined
+                        ) {
+                          dispatch(
+                            register(
+                              values.email,
+                              values.password,
+                              values.password
+                            )
+                          );
+                          console.log("REGISTERED USER");
+                        }
+                        setEmailLogin(() => values.email);
+                        setPasswordLogin(() => values.password);
+                        setSubmitting(false);
+                      }}
+                    >
+                      <Form>
+                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                          <label htmlFor="email" className="bg-stone-100">
+                            Email Address
+                          </label>
+                          <Field name="email" type="email" />
+                          <ErrorMessage name="email">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
 
-                    {loading ? (
-                      <div>
-                        <h1>LOADING</h1>
-                      </div>
-                    ) : (
-                      <div>
-                        {email.length > 8 && password.length > 8 ? (
+                          <label htmlFor="password">Password</label>
+                          <Field name="password" type="password" />
+                          <ErrorMessage name="password">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
                           <button
-                            className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
                             type="submit"
+                            className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
                           >
-                            Continue!
+                            Sign Up
                           </button>
-                        ) : (
-                          <p className="rounded p-2 mt-2 bg-stone-400 text-white cursor-default">
-                            Fill out all fields!
-                          </p>
-                        )}
-                      </div>
-                    )}
+                        </div>
+                      </Form>
+                    </Formik>
+
                     <div className="mt-2 flex  items-center ">
                       Already eating? &nbsp;
                       <button
@@ -258,17 +206,19 @@ function about() {
                         Login
                       </button>
                     </div>
-                  </form>
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-
+        <div></div>
         <Footer />
       </div>
     </div>
   );
 }
 
-export default about;
+export default AboutPage;
+
+// 273 lines of code before formik

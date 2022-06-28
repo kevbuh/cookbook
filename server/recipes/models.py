@@ -39,11 +39,10 @@ class Recipes(models.Model):
     
     # number of clicks/views
     views = models.IntegerField(default=0)
-    # ingredient list
     # course
     # cuisine
     # keywords
-    # serving
+    # servings
     # calories
 
     class Meta:

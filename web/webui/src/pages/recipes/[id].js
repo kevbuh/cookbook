@@ -29,7 +29,7 @@ function SelectedRecipe(data) {
 
   useEffect(() => {
     if (user) {
-      console.log("result::::", 77 in user.favorite_recipes[0]);
+      // console.log("result::::", 77 in user.favorite_recipes[0]);
       user.favorite_recipes.map((d) => {
         if (sentData.id === d["liked_recipe"]) {
           // console.log(true);
@@ -199,7 +199,13 @@ function SelectedRecipe(data) {
                       <div className="stat-title">Rating</div>
                       <div className="stat-value text-2xl">
                         {sentData?.avg_rating ? (
-                          <p>{sentData.avg_rating.toFixed(2)} ⭐️</p>
+                          <p>
+                            {sentData.avg_rating.toFixed(2)}{" "}
+                            {sentData.avg_rating
+                              ? getStars(sentData.avg_rating)
+                              : "No rating"}{" "}
+                            {/* ⭐️ */}
+                          </p>
                         ) : (
                           <p>No ratings yet!</p>
                         )}
@@ -230,7 +236,7 @@ function SelectedRecipe(data) {
                       <div className="stat-value text-2xl">
                         <p>{sentData.total_cook_time} mins</p>
                       </div>
-                      <div className="stat-desc">↗︎ 400 (22%)</div>
+                      <div className="stat-desc">Community Average</div>
                     </div>
 
                     <div className="state pl-6 py-2">
@@ -238,7 +244,7 @@ function SelectedRecipe(data) {
                       <div className="stat-value text-2xl">
                         {sentData.price}
                       </div>
-                      <div className="stat-desc">↘︎ 90 (14%)</div>
+                      <div className="stat-desc">Estimated Ingredient Cost</div>
                     </div>
                     {userID && userID === sentData.author ? null : (
                       <button
@@ -295,9 +301,9 @@ function SelectedRecipe(data) {
                   </div>
                 </div>
                 {sentData.image ? (
-                  <div className="w-2/5 ml-16">
+                  <div className="w-2/5 m-auto ">
                     <Image
-                      className="rounded-2xl"
+                      className="rounded-3xl shadow p-2"
                       loader={() => sentData.image}
                       src={sentData.image}
                       unoptimized={true}

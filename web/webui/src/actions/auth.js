@@ -155,6 +155,7 @@ export const login = (email, password) => async (dispatch) => {
       },
       body: body,
     });
+    console.log("in auth js", res.status);
 
     if (res.status === 200) {
       dispatch({
