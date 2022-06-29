@@ -4,13 +4,14 @@ import { API_URL } from "../config";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { useQuery, useInfiniteQuery } from "react-query";
-import React from "react";
+import { useInfiniteQuery } from "react-query";
+import React, { useRef, useEffect } from "react";
 
 export default function Home() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const router = useRouter();
+  const myRef = useRef();
 
   const fetchAllRecipes = async ({ pageParam = 0 }) => {
     // console.log(pageParam);
@@ -34,11 +35,19 @@ export default function Home() {
     isFetchingNextPage,
   } = useInfiniteQuery("allRecipes", fetchAllRecipes, {
     getNextPageParam: (lastPage) => {
-      console.log("@@@@", lastPage.next?.split("=")[1]);
       lastPage.nextCursor = lastPage.next?.split("=")[1];
       return lastPage.nextCursor;
     },
   });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      console.log("entry", entry);
+      fetchNextPage();
+    });
+    observer.observe(myRef.current);
+  }, []);
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -144,7 +153,7 @@ export default function Home() {
                 {isFetching && !isFetchingNextPage ? "Fetching..." : null}
               </div>
             </div>
-            <div className="bg-stone-100 rounded-lg p-2 my-4">
+            <div className="bg-stone-100 rounded-lg p-2 my-4" ref={myRef}>
               <p className="text-2xl my-2 ml-2 font-medium">Most Popular</p>
             </div>
 

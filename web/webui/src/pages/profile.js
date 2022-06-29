@@ -152,7 +152,9 @@ const Profile = () => {
     <Layout title="CookBook | profile">
       <div className=" flex flex-col justify-self-center my-5 self-center items-center">
         <div className="w-2/3">
-          {myUserData.user !== null && myUserData.user.first_name === "" ? (
+          {myUserData.user !== null &&
+          myUserData.user !== undefined &&
+          myUserData.user.first_name === "" ? (
             <div className="flex flex-col items-center">
               <div className="text-3xl my-8">Welcome to CookBook!</div>
               <div className="text-2xl">Enter your display name</div>
