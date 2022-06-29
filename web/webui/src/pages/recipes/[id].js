@@ -33,8 +33,6 @@ function SelectedRecipe(data) {
     enabled: !!query.id,
   });
 
-  console.log("@@@", sentData);
-
   // const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);

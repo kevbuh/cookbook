@@ -26,14 +26,6 @@ const AddRecipePage = () => {
   const router = useRouter();
   const userID = useSelector((state) => state.auth.user?.id);
 
-  // const addIngredient = (e) => {
-  //   setIngredientArr({ ...ingredientArr, [e.target.name]: e.target.value });
-  //   console.log(ingredientArr);
-  // };
-  // const onIngredientAmountChange = (e) => {
-  //   setIngredientAmount(e.target.value);
-  // };
-
   const onFileChange = (e) => {
     setImage(e.target.files[0]);
   };
@@ -92,7 +84,6 @@ const AddRecipePage = () => {
         body: formData,
       });
       const token = await res.json();
-      // console.log(token.token);
 
       const res2 = await fetch(`${API_URL}/recipe/`, {
         method: "POST",
@@ -105,7 +96,7 @@ const AddRecipePage = () => {
 
       if (res2.status === 201) {
         setUpdated(!updated);
-        // console.log("SUCCESS RECIPE ADDED AYY");
+        console.log("SUCCESS RECIPE ADDED AYY");
         router.push(`/recipes/${gotBack.id}/`);
       }
     } catch (err) {

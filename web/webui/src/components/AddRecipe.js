@@ -22,7 +22,6 @@ const AddRecipe = ({ userID, cookie }) => (
         })
           .then((res) => {
             res.json();
-            // console.log("HERE IS WHAT WE GOT BACK:", res);
             useRouter().push("/");
           })
           .catch((error) => console.log("error", error));
@@ -36,7 +35,6 @@ const AddRecipe = ({ userID, cookie }) => (
           placeholder="Title"
           className="bg-slate-200 rounded p-1 my-2 w-2/4"
         />
-        {console.log("GOT THIS ID:", userID)}
 
         <label htmlFor="description">Description</label>
         <Field

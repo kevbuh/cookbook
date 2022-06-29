@@ -14,9 +14,6 @@ export default function Home() {
   const myRef = useRef();
 
   const fetchAllRecipes = async ({ pageParam = 0 }) => {
-    // console.log(pageParam);
-    // console.log("log3", lastPage.next?.split("=")[1]);
-
     if (pageParam == 0) {
       const res = await fetch(`${API_URL}/recipe/`);
       return res.json();

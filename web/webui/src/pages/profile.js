@@ -110,7 +110,6 @@ const Profile = () => {
 
   const onSubmitPassword = async (e) => {
     e.preventDefault();
-    console.log("HERE");
 
     try {
       const res = await fetch(`/api/account/file_test`, {
@@ -221,11 +220,10 @@ const Profile = () => {
                     !
                   </p>
                   <p className="text-sm mb-6 mx-6">
-                    Joined {myUserData?.user.days_since_joined} days ago
+                    Joined {myUserData?.user?.days_since_joined} days ago
                   </p>
                 </div>
                 <div className="w-8/12">
-                  {/* {console.log(":::::", myUserData.user)} */}
                   {myUserData.user?.is_premium ? (
                     <div>
                       <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
@@ -244,7 +242,6 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* {console.log("user1:::::", user?.favorite_recipes)} */}
               <p className="text-lg m-6">Your favorites</p>
               <div className="flex flex-col ">
                 {myUserData.user?.favorite_recipes ? (
