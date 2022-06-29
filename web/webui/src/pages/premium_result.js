@@ -89,7 +89,7 @@ function premiumResultPage() {
             )}
           </div>
           <div className="h-80 flex align-center items-center justify-center">
-            <Link href="/">
+            <Link href="/profile">
               <button className="bg-pink-600 text-white text-lg px-4 py-2 rounded-lg ">
                 Continue
               </button>

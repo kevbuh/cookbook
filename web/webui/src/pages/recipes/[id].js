@@ -5,10 +5,37 @@ import Layout from "../../hocs/Layout";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import { API_URL } from "../../config/index";
+import { useQuery } from "react-query";
 
 function SelectedRecipe(data) {
-  const sentData = data.data;
+  const { query } = useRouter();
   const router = useRouter();
+
+  // const sentData = data.data;
+  const fetchThisRecipe = async () => {
+    const res = await fetch(`http://127.0.0.1:8000/recipe/${query.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+    const data = await res.json();
+    return data;
+  };
+
+  const {
+    isLoading,
+    isError,
+    data: sentData,
+    error,
+  } = useQuery(["recipe", query.id], fetchThisRecipe, {
+    enabled: !!query.id,
+  });
+
+  console.log("@@@", sentData);
+
+  // const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
 
@@ -18,21 +45,17 @@ function SelectedRecipe(data) {
   const userID = useSelector((state) => state.auth.user?.id);
   const user = useSelector((state) => state.auth?.user);
 
-  console.log(sentData);
-
-  const [image, setImage] = useState(sentData.image);
-  const [title, setTitle] = useState(sentData.title);
-  const [description, setDescription] = useState(sentData.description);
-  const [cookTime, setCookTime] = useState(sentData.total_cook_time);
-  const [price, setPrice] = useState(sentData.price);
+  const [image, setImage] = useState(sentData?.image);
+  const [title, setTitle] = useState(sentData?.title);
+  const [description, setDescription] = useState(sentData?.description);
+  const [cookTime, setCookTime] = useState(sentData?.total_cook_time);
+  const [price, setPrice] = useState(sentData?.price);
   const [updated, setUpdated] = useState(false);
 
   useEffect(() => {
     if (user) {
-      // console.log("result::::", 77 in user.favorite_recipes[0]);
       user.favorite_recipes.map((d) => {
-        if (sentData.id === d["liked_recipe"]) {
-          // console.log(true);
+        if (sentData?.id === d["liked_recipe"]) {
           setLiked(true);
         }
       });
@@ -71,7 +94,7 @@ function SelectedRecipe(data) {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("total_cook_time", cookTime);
-    formData.append("price", price);
+    // formData.append("price", price);
     formData.append("author", userID);
 
     try {
@@ -104,8 +127,16 @@ function SelectedRecipe(data) {
     }
   };
 
+  if (isLoading) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: {error.message}</span>;
+  }
+
   return (
-    <Layout title={"CookBook | Recipe: " + sentData.id}>
+    <Layout title={"CookBook | Recipe: " + sentData?.id}>
       <div className="flex justify-center w-11/12 mx-auto">
         <div className=" my-10 w-full">
           {showEdit ? (
@@ -150,7 +181,7 @@ function SelectedRecipe(data) {
                     />
                   </div>
                   <div>
-                    <label htmlFor="price">
+                    {/* <label htmlFor="price">
                       <strong>price*</strong>
                     </label>
                     <input
@@ -160,7 +191,7 @@ function SelectedRecipe(data) {
                       onChange={onPriceChange}
                       value={price}
                       required
-                    />
+                    /> */}
                   </div>
                   <div className="flex flex-row items-end ">
                     <button
@@ -185,8 +216,8 @@ function SelectedRecipe(data) {
               <div className="flex flex-row items-center">
                 <div className="flex flex-col">
                   <div className="flex flex-row mb-4 align-middle">
-                    <div className="text-4xl mr-4 ">{sentData.title}</div>
-                    {sentData.category.map((d) => (
+                    <div className="text-4xl mr-4 ">{sentData?.title}</div>
+                    {sentData?.category.map((d) => (
                       <div>
                         <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
                           {d.name}
@@ -211,8 +242,8 @@ function SelectedRecipe(data) {
                         )}
                       </div>
                       <div className="stat-desc">
-                        {sentData.num_likes} Saves, ({sentData.reviews.length})
-                        Reviews
+                        {sentData?.num_likes} Saves, ({sentData?.reviews.length}
+                        ) Reviews
                       </div>
                     </div>
                     <div className="flex flex-col justify-center py-2 pl-6">
@@ -234,7 +265,7 @@ function SelectedRecipe(data) {
                         </svg>
                       </div>
                       <div className="stat-value text-2xl">
-                        <p>{sentData.total_cook_time} mins</p>
+                        <p>{sentData?.total_cook_time} mins</p>
                       </div>
                       <div className="stat-desc">Community Average</div>
                     </div>
@@ -242,11 +273,11 @@ function SelectedRecipe(data) {
                     <div className="state pl-6 py-2">
                       <div className="stat-title">Cost</div>
                       <div className="stat-value text-2xl">
-                        {sentData.price}
+                        {sentData?.price}
                       </div>
                       <div className="stat-desc">Estimated Ingredient Cost</div>
                     </div>
-                    {userID && userID === sentData.author ? null : (
+                    {userID && userID === sentData?.author ? null : (
                       <button
                         className={liked ? "bg-pink-600" : null}
                         onClick={() => {
@@ -256,7 +287,7 @@ function SelectedRecipe(data) {
                               "Content-Type": "application/json",
                             },
                             body: JSON.stringify({
-                              liked_recipe: sentData.id,
+                              liked_recipe: sentData?.id,
                               user: userID,
                             }),
                           }).catch((error) => console.log("error", error));
@@ -264,9 +295,9 @@ function SelectedRecipe(data) {
                           setLiked((liked) => !liked);
                         }}
                       >
-                        {userID && userID === sentData.author ? null : (
+                        {userID && userID === sentData?.author ? null : (
                           <div className="flex justify-center items-center p-2">
-                            {user?.favorite_recipes.includes(sentData.id) ? (
+                            {user?.favorite_recipes.includes(sentData?.id) ? (
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"
@@ -300,7 +331,7 @@ function SelectedRecipe(data) {
                     )}
                   </div>
                 </div>
-                {sentData.image ? (
+                {sentData?.image ? (
                   <div className="w-2/5 m-auto ">
                     <Image
                       className="rounded-3xl shadow p-2"
@@ -319,10 +350,10 @@ function SelectedRecipe(data) {
               </div>
 
               <div className="rounded py-2">
-                {sentData.private ? (
+                {sentData?.private ? (
                   <p className="text-xl">Private Recipe </p>
                 ) : null}
-                {sentData.ingredient_list ? (
+                {sentData?.ingredient_list ? (
                   <div>
                     <div className="text-xl mt-6">Ingredients</div>
                     <div className="my-2 rounded w-1/3 border shadow p-3 divide-y whitespace-pre-line">
@@ -335,19 +366,21 @@ function SelectedRecipe(data) {
                 <p className="text-xl mt-6">Directions</p>
                 <div className="mb-4  my-2 border rounded p-3 shadow w-6/12">
                   <p className="text-medium whitespace-pre-line">
-                    {sentData.description}
+                    {sentData?.description}
                   </p>
-                  <div className="text-xs mt-1">Created {sentData.created}</div>
+                  <div className="text-xs mt-1">
+                    Created {sentData?.created}
+                  </div>
                 </div>
-                {sentData.source ? (
+                {sentData?.source ? (
                   <div>
                     Source:
-                    <a className="text-xs">{sentData.source}</a>
+                    <a className="text-xs">{sentData?.source}</a>
                   </div>
                 ) : null}
               </div>
               <div className="">
-                {userID && userID === sentData.author ? (
+                {userID && userID === sentData?.author ? (
                   <>
                     <button
                       className="bg-stone-200 p-2 mx-3 my-2 rounded font-semibold"
@@ -365,7 +398,7 @@ function SelectedRecipe(data) {
                           },
                           body: JSON.stringify(sentData.id),
                         }).catch((error) => console.log("error", error));
-                        router.push("/");
+                        router.push("/dashboard");
                       }}
                     >
                       Delete Recipe
@@ -511,11 +544,11 @@ function SelectedRecipe(data) {
                     )}
                   </div>
                 )}
-                {sentData.comments.length > 0 ? (
+                {sentData?.comments.length > 0 ? (
                   <div>
                     <div className="text-xl mt-6">Comments</div>
 
-                    {sentData.comments.map((d) => (
+                    {sentData?.comments.map((d) => (
                       <div className="my-2 rounded w-1/3 border shadow p-3">
                         <p className="text-lg">{d.title}</p>
                         <p>{d.content}</p>
@@ -562,24 +595,24 @@ function SelectedRecipe(data) {
   );
 }
 
-// This gets called on every request
-export async function getServerSideProps(context) {
-  const id = context.query.id; // Get ID from slug `/book/1`
-  // If routing to `/book/1?name=some-book`
-  // Outputs: `{ id: '1', name: 'some-book' }`
+// // This gets called on every request
+// export async function getServerSideProps(context) {
+//   const id = context.query.id; // Get ID from slug `/book/1`
+//   // If routing to `/book/1?name=some-book`
+//   // Outputs: `{ id: '1', name: 'some-book' }`
 
-  // Fetch data from external API
-  const res = await fetch(`http://127.0.0.1:8000/recipe/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
-  const data = await res.json();
+//   // Fetch data from external API
+//   // const res = await fetch(`http://127.0.0.1:8000/recipe/${id}`, {
+//   //   method: "GET",
+//   //   headers: {
+//   //     "Content-Type": "application/json",
+//   //     Accept: "application/json",
+//   //   },
+//   // });
+//   // const data = await res.json();
 
-  // Pass data to the page via props
-  return { props: { data } };
-}
+//   // Pass data to the page via props
+//   return { props: { id } };
+// }
 
 export default SelectedRecipe;

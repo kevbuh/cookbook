@@ -1,208 +1,225 @@
-import Link from "next/link";
-import Layout from "../hocs/Layout";
-import { API_URL } from "../config";
-import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/router";
-import { useInfiniteQuery } from "react-query";
-import React, { useRef, useEffect } from "react";
+import { register, login, reset_register_success } from "../actions/auth";
+import Link from "next/link";
+import Footer from "../components/Footer";
 
-export default function Home() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const loading = useSelector((state) => state.auth.loading);
+import React from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { useQuery } from "react-query";
+
+function AboutPage() {
+  const dispatch = useDispatch();
   const router = useRouter();
-  const myRef = useRef();
+  const register_success = useSelector((state) => state.auth.register_success);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [shouldShowLogin, setShouldShowLogin] = useState(false);
+  const [emailLogin, setEmailLogin] = useState("");
+  const [passwordLogin, setPasswordLogin] = useState("");
 
-  const fetchAllRecipes = async ({ pageParam = 0 }) => {
-    // console.log(pageParam);
-    // console.log("log3", lastPage.next?.split("=")[1]);
-
-    if (pageParam == 0) {
-      const res = await fetch(`${API_URL}/recipe/`);
-      return res.json();
-    } else if (pageParam) {
-      const res = await fetch(`${API_URL}/recipe/?cursor=${pageParam}`);
-      return res.json();
+  if (register_success) {
+    // sign user in
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(login(emailLogin, passwordLogin));
     }
-  };
 
-  const {
-    data: allRecipes,
-    isLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-  } = useInfiniteQuery("allRecipes", fetchAllRecipes, {
-    getNextPageParam: (lastPage) => {
-      lastPage.nextCursor = lastPage.next?.split("=")[1];
-      return lastPage.nextCursor;
-    },
-  });
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      console.log("entry", entry);
-      fetchNextPage();
-    });
-    observer.observe(myRef.current);
-  }, []);
-
-  const getStars = (num_stars) => {
-    const steps = [];
-    for (let i = 1; i <= num_stars; i++) {
-      steps.push("⭐️");
+    if (dispatch && dispatch !== null && dispatch !== undefined) {
+      dispatch(reset_register_success());
     }
-    return steps;
-  };
+  }
 
-  if (typeof window !== "undefined" && !loading && !isAuthenticated)
-    router.push("/about");
+  if (typeof window !== "undefined" && isAuthenticated) router.push("/profile");
 
   return (
-    <Layout title="CookBook | Home" content="CookBook Home">
-      <div className="flex justify-center">
-        <div className=" flex flex-row w-11/12  align-self-center">
-          <div className="w-full">
-            <div className="rounded-xl p-2 shadow-lg ">
-              <p className="text-2xl my-2 ml-2 font-medium">Recipes For You</p>
-              <div
-                className={
-                  isFetchingNextPage
-                    ? "grid grid-cols-4 animate-pulse"
-                    : "grid grid-cols-4  "
-                }
-              >
-                <>
-                  {allRecipes?.pages.map((group, i) => (
-                    <React.Fragment key={i}>
-                      {group?.results?.map((d) => (
-                        <div
-                          key={d.id}
-                          className="card w-100 border shadow m-2"
-                        >
-                          <div className="">
-                            <figure className="mt-4">
-                              {d.image ? (
-                                <Link href={"/recipes/" + d.id}>
-                                  <Image
-                                    className="rounded-xl cursor-pointer"
-                                    loader={() => d.image}
-                                    // layout="fill"
-                                    objectFit="cover"
-                                    src={d.image}
-                                    unoptimized={true}
-                                    width={200}
-                                    height={200}
-                                    // layout="fill"
-                                    position="relative"
-                                    // objectFit="contain"
-                                  />
-                                </Link>
-                              ) : null}
-                            </figure>
-                            <div className="card-actions justify-center self-center pt-4">
-                              <div className="badge badge-outline border-stone-400 w-2/5">
-                                {d.total_cook_time} mins
-                              </div>
-                              <div className="badge badge-outline border-stone-400 w-2/5">
-                                {d.num_likes} saves
-                              </div>
-                            </div>
-                            <div className="card-body px-4 pt-2 pb-4">
-                              <Link href={"/recipes/" + d.id}>
-                                <a className="text-xl font-semibold">
-                                  {d.title}
-                                </a>
-                              </Link>
-                              {d.avg_rating ? (
-                                <div>
-                                  {d.avg_rating.toFixed(2)}{" "}
-                                  {d.avg_rating
-                                    ? getStars(d.avg_rating)
-                                    : "No rating"}{" "}
-                                  - ({d.reviews.length})
-                                </div>
-                              ) : (
-                                <div>No Rating</div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </>
-              </div>
-              <div className=" flex  justify-center my-2 ">
-                <button
-                  onClick={() => fetchNextPage()}
-                  disabled={(isFetchingNextPage, !hasNextPage)}
-                  className="p-2 rounded text-lg bg-stone-100 border"
-                >
-                  {isFetchingNextPage
-                    ? // <button class="btn btn-square loading"></button>
-                      null
-                    : hasNextPage
-                    ? "Load More"
-                    : "No more results"}
-                </button>
-              </div>
-              <div>
-                {isFetching && !isFetchingNextPage ? "Fetching..." : null}
+    <div className=" flex flex-col  mx-6 my-5 self-center ">
+      <div className="grid justify-items-end">
+        {!isAuthenticated ? null : ( // </div> //   </Link> //     <a className="text-lg">Sign Up </a> //   <Link href="/signup"> //   </Link> //     <a className="text-lg">Log In &nbsp;</a> //   <Link href="/login"> // <div>
+          <Link href="/profile">
+            <a className="text-lg">Your Account </a>
+          </Link>
+        )}
+      </div>
+      <div>
+        <div className=" flex flex-col items-center justify-self-center">
+          <div className="flex flex-col items-center justify-self-center">
+            <div className="flex flex-row text-6xl my-8 h-30">
+              <div className="flex flex-col m-auto items-center ">
+                <p className="mb-4">CookBook</p>
+                <p className=" flex justify-center items-center text-xl">
+                  Everything food, personalized&nbsp;
+                  <span className="">for you.</span>
+                </p>
               </div>
             </div>
-            <div className="bg-stone-100 rounded-lg p-2 my-4" ref={myRef}>
-              <p className="text-2xl my-2 ml-2 font-medium">Most Popular</p>
-            </div>
+            <div className="mt-10 mb-20">
+              <div className="bg-stone-100 p-2 rounded flex flex-col ">
+                {shouldShowLogin ? (
+                  <div className="flex flex-col items-center">
+                    <p className="text-xl mb-4 flex flex-col items-center">
+                      Login!
+                    </p>
 
-            <div className="bg-stone-100 rounded-lg p-2 my-4">
-              <p className="text-2xl my-2 ml-2 font-medium">
-                Expert Recommended
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center w-1/5">
-            {/* <p>test</p> */}
-            <div className=" shadow rounded-lg p-2 ml-4 w-full h-64">
-              <div className="flex flex-row items-center">
-                <div className="flex flex-row items-center m-auto">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-                  <p className="text-2xl my-2 ml-2 font-medium">Trending </p>
-                </div>
+                    <Formik
+                      initialValues={{ email: "", password: "" }}
+                      validationSchema={Yup.object({
+                        email: Yup.string()
+                          .email("Invalid email address")
+                          .required("Required"),
+                        password: Yup.string()
+                          .required("No password provided.")
+                          .min(
+                            8,
+                            "Password is too short - should be 8 chars minimum."
+                          )
+                          .matches(
+                            /[a-zA-Z]/,
+                            "Password can only contain Latin letters."
+                          ),
+                      })}
+                      onSubmit={(values, { setSubmitting }) => {
+                        if (
+                          dispatch &&
+                          dispatch !== null &&
+                          dispatch !== undefined
+                        )
+                          dispatch(login(values.email, values.password));
+                        setSubmitting(false);
+                        router.push("/profile"); // break here if you don't add this, also need to fix bug where redux is doing login process  3 times over
+                      }}
+                    >
+                      <Form>
+                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                          <label htmlFor="email">Email</label>
+                          <Field name="email" type="email" />
+                          <ErrorMessage name="email">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
+                          <label htmlFor="password" className="mt-2">
+                            Password
+                          </label>
+                          <Field name="password" type="password" />
+                          <ErrorMessage name="password">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
+                          <button
+                            type="submit"
+                            className="rounded py-2 px-8 mt-4 bg-pink-600 text-white "
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </Form>
+                    </Formik>
+                    <div className="mt-2 flex  items-center ">
+                      Haven't Signed Up? &nbsp;
+                      <button
+                        className="underline"
+                        onClick={() =>
+                          setShouldShowLogin(
+                            (shouldShowLogin) => !shouldShowLogin
+                          )
+                        }
+                      >
+                        Sign Up
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-xl mb-4">Sign Up!</p>
+                    <Formik
+                      initialValues={{ email: "", password: "" }}
+                      validationSchema={Yup.object({
+                        email: Yup.string()
+                          .email("Invalid email address")
+                          .required("Required"),
+                        password: Yup.string()
+                          .required("No password provided.")
+                          .min(
+                            8,
+                            "Password is too short - should be 8 chars minimum."
+                          )
+                          .matches(
+                            /[a-zA-Z]/,
+                            "Password can only contain Latin letters."
+                          ),
+                      })}
+                      onSubmit={(values, { setSubmitting }) => {
+                        if (
+                          dispatch &&
+                          dispatch !== null &&
+                          dispatch !== undefined
+                        ) {
+                          dispatch(
+                            register(
+                              values.email,
+                              values.password,
+                              values.password
+                            )
+                          );
+                          console.log("REGISTERED USER");
+                        }
+                        setEmailLogin(() => values.email);
+                        setPasswordLogin(() => values.password);
+                        setSubmitting(false);
+                      }}
+                    >
+                      <Form>
+                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                          <label htmlFor="email" className="bg-stone-100">
+                            Email Address
+                          </label>
+                          <Field name="email" type="email" />
+                          <ErrorMessage name="email">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
+                          <label htmlFor="password">Password</label>
+                          <Field name="password" type="password" />
+                          <ErrorMessage name="password">
+                            {(msg) => <p className="text-red-600">{msg}</p>}
+                          </ErrorMessage>
+
+                          <button
+                            type="submit"
+                            className="rounded py-2 px-8 mt-2 bg-pink-600 text-white "
+                          >
+                            Sign Up
+                          </button>
+                        </div>
+                      </Form>
+                    </Formik>
+
+                    <div className="mt-2 flex  items-center ">
+                      Already eating? &nbsp;
+                      <button
+                        className="underline"
+                        onClick={() =>
+                          setShouldShowLogin(
+                            (shouldShowLogin) => !shouldShowLogin
+                          )
+                        }
+                      >
+                        Login
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-              <ul className="menu w-56 rounded-box">
-                <li>
-                  <a>Chicken Pot Pie</a>
-                </li>
-                <li>
-                  <a>Pork Dumplings</a>
-                </li>
-                <li>
-                  <a>Tower of Waffles</a>
-                </li>
-                <li>
-                  <a>Chocolate Shortbread</a>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
+        <div></div>
+        <Footer />
       </div>
-    </Layout>
+    </div>
   );
 }
+
+export default AboutPage;
+
+// 273 lines of code before formik

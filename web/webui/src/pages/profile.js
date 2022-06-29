@@ -122,10 +122,9 @@ const Profile = () => {
         },
       });
       const token = await res.json();
-      console.log(token.token, myUserData.data.id);
 
       const res2 = await fetch(
-        `${API_URL}/auth/change_password/${myUserData.data.id}/`,
+        `${API_URL}/auth/change_password/${myUserData.user.id}/`,
         {
           method: "PUT",
           headers: {
@@ -146,7 +145,7 @@ const Profile = () => {
   };
 
   if (typeof window !== "undefined" && !loading && !isAuthenticated)
-    router.push("/about");
+    router.push("/");
 
   return (
     <Layout title="CookBook | profile">
@@ -222,11 +221,12 @@ const Profile = () => {
                     !
                   </p>
                   <p className="text-sm mb-6 mx-6">
-                    Joined {myUserData.user.days_since_joined} days ago
+                    Joined {myUserData?.user.days_since_joined} days ago
                   </p>
                 </div>
                 <div className="w-8/12">
-                  {myUserData.data?.is_premium ? (
+                  {/* {console.log(":::::", myUserData.user)} */}
+                  {myUserData.user?.is_premium ? (
                     <div>
                       <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
                         Premium Member

@@ -111,7 +111,7 @@ function NavBar() {
   return (
     <div className="flex flex-row py-2 ">
       <div className="w-1/6 flex items-center justify-center">
-        <Link href="/">
+        <Link href="/dashboard">
           <a className="text-2xl font-medium ">CookBook</a>
         </Link>
       </div>
