@@ -214,7 +214,10 @@ const Profile = () => {
                 <div>
                   <p className="text-2xl mt-6 mx-6 ">
                     Welcome,{" "}
-                    {myUserData.user !== null && myUserData.user.first_name}!
+                    {myUserData.user !== null &&
+                      myUserData.user !== undefined &&
+                      myUserData.user.first_name}
+                    !
                   </p>
                   <p className="text-sm mb-6 mx-6">
                     Joined {myUserData.user.days_since_joined} days ago

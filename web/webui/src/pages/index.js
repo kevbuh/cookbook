@@ -4,32 +4,41 @@ import { API_URL } from "../config";
 import Image from "next/image";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import { useQuery } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
+import React from "react";
 
-export default function Home({ data }) {
+export default function Home() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const router = useRouter();
 
-  const fetchAllRecipes = async () => {
-    const res = await fetch(`${API_URL}/recipe/`);
-    return res.json();
+  const fetchAllRecipes = async ({ pageParam = 0 }) => {
+    console.log(pageParam);
+    // console.log("log3", lastPage.next?.split("=")[1]);
+
+    if (pageParam == 0) {
+      const res = await fetch(`${API_URL}/recipe/`);
+      return res.json();
+    } else {
+      const res = await fetch(`${API_URL}/recipe/?cursor=${pageParam}`);
+      return res.json();
+    }
   };
 
   const {
-    isLoading,
-    isError,
     data: allRecipes,
-    error,
-  } = useQuery("allRecipes", fetchAllRecipes);
-
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
-
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+  } = useInfiniteQuery("allRecipes", fetchAllRecipes, {
+    getNextPageParam: (lastPage) => {
+      console.log("@@@@", lastPage.next?.split("=")[1]);
+      lastPage.nextCursor = lastPage.next?.split("=")[1];
+      return lastPage.nextCursor;
+    },
+  });
 
   const getStars = (num_stars) => {
     const steps = [];
@@ -50,56 +59,80 @@ export default function Home({ data }) {
             <div className="rounded-xl p-2 shadow-lg ">
               <p className="text-2xl my-2 ml-2 font-medium">Recipes For You</p>
               <div className="grid grid-cols-4 ">
-                {allRecipes.map((d) => (
-                  <div key={d.id} className="card w-100 border shadow m-2">
-                    <div className="">
-                      <figure className="mt-4">
-                        {d?.image ? (
-                          <Link href={"/recipes/" + d.id}>
-                            <Image
-                              className="rounded-xl cursor-pointer"
-                              loader={() => d.image}
-                              // layout="fill"
-                              objectFit="cover"
-                              src={d.image}
-                              unoptimized={true}
-                              width={200}
-                              height={200}
-                              // layout="fill"
-                              position="relative"
-                              // objectFit="contain"
-                            />
-                          </Link>
-                        ) : null}
-                      </figure>
-                      <div className="card-actions justify-center self-center pt-4">
-                        <div className="badge badge-outline border-stone-400 w-2/5">
-                          {d.total_cook_time} mins
-                        </div>
-                        <div className="badge badge-outline border-stone-400 w-2/5">
-                          {d.num_likes} saves
-                        </div>
-                      </div>
-                      <div className="card-body px-4 pt-2 pb-4">
-                        <Link href={"/recipes/" + d.id}>
-                          <a className="text-xl font-semibold">{d.title}</a>
-                        </Link>
-                        {d.avg_rating ? (
-                          <div>
-                            {d.avg_rating.toFixed(2)}{" "}
-                            {d.avg_rating
-                              ? getStars(d.avg_rating)
-                              : "No rating"}{" "}
-                            - ({d.reviews.length})
+                <>
+                  {!isLoading &&
+                    !isFetching &&
+                    allRecipes?.pages.map((group, i) => (
+                      <React.Fragment key={i}>
+                        {group?.results?.map((d) => (
+                          <div
+                            key={d.id}
+                            className="card w-100 border shadow m-2"
+                          >
+                            <div className="">
+                              <figure className="mt-4">
+                                {d.image ? (
+                                  <Link href={"/recipes/" + d.id}>
+                                    <Image
+                                      className="rounded-xl cursor-pointer"
+                                      loader={() => d.image}
+                                      // layout="fill"
+                                      objectFit="cover"
+                                      src={d.image}
+                                      unoptimized={true}
+                                      width={200}
+                                      height={200}
+                                      // layout="fill"
+                                      position="relative"
+                                      // objectFit="contain"
+                                    />
+                                  </Link>
+                                ) : null}
+                              </figure>
+                              <div className="card-actions justify-center self-center pt-4">
+                                <div className="badge badge-outline border-stone-400 w-2/5">
+                                  {d.total_cook_time} mins
+                                </div>
+                                <div className="badge badge-outline border-stone-400 w-2/5">
+                                  {d.num_likes} saves
+                                </div>
+                              </div>
+                              <div className="card-body px-4 pt-2 pb-4">
+                                <Link href={"/recipes/" + d.id}>
+                                  <a className="text-xl font-semibold">
+                                    {d.title}
+                                  </a>
+                                </Link>
+                                {d.avg_rating ? (
+                                  <div>
+                                    {d.avg_rating.toFixed(2)}{" "}
+                                    {d.avg_rating
+                                      ? getStars(d.avg_rating)
+                                      : "No rating"}{" "}
+                                    - ({d.reviews.length})
+                                  </div>
+                                ) : (
+                                  <div>No Rating</div>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        ) : (
-                          <div>No Rating</div>
-                        )}
-                        {/* <p>{d.description}</p> */}
-                      </div>
-                    </div>
+                        ))}
+                      </React.Fragment>
+                    ))}
+                  <div>
+                    <button
+                      onClick={() => fetchNextPage()}
+                      disabled={isFetchingNextPage}
+                      className="bg-red-100"
+                    >
+                      {isFetchingNextPage ? "Loading more..." : "Load More"}
+                    </button>
                   </div>
-                ))}
+                  <div>
+                    {isFetching && !isFetchingNextPage ? "Fetching..." : null}
+                  </div>
+                </>
               </div>
             </div>
             <div className="bg-stone-100 rounded-lg p-2 my-4">

@@ -8,7 +8,16 @@ import { useState } from "react";
 
 const App = ({ Component, pageProps }) => {
   const store = useStore(pageProps.initialReduxState);
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
 
   return (
     <Provider store={store}>
