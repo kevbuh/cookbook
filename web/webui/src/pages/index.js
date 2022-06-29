@@ -13,13 +13,13 @@ export default function Home() {
   const router = useRouter();
 
   const fetchAllRecipes = async ({ pageParam = 0 }) => {
-    console.log(pageParam);
+    // console.log(pageParam);
     // console.log("log3", lastPage.next?.split("=")[1]);
 
     if (pageParam == 0) {
       const res = await fetch(`${API_URL}/recipe/`);
       return res.json();
-    } else {
+    } else if (pageParam) {
       const res = await fetch(`${API_URL}/recipe/?cursor=${pageParam}`);
       return res.json();
     }
@@ -58,81 +58,90 @@ export default function Home() {
           <div className="w-full">
             <div className="rounded-xl p-2 shadow-lg ">
               <p className="text-2xl my-2 ml-2 font-medium">Recipes For You</p>
-              <div className="grid grid-cols-4 ">
+              <div
+                className={
+                  isFetchingNextPage
+                    ? "grid grid-cols-4 animate-pulse"
+                    : "grid grid-cols-4  "
+                }
+              >
                 <>
-                  {!isLoading &&
-                    !isFetching &&
-                    allRecipes?.pages.map((group, i) => (
-                      <React.Fragment key={i}>
-                        {group?.results?.map((d) => (
-                          <div
-                            key={d.id}
-                            className="card w-100 border shadow m-2"
-                          >
-                            <div className="">
-                              <figure className="mt-4">
-                                {d.image ? (
-                                  <Link href={"/recipes/" + d.id}>
-                                    <Image
-                                      className="rounded-xl cursor-pointer"
-                                      loader={() => d.image}
-                                      // layout="fill"
-                                      objectFit="cover"
-                                      src={d.image}
-                                      unoptimized={true}
-                                      width={200}
-                                      height={200}
-                                      // layout="fill"
-                                      position="relative"
-                                      // objectFit="contain"
-                                    />
-                                  </Link>
-                                ) : null}
-                              </figure>
-                              <div className="card-actions justify-center self-center pt-4">
-                                <div className="badge badge-outline border-stone-400 w-2/5">
-                                  {d.total_cook_time} mins
-                                </div>
-                                <div className="badge badge-outline border-stone-400 w-2/5">
-                                  {d.num_likes} saves
-                                </div>
-                              </div>
-                              <div className="card-body px-4 pt-2 pb-4">
+                  {allRecipes?.pages.map((group, i) => (
+                    <React.Fragment key={i}>
+                      {group?.results?.map((d) => (
+                        <div
+                          key={d.id}
+                          className="card w-100 border shadow m-2"
+                        >
+                          <div className="">
+                            <figure className="mt-4">
+                              {d.image ? (
                                 <Link href={"/recipes/" + d.id}>
-                                  <a className="text-xl font-semibold">
-                                    {d.title}
-                                  </a>
+                                  <Image
+                                    className="rounded-xl cursor-pointer"
+                                    loader={() => d.image}
+                                    // layout="fill"
+                                    objectFit="cover"
+                                    src={d.image}
+                                    unoptimized={true}
+                                    width={200}
+                                    height={200}
+                                    // layout="fill"
+                                    position="relative"
+                                    // objectFit="contain"
+                                  />
                                 </Link>
-                                {d.avg_rating ? (
-                                  <div>
-                                    {d.avg_rating.toFixed(2)}{" "}
-                                    {d.avg_rating
-                                      ? getStars(d.avg_rating)
-                                      : "No rating"}{" "}
-                                    - ({d.reviews.length})
-                                  </div>
-                                ) : (
-                                  <div>No Rating</div>
-                                )}
+                              ) : null}
+                            </figure>
+                            <div className="card-actions justify-center self-center pt-4">
+                              <div className="badge badge-outline border-stone-400 w-2/5">
+                                {d.total_cook_time} mins
+                              </div>
+                              <div className="badge badge-outline border-stone-400 w-2/5">
+                                {d.num_likes} saves
                               </div>
                             </div>
+                            <div className="card-body px-4 pt-2 pb-4">
+                              <Link href={"/recipes/" + d.id}>
+                                <a className="text-xl font-semibold">
+                                  {d.title}
+                                </a>
+                              </Link>
+                              {d.avg_rating ? (
+                                <div>
+                                  {d.avg_rating.toFixed(2)}{" "}
+                                  {d.avg_rating
+                                    ? getStars(d.avg_rating)
+                                    : "No rating"}{" "}
+                                  - ({d.reviews.length})
+                                </div>
+                              ) : (
+                                <div>No Rating</div>
+                              )}
+                            </div>
                           </div>
-                        ))}
-                      </React.Fragment>
-                    ))}
-                  <div>
-                    <button
-                      onClick={() => fetchNextPage()}
-                      disabled={isFetchingNextPage}
-                      className="bg-red-100"
-                    >
-                      {isFetchingNextPage ? "Loading more..." : "Load More"}
-                    </button>
-                  </div>
-                  <div>
-                    {isFetching && !isFetchingNextPage ? "Fetching..." : null}
-                  </div>
+                        </div>
+                      ))}
+                    </React.Fragment>
+                  ))}
                 </>
+              </div>
+              <div className=" flex  justify-center my-2 ">
+                <button
+                  onClick={() => fetchNextPage()}
+                  disabled={(isFetchingNextPage, !hasNextPage)}
+                  className="p-2 rounded text-lg bg-stone-100 border"
+                >
+                  {isFetchingNextPage
+                    ? // <button class="btn btn-square loading"></button>
+                      null
+                    : hasNextPage
+                    ? "Load More"
+                    : "No more results"}
+                </button>
+              </div>
+              <div>
+                {isFetching && !isFetchingNextPage ? "Fetching..." : null}
               </div>
             </div>
             <div className="bg-stone-100 rounded-lg p-2 my-4">
