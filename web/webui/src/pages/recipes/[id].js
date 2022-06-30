@@ -7,11 +7,10 @@ import Image from "next/image";
 import { API_URL } from "../../config/index";
 import { useQuery } from "react-query";
 
-function SelectedRecipe(data) {
+const SelectedRecipePage = () => {
   const { query } = useRouter();
   const router = useRouter();
 
-  // const sentData = data.data;
   const fetchThisRecipe = async () => {
     const res = await fetch(`http://127.0.0.1:8000/recipe/${query.id}`, {
       method: "GET",
@@ -33,7 +32,6 @@ function SelectedRecipe(data) {
     enabled: !!query.id,
   });
 
-  // const router = useRouter();
   const [showEdit, setShowEdit] = useState(false);
   const [showRate, setShowRate] = useState(false);
 
@@ -92,7 +90,6 @@ function SelectedRecipe(data) {
     formData.append("title", title);
     formData.append("description", description);
     formData.append("total_cook_time", cookTime);
-    // formData.append("price", price);
     formData.append("author", userID);
 
     try {
@@ -178,19 +175,7 @@ function SelectedRecipe(data) {
                       required
                     />
                   </div>
-                  <div>
-                    {/* <label htmlFor="price">
-                      <strong>price*</strong>
-                    </label>
-                    <input
-                      type="number"
-                      name="price"
-                      placeholder="price"
-                      onChange={onPriceChange}
-                      value={price}
-                      required
-                    /> */}
-                  </div>
+
                   <div className="flex flex-row items-end ">
                     <button
                       className=" p-2 mr-3 my-2 rounded font-semibold w-1/6"
@@ -253,7 +238,6 @@ function SelectedRecipe(data) {
                     </div>
                     <div className="my-5">
                       <p className="text-2xl mr-1">Rating </p>
-
                       {sentData?.avg_rating ? (
                         <p className="text-lg">
                           {sentData.avg_rating.toFixed(2)}{" "}
@@ -264,9 +248,120 @@ function SelectedRecipe(data) {
                       ) : (
                         <p>No ratings yet!</p>
                       )}
+
                       <div className="stat-desc">
-                        {sentData?.num_likes} Saves, ({sentData?.reviews.length}
-                        ) Reviews
+                        <div>
+                          {sentData?.num_likes} Saves, (
+                          {sentData?.reviews.length}) Reviews
+                        </div>
+                        <div>
+                          <>
+                            {userID && userID === sentData?.author ? (
+                              <>
+                                <button
+                                  className="bg-stone-200 p-2 mx-3 my-2 rounded font-semibold"
+                                  onClick={() =>
+                                    setShowEdit((showEdit) => !showEdit)
+                                  }
+                                >
+                                  Edit Recipe
+                                </button>
+                                <button
+                                  className="bg-red-500 p-2 rounded text-white font-semibold"
+                                  onClick={() => {
+                                    fetch("/api/account/delete_recipe", {
+                                      method: "POST",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      },
+                                      body: JSON.stringify(sentData.id),
+                                    }).catch((error) =>
+                                      console.log("error", error)
+                                    );
+                                    router.push("/dashboard");
+                                  }}
+                                >
+                                  Delete Recipe
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                {showRate ? (
+                                  <div className="mb-4">
+                                    <Formik
+                                      initialValues={{
+                                        user: userID,
+                                        rate: "",
+                                        recipe: sentData.id,
+                                      }}
+                                      onSubmit={(values) => {
+                                        fetch(`/api/account/post_rating`, {
+                                          method: "POST",
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                          },
+                                          body: JSON.stringify(values),
+                                        })
+                                          .then((res) => res.json())
+                                          .then(() =>
+                                            router.reload(
+                                              window.location.pathname
+                                            )
+                                          )
+                                          .catch((error) =>
+                                            console.log("error", error)
+                                          );
+                                      }}
+                                    >
+                                      <Form className="p-3  flex flex-col rounded bg-stone-200  mt-6">
+                                        <label
+                                          htmlFor="rate"
+                                          className=" text-xl"
+                                        >
+                                          Rate this recipe below:
+                                        </label>
+                                        <Field
+                                          id="rate"
+                                          name="rate"
+                                          placeholder="Give a rating 1-5 stars"
+                                          className="bg-stone-100 rounded p-2 my-2 "
+                                        />
+
+                                        <div className="flex flex-row justify-between pr-1">
+                                          <button
+                                            className="font-semibold "
+                                            onClick={() =>
+                                              setShowRate(
+                                                (showRate) => !showRate
+                                              )
+                                            }
+                                          >
+                                            Cancel
+                                          </button>
+                                          <button
+                                            type="submit"
+                                            className=" font-semibold"
+                                          >
+                                            Submit
+                                          </button>
+                                        </div>
+                                      </Form>
+                                    </Formik>
+                                  </div>
+                                ) : (
+                                  <button
+                                    className=" font-semibold"
+                                    onClick={() =>
+                                      setShowRate((showRate) => !showRate)
+                                    }
+                                  >
+                                    Rate
+                                  </button>
+                                )}
+                              </>
+                            )}
+                          </>
+                        </div>
                       </div>
                     </div>
                     <div className="flex flex-col my-5">
@@ -341,7 +436,7 @@ function SelectedRecipe(data) {
                         layout="responsive"
                         objectFit="contain"
                         priority="true"
-                        // quality={100}
+                        quality={50}
                       />
                     </div>
                   ) : null}
@@ -352,19 +447,19 @@ function SelectedRecipe(data) {
                 {sentData?.private ? (
                   <p className="text-xl">Private Recipe </p>
                 ) : null}
+                <div className="text-2xl mt-6 w-full">Ingredients</div>
                 {sentData?.ingredient_list ? (
-                  <div>
-                    <div className="text-xl mt-6">Ingredients</div>
-                    <div className="my-2 rounded w-1/3 border shadow p-3 divide-y whitespace-pre-line">
+                  <div className="w-full">
+                    <div className="my-2 rounded border shadow p-3 divide-y whitespace-pre-line w-full">
                       {sentData.ingredient_list}
                     </div>
                   </div>
                 ) : (
                   <div className="text-xl mt-6">No ingredients listed</div>
                 )}
-                <p className="text-xl mt-6">Directions</p>
+                <p className="text-2xl mt-6">Directions</p>
 
-                <div className="mb-4  my-2 border rounded p-3 shadow w-6/12">
+                <div className="mb-4  my-2 border rounded p-3 shadow w-full">
                   <p className="text-medium whitespace-pre-line">
                     {sentData?.description}
                   </p>
@@ -379,239 +474,97 @@ function SelectedRecipe(data) {
                   </div>
                 ) : null}
               </div>
-              <div className="">
-                {userID && userID === sentData?.author ? (
-                  <>
-                    <button
-                      className="bg-stone-200 p-2 mx-3 my-2 rounded font-semibold"
-                      onClick={() => setShowEdit((showEdit) => !showEdit)}
-                    >
-                      Edit Recipe
-                    </button>
-                    <button
-                      className="bg-red-500 p-2 rounded text-white font-semibold"
-                      onClick={() => {
-                        fetch("/api/account/delete_recipe", {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify(sentData.id),
-                        }).catch((error) => console.log("error", error));
-                        router.push("/dashboard");
-                      }}
-                    >
-                      Delete Recipe
-                    </button>
-                  </>
-                ) : (
-                  <div className="mt-6">
-                    {showRate ? (
-                      <div className="mb-4">
-                        <Formik
-                          initialValues={{
-                            user: userID,
-                            rate: "",
-                            recipe: sentData.id,
-                          }}
-                          onSubmit={(values) => {
-                            fetch(`/api/account/post_rating`, {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify(values),
-                            })
-                              .then((res) => res.json())
-                              .then(() =>
-                                router.reload(window.location.pathname)
-                              )
-                              .catch((error) => console.log("error", error));
-                          }}
-                        >
-                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-stone-200  mt-6">
-                            <label htmlFor="rate" className=" rounded text-xl">
-                              Rate this recipe below:
-                            </label>
-                            <Field
-                              id="rate"
-                              name="rate"
-                              placeholder="Give a rating 1-5 stars"
-                              className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                            />
-
-                            <div className="flex flex-row items-end ">
-                              <button
-                                className="bg-stone-200 p-2 mr-3 my-2 rounded font-semibold w-1/6"
-                                onClick={() =>
-                                  setShowRate((showRate) => !showRate)
-                                }
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="submit"
-                                className="bg-pink-600 p-2 my-2 rounded text-white font-semibold w-1/6"
-                              >
-                                Submit
-                              </button>
-                            </div>
-                          </Form>
-                        </Formik>
-                      </div>
-                    ) : (
-                      <button
-                        className="bg-pink-600 p-2 rounded text-white font-semibold"
-                        onClick={() => setShowRate((showRate) => !showRate)}
-                      >
-                        Rate
-                      </button>
-                    )}
-                    {comment ? (
-                      <div className="mt-6">
-                        <Formik
-                          initialValues={{
-                            user: userID,
-                            title: "",
-                            content: "",
-                            recipe: sentData.id,
-                          }}
-                          onSubmit={(values) => {
-                            fetch(`/api/account/post_comment`, {
-                              method: "POST",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify(values),
-                            })
-                              .then((res) => res.json())
-                              .then(() =>
-                                router.reload(window.location.pathname)
-                              )
-                              .catch((error) => console.log("error", error));
-                            // router.reload(window.location.pathname);
-                          }}
-                        >
-                          <Form className="py-3 pl-3 flex flex-col  w-1/2 rounded bg-stone-100  mt-6">
-                            <label htmlFor="title" className=" rounded text-xl">
-                              Title
-                            </label>
-                            <Field
-                              id="title"
-                              name="title"
-                              placeholder="Enter a comment title"
-                              className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                            />
-                            <label
-                              htmlFor="content"
-                              className=" rounded text-xl"
-                            >
-                              Content
-                            </label>
-                            <Field
-                              id="content"
-                              name="content"
-                              placeholder="Give a description"
-                              className="bg-stone-100 rounded p-2 my-2 w-2/4 "
-                            />
-
-                            <div className="flex flex-row items-end ">
-                              <button
-                                className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold w-1/6"
-                                onClick={() =>
-                                  setComment((comment) => !comment)
-                                }
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="submit"
-                                className="bg-pink-600 p-2 my-2 rounded text-white font-semibold w-1/6"
-                              >
-                                Submit
-                              </button>
-                            </div>
-                          </Form>
-                        </Formik>
-                      </div>
-                    ) : (
-                      <button
-                        className="bg-pink-600 p-2 rounded text-white font-semibold ml-4"
-                        onClick={() => setComment((comment) => !comment)}
-                      >
-                        Comment
-                      </button>
-                    )}
-                  </div>
-                )}
-                {sentData?.comments.length > 0 ? (
-                  <div>
-                    <div className="text-xl mt-6">Comments</div>
-
-                    {sentData?.comments.map((d) => (
-                      <div className="my-2 rounded w-1/3 border shadow p-3">
-                        <p className="text-lg">{d.title}</p>
-                        <p>{d.content}</p>
-                        <p className="text-sm">- {d.created}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-xl mt-6">No Comments</div>
-                )}
-              </div>
             </div>
           )}
-        </div>
-        {/* <div className="flex justify-center w-1/5 my-10">
-          <div className=" shadow rounded-lg p-2 ml-4 w-full h-64">
-            <div className="flex flex-row items-center">
-              <div className="flex flex-row items-center ">
-                <p className="text-2xl my-2 ml-2 font-medium">
-                  More Like This{" "}
-                </p>
-              </div>
+
+          <div>
+            <div className="text-2xl w-full">Comments</div>
+            <div>
+              {sentData?.comments.length > 0 ? (
+                <div>
+                  {sentData?.comments.map((d) => (
+                    <div className="my-2 rounded border shadow p-3">
+                      <p>{d.content}</p>
+                      <p className="text-sm">- {d.created}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-xl mt-6">No Comments</div>
+              )}
             </div>
-            <ul className="menu w-56 rounded-box">
-              <li>
-                <a>Chicken Pot Pie</a>
-              </li>
-              <li>
-                <a>Pork Dumplings</a>
-              </li>
-              <li>
-                <a>Tower of Waffles</a>
-              </li>
-              <li>
-                <a>Chocolate Shortbread</a>
-              </li>
-            </ul>
+            <div>
+              {comment ? (
+                <div className="mt-6">
+                  <Formik
+                    initialValues={{
+                      user: userID,
+                      content: "",
+                      recipe: sentData.id,
+                    }}
+                    onSubmit={(values) => {
+                      fetch(`/api/account/post_comment`, {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(values),
+                      })
+                        .then((res) => res.json())
+                        .then(() => router.reload(window.location.pathname))
+                        .catch((error) => console.log("error", error));
+                      // router.reload(window.location.pathname);
+                    }}
+                  >
+                    <Form className="py-3 pl-3 flex flex-col  rounded bg-stone-100  mt-6">
+                      <label htmlFor="content" className=" rounded text-xl">
+                        Comment
+                      </label>
+                      <Field
+                        id="content"
+                        name="content"
+                        placeholder="Comment here"
+                        className="bg-stone-100 rounded p-2 my-2"
+                      />
+
+                      <div className="flex flex-row items-end ">
+                        <button
+                          className="bg-stone-400 p-2 mr-3 my-2 rounded text-white font-semibold "
+                          onClick={() => setComment((comment) => !comment)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="bg-pink-600 p-2 my-2 rounded text-white font-semibold "
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </Form>
+                  </Formik>
+                </div>
+              ) : (
+                <button
+                  className="p-2 rounded-lg border shadow font-semibold text-medium"
+                  onClick={() => setComment((comment) => !comment)}
+                >
+                  Comment
+                </button>
+              )}
+            </div>
           </div>
-        </div> */}
+          <div className="flex flex-col my-10">
+            <div className="flex flex-row items-center ">
+              <p className="text-2xl pb-1 border-b-2 w-full">
+                Recipes Like This{" "}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      {/* <Footer /> */}
     </Layout>
   );
-}
+};
 
-// // This gets called on every request
-// export async function getServerSideProps(context) {
-//   const id = context.query.id; // Get ID from slug `/book/1`
-//   // If routing to `/book/1?name=some-book`
-//   // Outputs: `{ id: '1', name: 'some-book' }`
-
-//   // Fetch data from external API
-//   // const res = await fetch(`http://127.0.0.1:8000/recipe/${id}`, {
-//   //   method: "GET",
-//   //   headers: {
-//   //     "Content-Type": "application/json",
-//   //     Accept: "application/json",
-//   //   },
-//   // });
-//   // const data = await res.json();
-
-//   // Pass data to the page via props
-//   return { props: { id } };
-// }
-
-export default SelectedRecipe;
+export default SelectedRecipePage;

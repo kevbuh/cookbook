@@ -63,8 +63,7 @@ class Recipes(models.Model):
 #         return str(self.id)
 
 class Comment(models.Model):
-    title = models.CharField(max_length=255)
-    content = models.TextField()
+    content = models.TextField(max_length=255)
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='comments', related_query_name='comment', blank=True, null=True)
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments', related_query_name='comment')
     created = models.DateField(auto_now_add=True)
