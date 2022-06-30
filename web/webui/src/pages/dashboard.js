@@ -54,7 +54,12 @@ export default function Home() {
     return steps;
   };
 
-  if (typeof window !== "undefined" && !loading && !isAuthenticated)
+  if (
+    typeof window !== "undefined" &&
+    !loading &&
+    !isAuthenticated &&
+    !isLoading
+  )
     router.push("/");
 
   return (

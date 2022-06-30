@@ -23,6 +23,7 @@ from rest_framework.response import Response
 #     permission_classes = [permissions.IsAuthenticated]
 #     queryset = CustomUser.objects.all()
 #     serializer_class = UserSerializer
+
 class LoadUserView(APIView):
     def get(self, request, format=None):
         try:

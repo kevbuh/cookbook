@@ -9,6 +9,12 @@ class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
     is_premium = models.BooleanField(default=False)
+    # favorite cuisines
+    # food allergies
+    # types of diets
+    # ingredients you don't want to see
+    # cooking level 
+    # cooking goals
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

@@ -8,9 +8,12 @@ import Footer from "../components/Footer";
 import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
+
+// Get QueryClient from the context
 
 function AboutPage() {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const router = useRouter();
   const register_success = useSelector((state) => state.auth.register_success);
@@ -56,10 +59,8 @@ function AboutPage() {
             <div className="mt-10 mb-20">
               <div className="bg-stone-100 p-2 rounded flex flex-col ">
                 {shouldShowLogin ? (
-                  <div className="flex flex-col items-center">
-                    <p className="text-xl mb-4 flex flex-col items-center">
-                      Login!
-                    </p>
+                  <div className="p-2">
+                    <p className="text-xl flex flex-col items-center">Login!</p>
 
                     <Formik
                       initialValues={{ email: "", password: "" }}
@@ -90,7 +91,7 @@ function AboutPage() {
                       }}
                     >
                       <Form>
-                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                        <div className="rounded-lg bg-stone-100 px-8 my-4 flex flex-col items-center">
                           <label htmlFor="email">Email</label>
                           <Field name="email" type="email" />
                           <ErrorMessage name="email">
@@ -129,8 +130,10 @@ function AboutPage() {
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <p className="text-xl mb-4">Sign Up!</p>
+                  <div className="p-2">
+                    <p className="text-xl flex flex-col items-center">
+                      Sign Up!
+                    </p>
                     <Formik
                       initialValues={{ email: "", password: "" }}
                       validationSchema={Yup.object({
@@ -169,7 +172,7 @@ function AboutPage() {
                       }}
                     >
                       <Form>
-                        <div className="rounded-lg bg-stone-100 p-8 flex flex-col items-center">
+                        <div className="rounded-lg bg-stone-100 px-8 my-4 flex flex-col items-center">
                           <label htmlFor="email" className="bg-stone-100">
                             Email Address
                           </label>

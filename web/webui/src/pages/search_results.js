@@ -23,7 +23,7 @@ function search_results() {
   const {
     isLoading,
     isError,
-    data: rqdata,
+    data: searchResultData,
     error,
   } = useQuery(["searchResults", query.result], () =>
     fetchSearchResults(query.result)
@@ -42,14 +42,14 @@ function search_results() {
       <div className=" flex flex-col justify-self-center  mx-6 my-5 self-center items-center">
         <div className="w-2/3 flex flex-col">
           <div className="flex flex-col items-center my-10">
-            {rqdata.length == 0 ? (
+            {searchResultData.results.length == 0 ? (
               <p className="text-3xl mt-6 mb-96">No Search Results!</p>
             ) : (
               <p className="text-3xl mt-6">Search Results</p>
             )}
           </div>
           <div className="grid grid-cols-4 ">
-            {rqdata.map((d) => (
+            {searchResultData.results?.map((d) => (
               <div key={d.id} className="card w-100 border shadow m-2">
                 <div className="">
                   <figure className="">

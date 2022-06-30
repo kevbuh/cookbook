@@ -37,6 +37,7 @@ class RecipesSerializer(serializers.ModelSerializer):
 
     avg_rating = serializers.SerializerMethodField()
     num_likes = serializers.SerializerMethodField()
+    num_views = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipes
@@ -48,5 +49,12 @@ class RecipesSerializer(serializers.ModelSerializer):
     def get_num_likes(self, obj):
         recipe = Recipes.objects.get(id=obj.id)
         return recipe.favorites.count()
+
+    def get_num_views(self, obj):
+        recipe = Recipes.objects.get(id=obj.id)
+        recipe.views=recipe.views+1
+        recipe.save()
+        print("called add view to recipe!")
+        return recipe.views
 
     

@@ -19,7 +19,7 @@ function NavBar() {
 
   const authLinks = (
     <>
-      <Link href="/filter">
+      <Link href="/special">
         <button className="m-auto">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@ function NavBar() {
           About
         </a>
       </Link> */}
-      <Link href="/login">
+      {/* <Link href="/login">
         <a
           className={
             router.pathname === "/login"
@@ -104,7 +104,7 @@ function NavBar() {
         >
           Sign Up
         </a>
-      </Link>
+      </Link> */}
     </>
   );
 

@@ -5,11 +5,12 @@ import { logout } from "../actions/auth";
 import { API_URL } from "../config";
 import Link from "next/link";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const Profile = () => {
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -85,9 +86,9 @@ const Profile = () => {
     enabled: !!myTokenData,
   });
 
-  if (isLoading || isLoading2 || isLoadingToken) {
-    return <span>Loading...</span>;
-  }
+  // if (isLoading || isLoading2 || isLoadingToken) {
+  //   return <span>Loading...</span>;
+  // }
 
   if (isErrorToken || isError || isError2) {
     return <span>Error: {tokenError.message}</span>;
@@ -103,9 +104,16 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const logoutHandler = () => {
+    queryClient.invalidateQueries();
+    console.log("invalidating....");
+    // queryClient.invalidateQueries();
+    // queryClient.removeQueries("userData", { exact: true });
+    // queryClient.removeQueries("userRecipes", { exact: true });
+    // queryClient.removeQueries("userToken", { exact: true });
     if (dispatch && dispatch !== null && dispatch !== undefined) {
       dispatch(logout());
     }
+    // Invalidate every query in the cache
   };
 
   const onSubmitPassword = async (e) => {
@@ -123,7 +131,7 @@ const Profile = () => {
       const token = await res.json();
 
       const res2 = await fetch(
-        `${API_URL}/auth/change_password/${myUserData.user.id}/`,
+        `${API_URL}/auth/change_password/${myUserData?.user.id}/`,
         {
           method: "PUT",
           headers: {
@@ -143,16 +151,31 @@ const Profile = () => {
     }
   };
 
-  if (typeof window !== "undefined" && !loading && !isAuthenticated)
+  if (
+    typeof window !== "undefined" &&
+    !loading &&
+    !isAuthenticated &&
+    !isLoading &&
+    !isLoading2 &&
+    !isLoadingToken
+  ) {
+    console.log("called this");
     router.push("/");
+  }
 
   return (
     <Layout title="CookBook | profile">
-      <div className=" flex flex-col justify-self-center my-5 self-center items-center">
+      <div
+        className={
+          !myUserData?.user
+            ? "flex flex-col justify-self-center my-5 self-center items-center animate-pulse"
+            : " flex flex-col justify-self-center my-5 self-center items-center"
+        }
+      >
         <div className="w-2/3">
-          {myUserData.user !== null &&
-          myUserData.user !== undefined &&
-          myUserData.user.first_name === "" ? (
+          {myUserData?.user !== null &&
+          myUserData?.user !== undefined &&
+          myUserData?.user.first_name === "" ? (
             <div className="flex flex-col items-center">
               <div className="text-3xl my-8">Welcome to CookBook!</div>
               <div className="text-2xl">Enter your display name</div>
@@ -167,7 +190,7 @@ const Profile = () => {
                   })}
                   onSubmit={async (values, { setSubmitting }) => {
                     fetch(
-                      `${API_URL}/auth/update_profile/${myUserData.user.id}/`,
+                      `${API_URL}/auth/update_profile/${myUserData?.user.id}/`,
                       {
                         method: "PUT",
                         headers: {
@@ -176,8 +199,8 @@ const Profile = () => {
                         },
                         body: JSON.stringify({
                           first_name: values.firstName,
-                          email: myUserData.user.email,
-                          is_premium: myUserData.user.is_premium,
+                          email: myUserData?.user.email,
+                          is_premium: myUserData?.user.is_premium,
                         }),
                       }
                     );
@@ -209,22 +232,29 @@ const Profile = () => {
             </div>
           ) : (
             <div>
-              <div className="bg-stone-100 rounded-lg p-2 flex flex-row items-center">
+              <div
+                className={
+                  isLoading
+                    ? "bg-stone-100 rounded-lg p-2 flex flex-row items-center animate-pulse"
+                    : "bg-stone-100 rounded-lg p-2 flex flex-row items-center"
+                }
+              >
                 {/* <p className="text-2xl m-6 underline">User Profile</p> */}
-                <div>
-                  <p className="text-2xl mt-6 mx-6 ">
+                <div className="mx-auto">
+                  <p className="text-2xl mt-6 ">
                     Welcome,{" "}
-                    {myUserData.user !== null &&
-                      myUserData.user !== undefined &&
-                      myUserData.user.first_name}
+                    {myUserData?.user !== null &&
+                      myUserData?.user !== undefined &&
+                      !isLoading &&
+                      myUserData?.user.first_name}
                     !
                   </p>
-                  <p className="text-sm mb-6 mx-6">
+                  <p className="text-sm mb-6">
                     Joined {myUserData?.user?.days_since_joined} days ago
                   </p>
                 </div>
                 <div className="w-8/12">
-                  {myUserData.user?.is_premium ? (
+                  {myUserData?.user?.is_premium ? (
                     <div>
                       <button className="px-2 py-4 bg-pink-600 text-white rounded m-auto w-full h-full">
                         Premium Member
@@ -242,9 +272,9 @@ const Profile = () => {
                 </div>
               </div>
 
-              <p className="text-lg m-6">Your favorites</p>
+              <p className="text-lg m-6">Your Saved Recipes</p>
               <div className="flex flex-col ">
-                {myUserData.user?.favorite_recipes ? (
+                {myUserData?.user?.favorite_recipes ? (
                   myUserData.user.favorite_recipes.map((d) => {
                     return (
                       <Link href={"/recipes/" + d.liked_recipe}>

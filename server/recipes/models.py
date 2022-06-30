@@ -24,6 +24,7 @@ class Recipes(models.Model):
         default=CHEAP,
     )
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # need author name as well
     title =  models.CharField(max_length=255, blank=True, default='')
     description = models.TextField(null=True, blank=True, default='')
     caption = models.TextField(null=True, blank=True, default='')
@@ -32,7 +33,6 @@ class Recipes(models.Model):
     total_cook_time = models.IntegerField(default = 0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    # price = models.DecimalField(max_digits=9, decimal_places=2, default='0')
     source = models.URLField(max_length=200, null=True, blank = True, default='')
     category = models.ManyToManyField(Category, related_name='recipes', blank=True, null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/")
@@ -41,9 +41,11 @@ class Recipes(models.Model):
     views = models.IntegerField(default=0)
     # course
     # cuisine
+    # potential allergies
     # keywords
     # servings
     # calories
+    # number of ingredients
 
     class Meta:
         ordering = ['-created']

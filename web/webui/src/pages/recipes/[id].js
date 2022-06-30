@@ -222,6 +222,9 @@ function SelectedRecipe(data) {
                         </button>
                       </div>
                     ))}
+                    <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
+                      {sentData?.num_views} views
+                    </button>
                   </div>
                   <div className="stats stats-vertical shadow border ">
                     <div className="stat">
@@ -295,7 +298,21 @@ function SelectedRecipe(data) {
                       >
                         {userID && userID === sentData?.author ? null : (
                           <div className="flex justify-center items-center p-2">
-                            {user?.favorite_recipes.includes(sentData?.id) ? (
+                            {user?.favorite_recipes.includes(sentData?.id) ||
+                            liked ? (
+                              <div className="text-white">
+                                {/* <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                                </svg> */}
+                                <p className="text-xl">Saved!</p>
+                                {console.log("HERE")}
+                              </div>
+                            ) : (
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 className="h-6 w-6"
@@ -310,18 +327,6 @@ function SelectedRecipe(data) {
                                   d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
                                 />
                               </svg>
-                            ) : (
-                              <div className="text-white">
-                                {/* <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              >
-                              <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                            </svg> */}
-                                <p className="text-xl">Saved!</p>
-                              </div>
                             )}
                           </div>
                         )}
@@ -362,6 +367,7 @@ function SelectedRecipe(data) {
                   <div className="text-xl mt-6">No ingredients listed</div>
                 )}
                 <p className="text-xl mt-6">Directions</p>
+
                 <div className="mb-4  my-2 border rounded p-3 shadow w-6/12">
                   <p className="text-medium whitespace-pre-line">
                     {sentData?.description}
