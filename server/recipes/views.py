@@ -48,6 +48,11 @@ class GroceryListViewSet(ModelViewSet):
     queryset = GroceryLists.objects.all()
     serializer_class = GroceryListSerializer
 
+    def get_object(self):
+        queryset = GroceryLists.objects.filter()
+        user = self.request.user
+        return GroceryLists.objects.filter(author=user)
+
 class SearchResultsList(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)
     search_fields = ['description', 'title']

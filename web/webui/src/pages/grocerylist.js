@@ -1,6 +1,6 @@
 import Layout from "../hocs/Layout";
 import { API_URL } from "../config/index";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useMutation } from "react-query";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -70,7 +70,25 @@ function groceryListPage() {
     }
   );
 
-  console.log("@@@@", myUserData?.user);
+  const sendCreateList = async (newList) => {
+    console.log("mutation data:", newList, myTokenData.token);
+
+    return fetch(`${API_URL}/grocerylist/`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + myTokenData.token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(newList), // dont forget to stringify
+    });
+  };
+
+  const mutation = useMutation((newList) => {
+    sendCreateList(newList);
+  });
+
+  // console.log("@@@@", myGroceryList);
 
   if (isErrorToken || errorGroceryList) {
     return <span>Error: {errorGroceryList.message}</span>;
@@ -85,7 +103,36 @@ function groceryListPage() {
             <p>Forgot what you needed to buy?</p>
             <p>We'll help, input your groceries below!</p>
           </div>
-          <div>this is a test</div>
+          <div>
+            {myGroceryList?.data == undefined
+              ? "You have no grocery list! Do you want to create one?"
+              : "You have a grocery list"}
+          </div>
+          <div>
+            {mutation.isLoading ? (
+              "Creating your grocery list..."
+            ) : (
+              <>
+                {mutation.isError ? (
+                  <div>An error occurred: {mutation.error.message}</div>
+                ) : null}
+
+                {mutation.isSuccess ? <div>Grocery List Added!</div> : null}
+
+                <button
+                  className="rounded p-2 bg-stone-100 mx-auto"
+                  onClick={() => {
+                    mutation.mutate({
+                      author: myUserData.user.id,
+                      content: "Add an item to your grocery list!",
+                    });
+                  }}
+                >
+                  Create List
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </Layout>
