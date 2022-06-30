@@ -51,7 +51,7 @@ class GroceryListViewSet(ModelViewSet):
     def get_object(self):
         queryset = GroceryLists.objects.filter()
         user = self.request.user
-        return GroceryLists.objects.filter(author=user)
+        return GroceryLists.objects.all()
 
 class SearchResultsList(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)

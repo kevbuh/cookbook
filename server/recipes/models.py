@@ -102,8 +102,7 @@ class Ingredients(models.Model):
 
 class GroceryLists(models.Model):
     author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='grocerylists', related_query_name='grocerylist')
-    content = models.TextField(default='')
-    created_at = models.DateTimeField(auto_now_add=True)
+    content = models.TextField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return str(self.id)
+        return self.content
