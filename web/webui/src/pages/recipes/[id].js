@@ -135,7 +135,7 @@ function SelectedRecipe(data) {
 
   return (
     <Layout title={"CookBook | Recipe: " + sentData?.id}>
-      <div className="flex justify-center w-11/12 mx-auto">
+      <div className="flex justify-center w-3/4 mx-auto">
         <div className=" my-10 w-full">
           {showEdit ? (
             <div>
@@ -211,45 +211,26 @@ function SelectedRecipe(data) {
             </div>
           ) : (
             <div>
-              <div className="flex flex-row items-center">
-                <div className="flex flex-col">
-                  <div className="flex flex-row mb-4 align-middle">
-                    <div className="text-4xl mr-4 ">{sentData?.title}</div>
-                    {sentData?.category.map((d) => (
-                      <div>
-                        <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
-                          {d.name}
-                        </button>
-                      </div>
-                    ))}
-                    <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
-                      {sentData?.num_views} views
-                    </button>
-                  </div>
-                  <div className="stats stats-vertical shadow border ">
-                    <div className="stat">
-                      <div className="stat-title">Rating</div>
-                      <div className="stat-value text-2xl">
-                        {sentData?.avg_rating ? (
-                          <p>
-                            {sentData.avg_rating.toFixed(2)}{" "}
-                            {sentData.avg_rating
-                              ? getStars(sentData.avg_rating)
-                              : "No rating"}{" "}
-                            {/* ⭐️ */}
-                          </p>
-                        ) : (
-                          <p>No ratings yet!</p>
-                        )}
-                      </div>
-                      <div className="stat-desc">
-                        {sentData?.num_likes} Saves, ({sentData?.reviews.length}
-                        ) Reviews
-                      </div>
+              <div className="">
+                <div className="flex flex-row justify-between">
+                  <div className="my-auto h-full">
+                    <div className="text-4xl mb-4">{sentData?.title}</div>
+                    <div className="flex flex-row justify-evenly">
+                      {sentData?.category.map((d) => (
+                        <div>
+                          <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
+                            {d.name}
+                          </button>
+                        </div>
+                      ))}
+
+                      <button className="border-stone-100 mx-2 border-2 rounded-2xl py-1 px-5 ">
+                        {sentData?.num_views} views
+                      </button>
                     </div>
-                    <div className="flex flex-col justify-center py-2 pl-6">
-                      <div className="stat-title flex flex-row">
-                        Time{" "}
+                    <div className="flex flex-col my-5">
+                      <div className=" flex flex-row items-center">
+                        <p className="text-2xl mr-1">Time </p>
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           className="h-6 w-6"
@@ -265,91 +246,106 @@ function SelectedRecipe(data) {
                           />
                         </svg>
                       </div>
-                      <div className="stat-value text-2xl">
+                      <div className=" text-lg">
                         <p>{sentData?.total_cook_time} mins</p>
                       </div>
                       <div className="stat-desc">Community Average</div>
                     </div>
+                    <div className="my-5">
+                      <p className="text-2xl mr-1">Rating </p>
 
-                    <div className="state pl-6 py-2">
-                      <div className="stat-title">Cost</div>
-                      <div className="stat-value text-2xl">
-                        {sentData?.price}
+                      {sentData?.avg_rating ? (
+                        <p className="text-lg">
+                          {sentData.avg_rating.toFixed(2)}{" "}
+                          {sentData.avg_rating
+                            ? getStars(sentData.avg_rating)
+                            : "No rating"}{" "}
+                        </p>
+                      ) : (
+                        <p>No ratings yet!</p>
+                      )}
+                      <div className="stat-desc">
+                        {sentData?.num_likes} Saves, ({sentData?.reviews.length}
+                        ) Reviews
                       </div>
+                    </div>
+                    <div className="flex flex-col my-5">
+                      <p className="text-2xl mr-1">Cost </p>
+
+                      <div className=" text-lg">{sentData?.price}</div>
                       <div className="stat-desc">Estimated Ingredient Cost</div>
                     </div>
-                    {userID && userID === sentData?.author ? null : (
-                      <button
-                        className={liked ? "bg-pink-600" : null}
-                        onClick={() => {
-                          fetch("/api/account/like_recipe", {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              liked_recipe: sentData?.id,
-                              user: userID,
-                            }),
-                          }).catch((error) => console.log("error", error));
-                          // router.push("/");
-                          setLiked((liked) => !liked);
-                        }}
-                      >
-                        {userID && userID === sentData?.author ? null : (
-                          <div className="flex justify-center items-center p-2">
-                            {user?.favorite_recipes.includes(sentData?.id) ||
-                            liked ? (
-                              <div className="text-white">
-                                {/* <svg
+                    <div className="flex flex-row mx-auto justify-center border rounded">
+                      {userID && userID === sentData?.author ? null : (
+                        <button
+                          className={
+                            liked
+                              ? "bg-pink-600 text-black w-full rounded"
+                              : null
+                          }
+                          onClick={() => {
+                            fetch("/api/account/like_recipe", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                liked_recipe: sentData?.id,
+                                user: userID,
+                              }),
+                            }).catch((error) => console.log("error", error));
+                            // router.push("/");
+                            setLiked((liked) => !liked);
+                          }}
+                        >
+                          {userID && userID === sentData?.author ? null : (
+                            <div className="flex justify-center items-center p-2">
+                              {user?.favorite_recipes.includes(sentData?.id) ||
+                              liked ? (
+                                <div className="text-white">
+                                  <p className="text-xl">Saved!</p>
+                                  {console.log("HERE")}
+                                </div>
+                              ) : (
+                                <svg
                                   xmlns="http://www.w3.org/2000/svg"
-                                  className="h-5 w-5"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
+                                  className="h-6 w-6"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                  strokeWidth={2}
                                 >
-                                  <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                                </svg> */}
-                                <p className="text-xl">Saved!</p>
-                                {console.log("HERE")}
-                              </div>
-                            ) : (
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                strokeWidth={2}
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                                />
-                              </svg>
-                            )}
-                          </div>
-                        )}
-                      </button>
-                    )}
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                                  />
+                                </svg>
+                              )}
+                            </div>
+                          )}
+                        </button>
+                      )}
+                    </div>
                   </div>
+
+                  {sentData?.image ? (
+                    <div className="w-3/5">
+                      <Image
+                        // className="rounded-3xl shadow p-2"
+                        loader={() => sentData.image}
+                        src={sentData.image}
+                        unoptimized={true}
+                        width="100%"
+                        height="100%"
+                        layout="responsive"
+                        objectFit="contain"
+                        priority="true"
+                        // quality={100}
+                      />
+                    </div>
+                  ) : null}
                 </div>
-                {sentData?.image ? (
-                  <div className="w-2/5 m-auto ">
-                    <Image
-                      className="rounded-3xl shadow p-2"
-                      loader={() => sentData.image}
-                      src={sentData.image}
-                      unoptimized={true}
-                      width={500}
-                      height={400}
-                      // layout="responsive"
-                      objectFit="contain"
-                      priority="true"
-                      // quality={100}
-                    />
-                  </div>
-                ) : null}
               </div>
 
               <div className="rounded py-2">
@@ -567,8 +563,7 @@ function SelectedRecipe(data) {
             </div>
           )}
         </div>
-        <div className="flex justify-center w-1/5 my-10">
-          {/* <p>test</p> */}
+        {/* <div className="flex justify-center w-1/5 my-10">
           <div className=" shadow rounded-lg p-2 ml-4 w-full h-64">
             <div className="flex flex-row items-center">
               <div className="flex flex-row items-center ">
@@ -592,7 +587,7 @@ function SelectedRecipe(data) {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
       {/* <Footer /> */}
     </Layout>
