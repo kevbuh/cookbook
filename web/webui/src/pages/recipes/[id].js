@@ -133,7 +133,11 @@ const SelectedRecipePage = () => {
   return (
     <Layout title={"CookBook | Recipe: " + sentData?.id}>
       <div className="flex justify-center w-3/4 mx-auto">
-        <div className=" my-10 w-full">
+        <div
+          className={
+            isLoading ? " my-10 w-full animate-pulse" : " my-10 w-full "
+          }
+        >
           {showEdit ? (
             <div>
               <div className="p-6 flex flex-col">

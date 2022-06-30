@@ -66,11 +66,11 @@ class Comment(models.Model):
     content = models.TextField(max_length=255)
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='comments', related_query_name='comment', blank=True, null=True)
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments', related_query_name='comment')
-    created = models.DateField(auto_now_add=True)
+    created_at = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.title
+        return str(self.id)
 
 class Review(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews', related_query_name='review')
@@ -100,4 +100,10 @@ class Ingredients(models.Model):
     amount = models.CharField(max_length=255)
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name='ingredients', related_query_name='ingredient', blank=True, null=True)
 
-    
+class GroceryLists(models.Model):
+    author = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='grocerylists', related_query_name='grocerylist')
+    content = models.TextField(default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)

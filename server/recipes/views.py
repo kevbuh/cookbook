@@ -4,16 +4,8 @@ from rest_framework.decorators import action
 from rest_framework import filters, generics, pagination
 from rest_framework.viewsets import ModelViewSet
 
-from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer, CommentSerializer, IngredientSerializer
-from .models import Recipes, Review, Favorites, Comment, Ingredients
-
-class CustomPagination(pagination.CursorPagination):
-    page_size = 4
-    cursor_query_param = 'cursor'
-
-# class CursorSetPagination(CursorPagination):
-#     # page_size = 4
-#     # page_size_query_param = 'page_size'
+from .serializers import RecipesSerializer, ReviewSerializer, LikedPostSerializer, CommentSerializer, IngredientSerializer, GroceryListSerializer
+from .models import Recipes, Review, Favorites, Comment, Ingredients, GroceryLists
 
 
 class RecipeViewSet(ModelViewSet):
@@ -51,6 +43,10 @@ class RecipesCreatedByUser(generics.ListCreateAPIView):
         queryset = Recipes.objects.filter()
         user = self.request.user
         return Recipes.objects.filter(author=user)
+
+class GroceryListViewSet(ModelViewSet):
+    queryset = GroceryLists.objects.all()
+    serializer_class = GroceryListSerializer
 
 class SearchResultsList(generics.ListCreateAPIView):
     filter_backends = (filters.SearchFilter,)

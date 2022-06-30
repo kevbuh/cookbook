@@ -9,17 +9,17 @@ function specialFeaturesPage() {
         <div className="w-2/3 flex flex-col">
           <div className="flex flex-col items-center my-10">
             <p className="text-3xl my-6">CookBook Features</p>
-            <p>Don't know what to cook?</p>
+            <p>Check these out</p>
           </div>
-          <div className="flex flex-col">
+          <div className="grid grid-cols-3 h-1/2">
             <Link href="/grocerylist">
-              <a>Grocery List</a>
+              <a className="text-2xl my-2 mx-auto">Grocery List</a>
             </Link>
             <Link href="/generator">
-              <a>Recipe Generator</a>
+              <a className="text-2xl my-2 mx-auto">Recipe Generator</a>
             </Link>
             <Link href="/mealplanner">
-              <a>Meal Planner</a>
+              <a className="text-2xl my-2 mx-auto">Meal Planner</a>
             </Link>
           </div>
           {/* <div className=" flex flex-row gap h-80">

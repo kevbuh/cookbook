@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from recipes.models import Recipes, Category, Comment, Review, Favorites, Ingredients
+from recipes.models import Recipes, Category, Comment, Review, Favorites, Ingredients, GroceryLists
 from django.db.models import Avg
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
+        fields = '__all__'
+
+class GroceryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GroceryLists
         fields = '__all__'
 
 class IngredientSerializer(serializers.ModelSerializer):

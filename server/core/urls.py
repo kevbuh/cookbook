@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet, CommentViewSet, IngredientViewSet, RecipesCreatedByUser
+from recipes.views import RecipeViewSet, SearchResultsList, RatingViewSet, LikeRecipeViewSet, CommentViewSet, IngredientViewSet, RecipesCreatedByUser, GroceryListViewSet
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -29,6 +29,7 @@ router = DefaultRouter()
 router.register(r'recipe', RecipeViewSet, basename='Recipe')
 router.register(r'rating', RatingViewSet, basename='Review')
 router.register(r'like', LikeRecipeViewSet, basename='LikeRecipe')
+router.register(r'grocerylist', GroceryListViewSet, basename='GroceryList')
 router.register(r'comment', CommentViewSet, basename='Comment')
 router.register(r'ingredient', IngredientViewSet, basename='Ingredient')
 
@@ -43,6 +44,7 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/token/verify/', TokenVerifyView.as_view()),
     path("my_recipes/", RecipesCreatedByUser.as_view(), name="RecipesCreatedByUser"),
+
 ]
 
 if settings.DEBUG:

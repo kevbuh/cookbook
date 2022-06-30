@@ -3,15 +3,14 @@ from rest_framework import serializers
 from django.utils.timezone import now
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from core.settings import AUTH_USER_MODEL
 from .models import CustomUser
-from recipes.serializers import RecipesSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     days_since_joined = serializers.SerializerMethodField()
     favorite_recipes = serializers.SerializerMethodField()
+    grocery_list = serializers.SerializerMethodField()
+
 
     class Meta:
         model = CustomUser
@@ -23,6 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
     def get_favorite_recipes(self, obj):
         user = CustomUser.objects.get(id=obj.id)
         return user.favorites.values('liked_recipe')
+    
+    def get_grocery_list(self, obj):
+        user = CustomUser.objects.get(id=obj.id)
+        return user.grocerylists.values('author')
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
