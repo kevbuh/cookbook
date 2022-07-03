@@ -5,8 +5,9 @@ import { useStore } from "../store";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { useState } from "react";
+import { SessionProvider } from "next-auth/react";
 
-const App = ({ Component, pageProps }) => {
+const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const store = useStore(pageProps.initialReduxState);
   const [queryClient] = useState(
     () =>
@@ -20,15 +21,17 @@ const App = ({ Component, pageProps }) => {
   );
 
   return (
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <Head>
-          <title>CookBook, the Food Platform</title>
-        </Head>
-        <Component {...pageProps} />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </Provider>
+    <SessionProvider session={session}>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <Head>
+            <title>CookBook, the Food Platform</title>
+          </Head>
+          <Component {...pageProps} />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
+      </Provider>
+    </SessionProvider>
   );
 };
 

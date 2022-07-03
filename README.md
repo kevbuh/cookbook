@@ -7,7 +7,9 @@ React
 NextJS
 Tailwind CSS
 
-START SERVER: npm run dev
+START FRONTEND: npm run dev
+START BACKEND: python3 manage.py runserver
+also make sure to have postgres running
 
 RENDERING: Static Generation without Data + Fetch Data on the Client-Side
 

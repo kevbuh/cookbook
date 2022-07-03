@@ -163,6 +163,18 @@ const Profile = () => {
     router.push("/");
   }
 
+  if (isLoadingToken || isLoading2 || isLoading2) {
+    return (
+      <Layout>
+        <div className="flex flex-col align-center items-center justify-center h-3/4">
+          <div className="m-auto animate-pulse h-full my-60">
+            Loading your profile....
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout title="CookBook | profile">
       <div
