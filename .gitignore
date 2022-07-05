@@ -1,12 +1,12 @@
 
-venv
+v1/venv
 
-server/core/settings.py
+v1/server/core/settings.py
 
-web/webui/package-lock.json
-web/webui/node_modules
-web/webui/.env
-web/webui/env
-server/media/images
-web/webui/node_modules 2/
-server/recipes/__pycache__
+v1/web/webui/package-lock.json
+v1/web/webui/node_modules
+v1/web/webui/.env
+v1/web/webui/env
+v1/server/media/images
+v1/web/webui/node_modules 2/
+v1/server/recipes/__pycache__
